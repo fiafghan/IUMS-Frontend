@@ -1,23 +1,12 @@
-import { useEffect, useState, type JSX, type SetStateAction } from "react";
+import { useEffect, useState, type JSX} from "react";
 import axios from "axios";
 import {
   User, Eye, Edit, Trash,
-  Search,
-  Users
+  Search, Users, Briefcase, Building2
 } from "lucide-react";
 import GradientSidebar from "./components/Sidebar";
-import {motion} from "framer-motion";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from "chart.js";
-import { Doughnut, Pie } from "react-chartjs-2";
 import { Combobox } from "@headlessui/react";
-
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import UserFilters from "./components/UserFilters";
 
 type InternetUser = {
   id: string;
@@ -38,8 +27,8 @@ type InternetUser = {
 };
 
 const headers = [
-  "Name", "Username", "Phone","Position", "Employment Type",
-  "Directorate", "Deputy Ministry","Status", "Violations", "Comment", "Actions"
+  "Name", "Username","Phone", "Directorate", "Deputy Ministry","Status", 
+  "Violations", "Comment", "Actions"
 ];
 
 export default function InternetUsersList(): JSX.Element {
@@ -61,16 +50,29 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedDeputyMinistryEdit, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
   const [queryDeputyMinistryEdit, setQueryDeputyMinistryEdit] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const totalUsers = users.length;
+  const activeUsers = users.filter((user) => user.status === "active").length;
+  const deactiveUsers = users.filter((user) => user.status === "deactive").length;
+    
+  const employmentTypeCounts: Record<string, number> = users.reduce((acc, user) => {
+  const type = user.employment_type || "Unknown";
+      acc[type] = (acc[type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
 
-  
   const filteredDirectorates =
           queryDirectorate === ""
           ? directorateOptions
           : directorateOptions.filter((dir) => 
                   dir.name.toLowerCase().includes(queryDirectorate.toLowerCase())
         );
-
+  
+  const deputyMinistryCounts: Record<string, number> = users.reduce((acc, user) => {
+      const ministry = user.deputyMinistry || "Unknown";
+      acc[ministry] = (acc[ministry] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
 
   const filteredDeputyMinistriesEdit =
@@ -79,14 +81,6 @@ export default function InternetUsersList(): JSX.Element {
         : deputyMinistryOptions.filter((dm) =>
             dm.name.toLowerCase().includes(queryDeputyMinistryEdit.toLowerCase())
       );
-
-  const totalUsers = users.length;
-
-  const deputyMinistryCounts: Record<string, number> = users.reduce((acc, user) => {
-    const deputy = user.deputyMinistry || "Unknown";
-    acc[deputy] = (acc[deputy] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
 
   useEffect(() => {
@@ -186,207 +180,100 @@ export default function InternetUsersList(): JSX.Element {
       border-gray-200 bg-white shadow-sm z-20">
         <GradientSidebar />
       </div>
-        
       <main className="flex-1 ml-64 p-8 overflow-auto">
-       {/* 🧊 Summary Cards */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 
-       md:grid-cols-3 gap-6 mb-10">
-        {/* Total Users Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="bg-white shadow-md border border-gray-200 rounded-xl p-6"
-        >
-  <h3 className="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
-    <Users className="w-5 h-5 text-blue-400" />
-    Total Users
-  </h3>
-
-  <div className="w-48 mx-auto">
-    <Doughnut
-      data={{
-        labels: ["Users"],
-        datasets: [
-          {
-            data: [totalUsers, Math.max(100 - totalUsers, 0)], // fills rest as empty
-            backgroundColor: ["#60A5FA", "#E5E7EB"], // blue-400 and gray-200
-            borderWidth: 0,
-          },
-        ],
-      }}
-      options={{
-        cutout: "70%",
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false },
-        },
-      }}
-    />
-    <div className="absolute top-[50%] transform -translate-x-1/2 -translate-y-[50%] text-center">
-      <p className="text-3xl font-bold text-blue-500 ml-50">{totalUsers}</p>
-      <p className="text-xs text-gray-500 ml-50">Users</p>
-    </div>
-  </div>
-</motion.div>
-
-          
-        {/* Users Per Deputy Ministry */}
-        <div className="bg-white rounded-md shadow-md border border-gray-200 p-6">
-      <h2 className="text-lg font-bold text-gray-700 mb-4">Users Per Deputy Ministry</h2>
-      <div className="space-y-4">
-        {Object.entries(deputyMinistryCounts).map(([depMinistry, count], index) => {
-      const max = Math.max(...Object.values(deputyMinistryCounts)); // for proportional width
-      const widthPercent = (count / max) * 100;
-
-      return (
-        <motion.div
-          key={depMinistry}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
-        >
-          <div className="text-sm text-gray-700 mb-1 font-medium">
-            {depMinistry} ({count} user{count > 1 ? "s" : ""})
-          </div>
-          <div className="bg-blue-100 rounded-lg h-6 overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${widthPercent}%` }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 + index * 0.1 }}
-              className="h-full bg-blue-300 text-white text-xs flex items-center px-3 font-semibold"
-            >
-              {count}
-            </motion.div>
-          </div>
-          
-        </motion.div>
-        
-      );
-    })}
-    
-  </div>
-  
-</div>
-
-            {/* Users Per Deputy Ministry - Pie Chart */}
-<div className="bg-white rounded-md shadow-md border border-gray-200 p-6">
-  <h2 className="text-lg font-bold text-gray-700 mb-4">Users Distribution</h2>
-  <div className="w-full max-w-md mx-auto">
-    <Pie
-      data={{
-        labels: Object.keys(deputyMinistryCounts),
-        datasets: [
-          {
-            label: "Users",
-            data: Object.values(deputyMinistryCounts),
-            backgroundColor: [
-              "#60A5FA", // blue-400
-              "#3B82F6", // blue-500
-              "#1D4ED8", // blue-700
-              "#DBEAFE", // blue-100
-              "#BFDBFE", // blue-200
-              "#93C5FD"  // blue-300
-            ],
-            borderColor: "#ffffff",
-            borderWidth: 2,
-          }
-        ],
-      }}
-      options={{
-        responsive: true,
-        plugins: {
-          legend: {
-            position: "bottom" as const,
-            labels: {
-              color: "#1F2937", // gray-800
-              font: { size: 12 },
-            },
-          },
-        },
-      }}
-    />
-  </div>
-</div>
-
-      </div>
-
-        <div className="flex gap-4 mb-4">
-          
-          <div>
-             <label htmlFor="deputyMinistryFilter" className="block text-sm font-medium 
-            text-gray-700">
-              Deputy Ministry
-            </label>
-            <select
-              id="deputyMinistryFilter"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm f
-              ocus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-7 
-              shadow-md shadow-gray-400 p-2 text-gray-700"
-              value={selectedDeputyMinistry}
-              onChange={(e) => setSelectedDeputyMinistry(e.target.value)}
-            >
-              <option value="">All</option>
-              {deputyMinistryOptions.map((dep) => (
-                <option key={dep.id} value={dep.name}>{dep.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Directorate Filter */}
-          <div>
-            <label htmlFor="directorateFilter" className="block text-sm font-medium 
-            text-gray-700 text-gray-700">
-              Directorate
-            </label>
-            <select
-              id="directorateFilter"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm 
-              h-7 shadow-md shadow-gray-400 p-2 text-gray-700"
-              value={selectedDirectorate}
-              onChange={(e: { target: { value: SetStateAction<string>; }; }) => setSelectedDirectorate(e.target.value)}
-            >
-              <option value="">All</option>
-              {directorateOptions.map((dir) => {
-                return (
-                  <option key={dir.id} value={dir.name}>
-                    {dir.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          {/* status filter */}
-                      <div>
-              <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700">
-                Status
-              </label>
-              <select
-                id="statusFilter"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
-                  focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm 
-                  h-7 shadow-md shadow-gray-400 p-2 text-gray-700"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-              >
-                <option value="">All</option>
-                <option value="active">Active</option>
-                <option value="deactive">Deactive</option>
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 🔵 Total Users */}
+        <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white 
+        border border-blue-100 group">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <User className="w-6 h-6 text-blue-400" />
+              <span className="text-blue-400 font-semibold text-sm">Total Users</span>
             </div>
-
-                 <div className="relative w-full sm:w-[900px] mt-5">
+            <div className="text-blue-400 text-xs uppercase tracking-wider">Summary</div>
+          </div>
+          <div className="text-3xl font-bold text-blue-400 text-center">{totalUsers}</div>
+        </div>
+        {/* 🟦 Active / Deactive */}
+        <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Users className="w-6 h-6 text-blue-400" />
+              <span className="text-blue-400 font-semibold text-sm">Active / Deactive</span>
+            </div>
+            <div className="text-blue-400 text-xs uppercase tracking-wider">Status</div>
+          </div>
+          <div className="space-y-1 text-blue-400">
+            <div className="flex justify-between text-sm">
+              <span>Active</span>
+              <span className="font-bold">{activeUsers}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Deactive</span>
+              <span className="font-bold">{deactiveUsers}</span>
+            </div>
+          </div>
+        </div>
+        {/* 👔 Employment Type */}
+        <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Briefcase className="w-6 h-6 text-blue-400" /> 
+              <span className="text-blue-400 font-semibold text-sm">Employment Types</span>
+            </div>
+            <div className="text-blue-400 text-xs uppercase tracking-wider">Type</div>
+          </div>
+          <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1">
+            {Object.entries(employmentTypeCounts).map(([type, count]) => (
+              <li key={type} className="flex justify-between">
+                <span>{type}</span>
+                <span className="font-bold">{count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* 🏛️ Deputy Ministry */}
+        <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Building2 className="w-6 h-6 text-blue-400" />
+              <span className="text-blue-400 font-semibold text-sm">Deputy Ministries</span>
+            </div>
+            <div className="text-blue-400 text-xs uppercase tracking-wider">Groups</div>
+          </div>
+          <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1">
+            {Object.entries(deputyMinistryCounts).map(([name, count]) => (
+              <li key={name} className="flex justify-between">
+                <span>{name}</span>
+                <span className="font-bold">{count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+       
+        <div className="flex gap-4 mb-4 mt-5 justify-center items-center">
+              <UserFilters
+                  deputyMinistryOptions={deputyMinistryOptions.map(dm => ({ ...dm, id: String(dm.id) }))}
+                  directorateOptions={directorateOptions.map(dir => ({ ...dir, id: String(dir.id) }))}
+                  selectedDeputyMinistry={selectedDeputyMinistry}
+                  setSelectedDeputyMinistry={setSelectedDeputyMinistry}
+                  selectedDirectorate={selectedDirectorate}
+                  setSelectedDirectorate={setSelectedDirectorate}
+                  selectedStatus={selectedStatus}
+                  setSelectedStatus={setSelectedStatus}
+              />
+                    <div className="relative w-full sm:w-[900px] mt-5">
                   <input
                     id="searchInput"
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search users..."
-                    className="w-full px-4 py-2 pl-10 rounded-lg shadow-md border border-blue-400 
+                    className="w-100 px-4 py-2 pl-10 rounded-sm shadow-sm border border-blue-200 
                     focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm 
                     placeholder:text-blue-300 text-gray-700 
-                    bg-white shadow-md shadow-blue-400"
+                    bg-white"
                     autoComplete="on"
                     autoCorrect="on"
                   />
@@ -404,119 +291,114 @@ export default function InternetUsersList(): JSX.Element {
           <div className="overflow-x-auto rounded-sm 
           shadow-lg bg-white border 
           border-gray-200 max-w-full">
-            <div className="grid grid-cols-[200px_150px_150px_150px_150px_150px_200px_200px_200px_200px_200px] 
-            bg-blue-400 text-white font-semibold text-sm 
-            select-none rounded-t-lg shadow-inner">
-              {headers.map((header) => (
-                <div
-                  key={header}
-                  className="px-3 py-2 border-r  last:border-r-0 flex items-center 
-                  bg-blue-300 text-[10px]"
-                  style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
-                >
-                  {header}
-                </div>
-              ))}
-            </div>
+        <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
+          <table className="table-auto w-full text-left text-sm">
+            {/* Table Head */}
+            <thead>
+              <tr className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs uppercase 
+              tracking-wider select-none rounded-t-xl">
+                {headers.map((header) => (
+                  <th
+                    key={header}
+                    className="px-3 py-2 border-r last:border-r-0 bg-blue-300 text-[10px] font-semibold"
+                    style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
+                  >
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
 
-            {users
-              .filter((user) => 
-                (selectedDeputyMinistry === "" || user.deputyMinistry === selectedDeputyMinistry) &&
-                (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
-                 (selectedStatus === "" || user.status === selectedStatus) &&
-                (user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+            {/* Table Body */}
+            <tbody>
+              {users
+                .filter((user) =>
+                  (selectedDeputyMinistry === "" || user.deputyMinistry === selectedDeputyMinistry) &&
+                  (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
+                  (selectedStatus === "" || user.status === selectedStatus) &&
+                  (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    user.phone.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              ).map((user, idx) => {
-    const isRedCard = user.violations === "2";
-    const isYellowCard = user.violations === "1";
+                    user.phone.toLowerCase().includes(searchTerm.toLowerCase()))
+                )
+                .map((user, idx) => {
+                  const isRedCard = user.violations === "2";
+                  const isYellowCard = user.violations === "1";
 
-    return (
-      <div
-        key={user.id}
-        className={`grid grid-cols-[200px_150px_150px_150px_150px_150px_200px_200px_200px_200px_200px] 
-          border-b border-gray-200 transition-colors duration-200 ${
-          isRedCard
-            ? "bg-red-100"
-            : idx % 2 === 0
-            ? "bg-gray-100"
-            : "bg-white"
-        } hover:bg-blue-100 cursor-default`}
-      >
-        <div className="px-3 py-2 flex items-center gap-2 font-medium 
-          text-gray-700 whitespace-nowrap border-r border-gray-200">
-          <User className="w-4 h-4 shrink-0" />
-          <span className="text-[10px]">
-            {user.name}
-            {isYellowCard && <span className="ml-1">🟨</span>}
-            {isRedCard && <span className="ml-1">🟥</span>}
-          </span>
-        </div>
+                  return (
+                    <tr
+                      key={user.id}
+                      className={`transition-colors duration-200 ${
+                        isRedCard
+                          ? "bg-red-100"
+                          : idx % 2 === 0
+                          ? "bg-gray-100"
+                          : "bg-white"
+                      } hover:bg-blue-100`}
+                    >
+                      {/* Name */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px] whitespace-nowrap 
+                      flex items-center gap-1 font-medium">
+                        <User className="w-4 h-4 shrink-0" />
+                        {user.name}
+                        {isYellowCard && <span className="ml-1">🟨</span>}
+                        {isRedCard && <span className="ml-1">🟥</span>}
+                      </td>
 
-        <div className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-200 text-[10px]">
-          {user.username}
-        </div>
+                      {/* Username */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
 
-        <div className="px-3 py-2 flex items-center gap-1 text-gray-700 whitespace-nowrap border-r border-gray-200">
-          <span className="text-[10px]">{user.phone}</span>
-        </div>
+                      {/* Phone */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.phone}</td>
 
-        <div className="px-3 py-2 text-gray-700 max-w-xs break-words border-r border-gray-200 text-[8px]">
-          {user.position || "-"}
-        </div>
+                      {/* Directorate */}
+                      <td className="px-3 py-2  text-gray-700 text-[8px]">{user.directorate}</td>
 
-        <div className="px-3 py-2 flex items-center gap-1 text-gray-700 whitespace-nowrap border-r border-gray-200">
-          <span className="text-[10px]">{user.employment_type}</span>
-        </div>
+                      {/* Deputy Ministry */}
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.deputyMinistry}</td>
 
-        <div className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-200 text-[8px]">
-          {user.directorate}
-        </div>
+                      {/* Status */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.status || "-"}</td>
 
-        <div className="px-3 py-2 text-gray-700 whitespace-nowrap border-r border-gray-200 text-[8px]">
-          {user.deputyMinistry}
-        </div>
+                      {/* Violations */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violations || "0"}</td>
 
-        <div className="px-3 py-2 text-gray-700 border-r border-gray-200 text-[10px]">
-          {user.status || "-"}
-        </div>
+                      {/* Comment */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px] truncate max-w-[120px]">
+                        {user.comment || "-"}
+                      </td>
 
-        <div className="px-3 py-2 text-gray-700 border-r border-gray-200 text-[10px]">
-          {user.violations || "0"}
+                      {/* Actions */}
+                      <td className="px-3 py-2 text-blue-400 text-center">
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => handleView(user)}
+                            className="hover:text-blue-100"
+                            title="View"
+                          >
+                            <Eye className="w-5 h-5 hover:text-blue-300" />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(user)}
+                            className="hover:text-blue-100"
+                            title="Edit"
+                          >
+                            <Edit className="w-5 h-5 hover:text-blue-300" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="hover:text-blue-100"
+                            title="Delete"
+                          >
+                            <Trash className="w-5 h-5 hover:text-blue-300" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
-
-        <div className="px-3 py-2 text-gray-700 border-r border-gray-200 text-[10px] truncate max-w-[120px]">
-          {user.comment || "-"}
-        </div>
-
-        {/* Actions */}
-        <div className="px-3 py-2 flex items-center justify-center gap-2 bg-blue-300">
-          <button
-            onClick={() => handleView(user)}
-            className="text-white hover:text-blue-100 transition-colors"
-            title="View"
-          >
-            <Eye className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => handleEdit(user)}
-            className="text-white hover:text-blue-100 transition-colors"
-            title="Edit"
-          >
-            <Edit className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => handleDelete(user.id)}
-            className="text-white hover:text-blue-100 transition-colors"
-            title="Delete"
-          >
-            <Trash className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
-    );
-  })}
           </div>
         )}
       </main>

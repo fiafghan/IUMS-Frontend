@@ -1,78 +1,193 @@
 import { useNavigate } from "react-router-dom";
-import { User, Settings, AlertOctagon, Users, LogOut } from "lucide-react";
+import {Settings, AlertOctagon, Users, LogOut,
+  Building2, ChevronDown, ChevronUp
+} from "lucide-react";
 import { motion } from "framer-motion";
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 
 export default function GradientSidebar(): JSX.Element {
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isAdmin = currentUser?.isAdmin === true;
 
-
   const logout = () => {
     localStorage.removeItem("loggedInUser");
     navigate("/login");
   };
 
-const items = [
-  { id: 1, label: "All Users", icon: <Users className="w-5 h-5" />, path: "/" },
-  { id: 2, label: "Add User", icon: <User className="w-5 h-5" />, path: "/adduser" },
-  { id: 3, label: "Violation Form", icon: <AlertOctagon className="w-5 h-5" />, path: "/addviolation" },
-
-  // ✅ Add System User (admin only)
-  ...(isAdmin ? [{
-    id: 4,
-    label: "Add System User",
-    icon: <User className="w-5 h-5" />,
-    path: "/register",
-  }] : []),
-
-  // ✅ All System Users (admin only)
-  ...(isAdmin ? [{
-    id: 5,
-    label: "All System Users",
-    icon: <Users className="w-5 h-5" />,
-    path: "/all-system-users",
-  }] : []),
-
-  { id: 6, label: "Settings", icon: <Settings className="w-5 h-5" />, path: "/settings" },
-];
-
+  // Toggle states for nested sections
+  const [userOpen, setUserOpen] = useState(false);
+  const [systemUserOpen, setSystemUserOpen] = useState(false);
+  const [deputyOpen, setDeputyOpen] = useState(false);
+  const [directorateOpen, setDirectorateOpen] = useState(false);
 
   return (
     <aside className="w-64 min-h-screen bg-blue-400 text-white flex flex-col">
       <div className="flex items-center justify-center flex-col py-6 px-4">
-        <img src="moph.jpeg" className="rounded-full w-30 shadow-xl shadow-white border-1" />
+        <img src="moph.jpeg" className="rounded-full w-30 border-1" />
         <h1 className="text-center mt-5">IUMS</h1>
       </div>
 
-      <nav className="flex flex-col mt-8 gap-1 px-4">
-        {items.map((item) => (
-          <motion.button
-            key={item.id}
-            whileHover={{ scale: 1.04, opacity: 0.9 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(item.path)}
-            className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white 
-              hover:text-blue-400 hover:shadow-sm hover:shadow-white 
-              transition text-sm font-medium"
-          >
-            {item.icon}
-            <span>{item.label}</span>
-          </motion.button>
-        ))}
-
-        {/* 🔒 Logout button with custom logic */}
+      <nav className="flex flex-col mt-4 gap-1 px-4 text-sm font-medium">
+        {/* 🔹 All Users section */}
         <motion.button
-          whileHover={{ scale: 1.04, opacity: 0.9 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setUserOpen(!userOpen)}
+          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            All Users
+          </div>
+          {userOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </motion.button>
+
+        {userOpen && (
+          <div className="ml-6 flex flex-col gap-1 text-white">
+            <button
+              onClick={() => navigate("/")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ View All
+            </button>
+            <button
+              onClick={() => navigate("/adduser")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Add User
+            </button>
+          </div>
+        )}
+
+        {/* 🔹 All Deputy Ministries section */}
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setDeputyOpen(!deputyOpen)}
+          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <div className="flex items-center gap-2">
+            <Building2 className="w-5 h-5" />
+            Deputy Ministries
+          </div>
+          {deputyOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </motion.button>
+
+        {deputyOpen && (
+          <div className="ml-6 flex flex-col gap-1 text-white">
+            <button
+              onClick={() => navigate("/alldeputyministries")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ View All
+            </button>
+            <button
+              onClick={() => navigate("/newdeputyministry")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Add New
+            </button>
+          </div>
+        )}
+
+        {/* 🔹 All Directorates section */}
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setDirectorateOpen(!directorateOpen)}
+          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <div className="flex items-center gap-2">
+            <Building2 className="w-5 h-5" />
+            Directorates
+          </div>
+          {directorateOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </motion.button>
+
+        {directorateOpen && (
+          <div className="ml-6 flex flex-col gap-1 text-white">
+            <button
+              onClick={() => navigate("/alldirectorates")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ View All
+            </button>
+            <button
+              onClick={() => navigate("/newdirectorate")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Add New
+            </button>
+          </div>
+        )}
+
+        {/* 🔹 Violation Form */}
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/addviolation")}
+          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <AlertOctagon className="w-5 h-5" />
+          Violation Form
+        </motion.button>
+
+        {/* 🔹 System Users (admin only) */}
+        {isAdmin && (
+          <>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setSystemUserOpen(!systemUserOpen)}
+              className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+            >
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                System Users
+              </div>
+              {systemUserOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </motion.button>
+
+            {systemUserOpen && (
+              <div className="ml-6 flex flex-col gap-1 text-white">
+                <button
+                  onClick={() => navigate("/all-system-users")}
+                  className="hover:text-white/80 transition py-1 text-left"
+                >
+                  ➤ View All
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="hover:text-white/80 transition py-1 text-left"
+                >
+                  ➤ Add New
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* 🔹 Settings */}
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/settings")}
+          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <Settings className="w-5 h-5" />
+          Settings
+        </motion.button>
+
+        {/* 🔒 Logout */}
+        <motion.button
+          whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.95 }}
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white 
-            hover:text-blue-400 hover:shadow-sm hover:shadow-white 
-            transition text-sm font-medium mt-4"
+          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400 mt-4"
         >
           <LogOut className="w-5 h-5" />
-          <span>Logout</span>
+          Logout
         </motion.button>
       </nav>
     </aside>
