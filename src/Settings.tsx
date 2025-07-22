@@ -13,61 +13,79 @@ export default function SettingsPage() {
     password: "",
   });
 
-
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState("");
 
-        // Load user data on mount
-        useEffect(() => {
-        const storedUser = localStorage.getItem("loggedInUser");
+  // Load user data on mount
+ useEffect(() => {
+  const storedUser = localStorage.getItem("loggedInUser");
 
-        if (!storedUser) {
-            console.error("User not logged in");
-            return;
-        }
+  if (!storedUser) {
+    console.error("User not logged in");
+    return;
+  }
 
-        try {
-            const userData = JSON.parse(storedUser);
-            const userId = userData.id;
+  try {
+    const userData = JSON.parse(storedUser);
 
-            if (!userId) {
-            console.error("User ID not found in localStorage data");
-            return;
-            }
+    // بررسی اینکه آیا توکن وجود دارد یا خیر
+    const token = userData.token;
+    if (!token) {
+      console.error("No token found in localStorage");
+      return;
+    }
 
-            setUserId(userId);
+    const userId = userData.user?.id;
 
-            axios.get(`http://localhost:3000/users/${userId}`)
-            .then((response) => {
-                const user = response.data;
-                setForm({
-                name: user.name || "",
-                email: user.email || "",
-                password: "", // blank on purpose
-                });
-            })
-            .catch((error) => {
-                console.error("User fetch failed:", error);
-            });
-        } catch (e) {
-            console.error("Failed to parse user from localStorage", e);
-        }
-        }, []);
+    if (!userId) {
+      console.error("User ID not found in localStorage data");
+      return;
+    }
+
+    setUserId(userId);
+
+    // Fetch user profile data using API with token
+    axios.get("http://localhost:8000/api/profile", {
+      headers: { Authorization: `Bearer ${token}` },  // ارسال توکن در هدر
+    })
+    .then((response) => {
+      const user = response.data.user;
+      setForm({
+        name: user.name || "",
+        email: user.email || "",
+        password: "", // blank on purpose
+      });
+    })
+    .catch((error) => {
+      console.error("User fetch failed:", error);
+    });
+  } catch (e) {
+    console.error("Failed to parse user from localStorage", e);
+  }
+}, []);
 
 
+  // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission for updating profile
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    const storedUser = localStorage.getItem("loggedInUser");
+    const token = storedUser ? JSON.parse(storedUser).token : '';
+
     try {
-      await axios.put(`http://localhost:3000/users/${userId}`, {
+      // Send PUT request to update user profile
+      await axios.put(`http://localhost:8000/api/update-profile/${userId}`, {
         name: form.name,
         email: form.email,
         ...(form.password && { password: form.password }),
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       alert("✅ Profile updated successfully.");
@@ -96,8 +114,6 @@ export default function SettingsPage() {
         )}
       </AnimatePresence>
 
-      
-            
       <motion.div
         className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-50 
         flex items-center justify-center px-4 py-12"
@@ -112,7 +128,6 @@ export default function SettingsPage() {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          
         >
 
           <motion.h2

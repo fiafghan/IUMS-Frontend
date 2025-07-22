@@ -24,20 +24,19 @@ export default function LoginForm(): JSX.Element {
     setLoading(true);
 
     try {
-      // Fetch all users from json-server
-      const response = await axios.get("http://localhost:3000/users");
-      const users = response.data;
+      
+      const response = await axios.post('http://localhost:8000/api/login', {
+        email: form.email,
+        password: form.password,
+      });
 
-      // Find user with matching email and password
-      const user = users.find(
-        (u: any) => u.email === form.email && u.password === form.password
-      );
+      const user = response.data; 
 
       if (user) {
-        localStorage.setItem("loggedInUser", JSON.stringify(user)); // ✅ Save full user object
+        localStorage.setItem("loggedInUser", JSON.stringify(user)); 
         alert(`✅ Login successful! Welcome back, ${user.name}.`);
         setForm({ email: "", password: "" });
-        navigate('/');
+        navigate('/'); 
       } else {
         alert("❌ Login failed: Incorrect email or password.");
       }

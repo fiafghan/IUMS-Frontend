@@ -38,7 +38,7 @@ export default function RegisterForm(): JSX.Element {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/users", {
+      const response = await axios.post('http://localhost:8000/api/register', {
         name: form.name,
         email: form.email,
         password: form.password,

@@ -137,7 +137,7 @@ export default function InternetUserAddForm(): JSX.Element {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/internet_users", form);
+      await axios.post("http://localhost:8000/api/internet-users", form);
       alert("✅ User added successfully!");
       setForm({
         name: "",
