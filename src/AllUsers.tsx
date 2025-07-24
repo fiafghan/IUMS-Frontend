@@ -17,7 +17,7 @@ type InternetUser = {
   position?: string;
   employment_type: string;
   directorate: string;
-  deputyMinistry: string;
+  deputy: string;
   device_limit: string;
   device_type: string;
   mac_address?: string;
@@ -69,7 +69,7 @@ export default function InternetUsersList(): JSX.Element {
         );
   
   const deputyMinistryCounts: Record<string, number> = users.reduce((acc, user) => {
-      const ministry = user.deputyMinistry || "Unknown";
+      const ministry = user.deputy || "Unknown";
       acc[ministry] = (acc[ministry] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -88,7 +88,7 @@ export default function InternetUsersList(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<InternetUser[]>("http://localhost:3000/internet_users");
+        const response = await axios.get<InternetUser[]>("http://localhost:8000/api/internet");
         setUsers(response.data);
       } catch (err) {
         setError("Failed to fetch users. Please try again later.");
@@ -132,7 +132,7 @@ export default function InternetUsersList(): JSX.Element {
         });
 
         // Preselect directorate object
-         const matchingDepMinistry = deputyMinistryOptions.find((d) => d.name === user.deputyMinistry);
+         const matchingDepMinistry = deputyMinistryOptions.find((d) => d.name === user.deputy);
             setSelectedDeputyMinistryEdit(matchingDepMinistry || null);
             setIsEditOpen(true);
 
@@ -313,7 +313,7 @@ export default function InternetUsersList(): JSX.Element {
             <tbody>
               {users
                 .filter((user) =>
-                  (selectedDeputyMinistry === "" || user.deputyMinistry === selectedDeputyMinistry) &&
+                  (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
                   (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
                   (selectedStatus === "" || user.status === selectedStatus) &&
                   (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -354,7 +354,7 @@ export default function InternetUsersList(): JSX.Element {
                       <td className="px-3 py-2  text-gray-700 text-[8px]">{user.directorate}</td>
 
                       {/* Deputy Ministry */}
-                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.deputyMinistry}</td>
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.deputy}</td>
 
                       {/* Status */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.status || "-"}</td>

@@ -28,6 +28,7 @@ export default function LoginForm(): JSX.Element {
       const response = await axios.post('http://localhost:8000/api/login', {
         email: form.email,
         password: form.password,
+        
       });
 
       const user = response.data; 

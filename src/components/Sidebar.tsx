@@ -4,16 +4,43 @@ import {Settings, AlertOctagon, Users, LogOut,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, type JSX } from "react";
+import axios from "axios";
 
 export default function GradientSidebar(): JSX.Element {
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isAdmin = currentUser?.isAdmin === true;
 
-  const logout = () => {
+const logout = async () => {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+  const token = loggedInUser.token;
+  const user_id = loggedInUser.id;  // assuming your backend sends token inside user object as 'token'
+
+  if (!token) {
+    console.error("❌ No token found. Cannot logout.");
+    return;
+  }
+
+  try {
+    await axios.post(
+      "http://localhost:8000/api/logout",
+      {id:user_id},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     localStorage.removeItem("loggedInUser");
     navigate("/login");
-  };
+  } catch (error) {
+    console.error("❌ Logout failed", error);
+  }
+};
+
+
+
 
   // Toggle states for nested sections
   const [userOpen, setUserOpen] = useState(false);
