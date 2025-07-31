@@ -39,7 +39,7 @@ export default function LoginForm(): JSX.Element {
         setForm({ email: "", password: "" });
         navigate('/'); 
       } else {
-        alert("❌ Login failed: Incorrect email or password.");
+        alert("❌ Login failed: Invalid credentials!");
       }
     } catch (error) {
       console.error("Login error:", error);
