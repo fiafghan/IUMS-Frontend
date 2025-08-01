@@ -24,6 +24,20 @@ type FormState = {
   comment: string;
 };
 
+const mapsid: { [key: number]: string } = {
+  1: "Ministry",
+  2: "Administrative And Financial Deputy Ministry",
+  3: "Plan And Policy Deputy Ministry",
+  4: "Drug And Food Deputy Ministry",
+  5: "Service Providing Deputy Ministry",
+};
+
+type SelectOption = {
+  value: string;
+  label: string;
+};
+
+
 
 const stepTitles = [
   "Basic Info",
@@ -57,25 +71,26 @@ export default function InternetUserAddForm(): JSX.Element {
   const [directorateOptions, setDirectorateOptions] = useState<string[]>([]);
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<string[]>([]);
   const [employmentTypeOptions, setEmploymentTypeOptions] = useState<string[]>([]);
+  
 
 
 
-  useEffect(() => {
+useEffect(() => {
   const fetchOptions = async () => {
     try {
-      const [dirRes, depMinRes, empTypeRes] = await Promise.all([
+      const [dirRes, empTypeRes] = await Promise.all([
         axios.get("http://127.0.0.1:8000/api/directorate"),
-        axios.get("http://localhost:3000/deputy_ministries"),
         axios.get("http://127.0.0.1:8000/api/employment-type"),
       ]);
 
-      // You may need to map if they are objects
-      setDirectorateOptions(
-          dirRes.data
-            .filter((d: any) => d.id > 4) // ✅ Only include items with id > 4
-            .map((d: any) => d.name)      // 👈 Then map to just the name
-        );
-      setDeputyMinistryOptions(depMinRes.data.map((d: any) => d.name));
+      // Directorates are those with directorate_type_id === 2
+      const directorates = dirRes.data.filter((d: any) => d.directorate_type_id === 2);
+
+      // Deputy Ministries are those with directorate_type_id === 1
+      const deputyMinistries = dirRes.data.filter((d: any) => d.directorate_type_id === 1);
+
+      setDirectorateOptions(directorates);
+      setDeputyMinistryOptions(deputyMinistries);
       setEmploymentTypeOptions(empTypeRes.data.map((d: any) => d.name));
     } catch (error) {
       console.error("❌ Error fetching select options", error);
@@ -310,47 +325,61 @@ function Step2({
   form,
   onChange,
   directorateOptions,
-  deputyMinistryOptions,
   employmentTypeOptions,
 }: {
   form: FormState;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  directorateOptions: string[];
-  deputyMinistryOptions: string[];
+  directorateOptions: any[];
+  deputyMinistryOptions: any[];
   employmentTypeOptions: string[];
 }): JSX.Element {
 
   return (
     <div>
       <InputField label="Position" icon={<Briefcase className="w-5 h-5 text-gray-500" />} 
-      name="position" type="text" placeholder="Position" value={form.position} onChange={onChange} />
-        <SelectField
-            label="Employment Type"
-            icon={<User className="w-5 h-5 text-gray-500" />}
-            name="employment_type"
-            value={form.employment_type}
-            onChange={onChange}
-            options={employmentTypeOptions}
-          />
+        name="position" type="text" placeholder="Position" value={form.position} onChange={onChange} />
+      
       <SelectField
-            label="Directorate"
-            icon={<User className="w-5 h-5 text-gray-500" />}
-            name="directorate"
-            value={form.directorate}
-            onChange={(e) => onChange(e as any)}
-            options={directorateOptions}
-          />
-        <SelectField
-          label="Deputy Ministry"
+          label="Employment Type"
           icon={<User className="w-5 h-5 text-gray-500" />}
-          name="deputyMinistry"
-          value={form.deputyMinistry}
-          onChange={(e) => onChange(e as any)}
-          options={deputyMinistryOptions}
+          name="employment_type"
+          value={form.employment_type}
+          onChange={onChange}
+          options={employmentTypeOptions.map((et) => ({ value: et, label: et }))}
         />
+
+      <SelectField
+          label="Directorate"
+          icon={<User className="w-5 h-5 text-gray-500" />}
+          name="directorate"
+          value={form.directorate}
+          onChange={(e) => {
+            // Call special handler to update deputy ministry as well
+            onChange(e); // update directorate id
+          }}
+          options={directorateOptions.map((d) => ({ value: d.id.toString(), label: d.name }))}
+        />
+
+<InputField
+  label="Deputy Ministry"
+  icon={<User className="w-5 h-5 text-gray-500" />}
+  name="deputyMinistry"
+  value={
+    mapsid[
+      directorateOptions.find((d) => d.id === parseInt(form.directorate))
+        ?.directorate_id ?? 0
+    ] || ""
+  }
+  onChange={onChange}
+  type="text"
+  placeholder="Deputy Ministry"
+  disabled
+/>
+
     </div>
   );
 }
+
 
 function Step3({ form, onChange }: { form: FormState; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }): JSX.Element {
   return (
@@ -387,7 +416,10 @@ function Step5({ form, onChange }: { form: FormState; onChange: (e: React.Change
         name="status"
         value={form.status}
         onChange={onChange}
-        options={["Active", "Deactive"]}
+        options={[
+          { value: "Active", label: "Active" },
+          { value: "Deactive", label: "Deactive" }
+        ]}
       />
 
       <SelectField
@@ -396,7 +428,11 @@ function Step5({ form, onChange }: { form: FormState; onChange: (e: React.Change
         name="violations"
         value={form.violations}
         onChange={onChange}
-        options={["0", "1", "2"]}
+        options={[
+          { value: "0", label: "0" },
+          { value: "1", label: "1" },
+          { value: "2", label: "2" }
+        ]}
       />
 
       <div className="mb-6">
@@ -426,7 +462,7 @@ type SelectProps = {
   icon: JSX.Element;
   name: string;
   value: string;
-  options: string[];
+  options: SelectOption[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
@@ -455,8 +491,8 @@ function SelectField({
         >
           <option value="">Select {label}</option>
           {options.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
             </option>
           ))}
         </select>
@@ -473,8 +509,8 @@ type InputProps = {
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 };
-
 function InputField({
   label,
   icon,
@@ -483,6 +519,7 @@ function InputField({
   placeholder,
   value,
   onChange,
+  disabled = false,
 }: InputProps): JSX.Element {
   return (
     <div className="mb-6">
@@ -502,8 +539,10 @@ function InputField({
           required
           className="w-full bg-transparent text-gray-800 text-sm placeholder-gray-400 focus:outline-none"
           autoComplete="off"
+          disabled={disabled}
         />
       </div>
     </div>
   );
 }
+
