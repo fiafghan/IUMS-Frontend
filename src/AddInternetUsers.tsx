@@ -64,13 +64,17 @@ export default function InternetUserAddForm(): JSX.Element {
   const fetchOptions = async () => {
     try {
       const [dirRes, depMinRes, empTypeRes] = await Promise.all([
-        axios.get("http://localhost:3000/directorates"),
+        axios.get("http://127.0.0.1:8000/api/directorate"),
         axios.get("http://localhost:3000/deputy_ministries"),
         axios.get("http://127.0.0.1:8000/api/employment-type"),
       ]);
 
       // You may need to map if they are objects
-      setDirectorateOptions(dirRes.data.map((d: any) => d.name));
+      setDirectorateOptions(
+          dirRes.data
+            .filter((d: any) => d.id > 4) // ✅ Only include items with id > 4
+            .map((d: any) => d.name)      // 👈 Then map to just the name
+        );
       setDeputyMinistryOptions(depMinRes.data.map((d: any) => d.name));
       setEmploymentTypeOptions(empTypeRes.data.map((d: any) => d.name));
     } catch (error) {
