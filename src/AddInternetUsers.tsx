@@ -6,6 +6,7 @@ import AnimatedSubmitButton from "./components/AnimatedButton";
 import Spinner from "./components/Spinner";
 import { useNavigate } from "react-router-dom";
 import GradientSidebar from "./components/Sidebar";
+import Dropdown from "./components/Dropdown";
 
 type FormState = {
   name: string;
@@ -301,12 +302,12 @@ function Step1({ form, onChange }: { form: FormState; onChange: (e: React.Change
   );
 }
 
+
 function Step2({
   form,
   onChange,
   directorateOptions,
   deputyMinistryOptions,
-  employmentTypeOptions,
 }: {
   form: FormState;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -314,19 +315,20 @@ function Step2({
   deputyMinistryOptions: string[];
   employmentTypeOptions: string[];
 }): JSX.Element {
-  
+  const [selected, setSelected] = useState<string | number>("");
+
   return (
     <div>
       <InputField label="Position" icon={<Briefcase className="w-5 h-5 text-gray-500" />} 
       name="position" type="text" placeholder="Position" value={form.position} onChange={onChange} />
-      <SelectField
-        label="Employment Type"
-        icon={<Hash className="w-5 h-5 text-gray-500" />}
-        name="employment_type"
-        value={form.employment_type}
-        onChange={onChange}
-        options={employmentTypeOptions}
-      />
+        <div className="max-w-md mx-auto mt-2">
+              <Dropdown
+                url="http://127.0.0.1:8000/api/employment-type"
+                onChange={(value) => setSelected(value)}
+                label="Employment Type"
+                
+              />
+            </div>
       <SelectField
             label="Directorate"
             icon={<User className="w-5 h-5 text-gray-500" />}
