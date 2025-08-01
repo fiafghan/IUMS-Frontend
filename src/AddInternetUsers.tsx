@@ -6,7 +6,6 @@ import AnimatedSubmitButton from "./components/AnimatedButton";
 import Spinner from "./components/Spinner";
 import { useNavigate } from "react-router-dom";
 import GradientSidebar from "./components/Sidebar";
-import Dropdown from "./components/Dropdown";
 
 type FormState = {
   name: string;
@@ -67,13 +66,13 @@ export default function InternetUserAddForm(): JSX.Element {
       const [dirRes, depMinRes, empTypeRes] = await Promise.all([
         axios.get("http://localhost:3000/directorates"),
         axios.get("http://localhost:3000/deputy_ministries"),
-        axios.get("http://localhost:3000/employment_type"),
+        axios.get("http://127.0.0.1:8000/api/employment-type"),
       ]);
 
       // You may need to map if they are objects
       setDirectorateOptions(dirRes.data.map((d: any) => d.name));
       setDeputyMinistryOptions(depMinRes.data.map((d: any) => d.name));
-      setEmploymentTypeOptions(empTypeRes.data.map((d: any) => d.type));
+      setEmploymentTypeOptions(empTypeRes.data.map((d: any) => d.name));
     } catch (error) {
       console.error("❌ Error fetching select options", error);
     }
@@ -308,6 +307,7 @@ function Step2({
   onChange,
   directorateOptions,
   deputyMinistryOptions,
+  employmentTypeOptions,
 }: {
   form: FormState;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -315,20 +315,19 @@ function Step2({
   deputyMinistryOptions: string[];
   employmentTypeOptions: string[];
 }): JSX.Element {
-  const [selected, setSelected] = useState<string | number>("");
 
   return (
     <div>
       <InputField label="Position" icon={<Briefcase className="w-5 h-5 text-gray-500" />} 
       name="position" type="text" placeholder="Position" value={form.position} onChange={onChange} />
-        <div className="max-w-md mx-auto mt-2">
-              <Dropdown
-                url="http://127.0.0.1:8000/api/employment-type"
-                onChange={(value) => setSelected(value)}
-                label="Employment Type"
-                
-              />
-            </div>
+        <SelectField
+            label="Employment Type"
+            icon={<User className="w-5 h-5 text-gray-500" />}
+            name="employment_type"
+            value={form.employment_type}
+            onChange={onChange}
+            options={employmentTypeOptions}
+          />
       <SelectField
             label="Directorate"
             icon={<User className="w-5 h-5 text-gray-500" />}
