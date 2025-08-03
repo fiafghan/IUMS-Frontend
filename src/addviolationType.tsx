@@ -10,7 +10,7 @@ interface ViolationForm {
   name: string;
 }
 
-export default function AddViolation(): JSX.Element {
+export default function AddViolationType(): JSX.Element {
   const [form, setForm] = useState<ViolationForm>({
     name: ""
   });
