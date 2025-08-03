@@ -38,6 +38,7 @@ export interface ViolationProps {
   directorate_signature: string;
   violations: string;
   comment: string;
+  
 }
 
 
@@ -55,11 +56,12 @@ export type FormState = {
   mac_address: string;
   status: string;
   violations: string;
+  violation_type: string;
   comment: string;
 };
 
 export type SelectOption = {
-  value: string;
+  value: number | string;
   label: string;
 };
 

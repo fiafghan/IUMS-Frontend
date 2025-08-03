@@ -3,7 +3,7 @@ import type { FormState } from "../../types/types";
 import { Briefcase, User, Building2, Building } from "lucide-react";
 import { InputField } from "./InputField";
 import { SelectField } from "./selectfield";
-import { mapsid } from "../../deputy_enum";
+import { mapsid } from "../../enums/deputy_enum";
 
 export function Step2({
   form,
