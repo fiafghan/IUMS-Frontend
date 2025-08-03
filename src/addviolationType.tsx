@@ -62,7 +62,7 @@ export default function AddViolationType(): JSX.Element {
       setForm({ name: ""});
       
       // Navigate back or to violations list
-      navigate("/allviolations"); // Adjust route as needed
+      navigate("/all-violation-types"); // Adjust route as needed
       
     } catch (error: any) {
       console.error("Error adding violation:", error);
@@ -151,7 +151,7 @@ export default function AddViolationType(): JSX.Element {
               type="submit"
               disabled={loading}
               className="w-full py-3 text-base font-semibold tracking-wide rounded-2xl bg-gradient-to-r 
-              from-blue-400 to-blue-200 text-white hover:from-red-600 hover:to-orange-600 
+              from-blue-400 to-blue-200 text-white hover:from-blue-500 hover:to-blue-300 
               focus:outline-none focus:ring-4 focus:ring-red-300 disabled:opacity-50 
               disabled:cursor-not-allowed transition-all duration-200"
               initial={{ opacity: 0, y: 20 }}
