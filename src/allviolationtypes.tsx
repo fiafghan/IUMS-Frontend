@@ -1,5 +1,5 @@
 import { useState, useEffect, type JSX } from "react";
-import { Edit, Trash2, Plus, AlertTriangle, Search } from "lucide-react";
+import { Edit, Trash2, Plus, AlertTriangle, Search, Home } from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -60,10 +60,9 @@ export default function AllViolationTypes(): JSX.Element {
     }
 
     try {
-      await axios.put(`${route}/violation/${id}`, {
-        name: editName.trim()
-      });
-      
+        await axios.put(`${route}/violation/${id}`, {
+          name: editName.trim(),
+        });
       // Update local state
       setViolationTypes(prev => 
         prev.map(vt => 
@@ -151,7 +150,14 @@ export default function AllViolationTypes(): JSX.Element {
                 <p className="text-gray-600">Manage violation types in the system</p>
               </div>
             </div>
-            
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
+              hover:from-blue-500 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Home className="w-5 h-5" />
+              Home
+            </button>
             <button
               onClick={() => navigate("/add-violation-type")}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 

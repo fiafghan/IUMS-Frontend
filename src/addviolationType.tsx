@@ -96,7 +96,7 @@ export default function AddViolationType(): JSX.Element {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-100 flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-200 flex items-center justify-center px-4 py-12">
         <motion.div
           className="w-full max-w-md bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12"
           initial={{ scale: 0.95, opacity: 0 }}
