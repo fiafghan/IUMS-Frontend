@@ -65,10 +65,18 @@ useEffect(() => {
   fetchOptions();
 }, []);
 
+    console.log("Form State:", form);
+    const handleChange = (
+      e:
+        | React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+        | { target: { name: string; value: string } }
+    ) => {
+      setForm((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value.toString(), // <--- force string here
+      }));
+    };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   function validateStep(step: number): boolean {
     switch (step) {
@@ -213,7 +221,6 @@ useEffect(() => {
                     case 1:
                       return <Step2 form={form} 
                       directorateOptions={directorateOptions}
-                      deputyMinistryOptions={deputyMinistryOptions}
                       employmentTypeOptions={employmentTypeOptions}
                       onChange={handleChange} />;
                     case 2:

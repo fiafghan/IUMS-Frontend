@@ -46,7 +46,7 @@ export type FormState = {
   username: string;
   email: string;
   phone: string;
-  employment_type:string
+  employment_type:string;
   directorate: string;
   position: string;
   deputyMinistry: string;
@@ -81,5 +81,6 @@ export type InputProps = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  readOnly?: boolean;
 };
 
