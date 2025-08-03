@@ -236,13 +236,12 @@ useEffect(() => {
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex">
+            <div className="mt-8 flex justify-between">
               {currentStep > 0 ? (
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="px-6 text-blue-300 
-                  hover:text-red-400 mb-3 transition mt-10 mr-2"
+                  className="px-6 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
                 >
                   Back
                 </button>
@@ -260,7 +259,7 @@ useEffect(() => {
               ) : (
                 <AnimatedSubmitButton onClick={handleSubmit} disabled={loading}>
                   {loading ? (
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center gap-2">
                       <Spinner />
                       <span>Submitting...</span>
                     </div>
