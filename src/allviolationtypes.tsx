@@ -143,8 +143,8 @@ export default function AllViolationTypes(): JSX.Element {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
+              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-blue-300" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">All Violation Types</h1>
@@ -155,7 +155,7 @@ export default function AllViolationTypes(): JSX.Element {
             <button
               onClick={() => navigate("/add-violation-type")}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
-              hover:from-red-600 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+              hover:from-blue-500 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Plus className="w-5 h-5" />
               Add New Type
