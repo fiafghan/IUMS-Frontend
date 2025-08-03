@@ -49,31 +49,6 @@
       "email": "obaid@gmail.com",
       "password": "adam123",
       "isAdmin": false
-    },
-    {
-      "id": "bafc",
-      "email": "jameela@gmail.com",
-      "password": "123"
-    },
-    {
-      "id": "f64a",
-      "email": "jameela@gmail.com",
-      "password": "123"
-    },
-    {
-      "id": "1039",
-      "email": "jameela@gmail.com",
-      "password": "123"
-    },
-    {
-      "id": "a672",
-      "email": "admin@example.com",
-      "password": "adminpassword"
-    },
-    {
-      "id": "23e7",
-      "email": "admin@example.com",
-      "password": "adminpassword"
     }
   ],
   "internet_users": [

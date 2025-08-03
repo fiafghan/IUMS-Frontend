@@ -2,8 +2,8 @@ import { useState, type JSX } from "react";
 import { Mail, Lock, User } from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import AnimatedSubmitButton from "./components/AnimatedButton";
-import Spinner from "./components/Spinner";
+import AnimatedSubmitButton from "../components/AnimatedButton";
+import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm(): JSX.Element {

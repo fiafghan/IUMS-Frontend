@@ -4,27 +4,12 @@ import {
   User, Eye, Edit, Trash,
   Search, Users, Briefcase, Building2
 } from "lucide-react";
-import GradientSidebar from "./components/Sidebar";
+import GradientSidebar from "../components/Sidebar";
 import { Combobox } from "@headlessui/react";
-import UserFilters from "./components/UserFilters";
+import UserFilters from "../components/UserFilters";
+import type { InternetUser } from "../types/types";
+import { route } from "../config";
 
-type InternetUser = {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  phone: string;
-  position?: string;
-  employment_type: string;
-  directorate: string;
-  deputy: string;
-  device_limit: string;
-  device_type: string;
-  mac_address?: string;
-  status?:"active" | "deactive";
-  violations?:"0" | "1" | "2";
-  comment?:string;
-};
 
 const headers = [
   "Name", "Username","Phone", "Directorate", "Deputy Ministry","Status", 
@@ -88,7 +73,7 @@ export default function InternetUsersList(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<InternetUser[]>("http://localhost:8000/api/internet");
+        const response = await axios.get<InternetUser[]>(`${route}/internet`);
         setUsers(response.data);
       } catch (err) {
         setError("Failed to fetch users. Please try again later.");
@@ -346,6 +331,9 @@ export default function InternetUsersList(): JSX.Element {
 
                       {/* Username */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
+
+                      {/* Lastname */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
 
                       {/* Phone */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.phone}</td>

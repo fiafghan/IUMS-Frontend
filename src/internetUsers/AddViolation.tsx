@@ -1,34 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import GradientSidebar from "./components/Sidebar";
+import GradientSidebar from "../components/Sidebar";
 import { useReactToPrint } from "react-to-print";
-
-
-interface InternetUser {
-  id: string;
-  username: string;
-  name: string;
-  position: string;
-  deputyMinistry: string;
-  directorate: string;
-  user_signature: string;
-  directorate_signature: string;
-  violations: string;
-  comment: string;
-}
+import type { ViolationProps } from "../types/types";
 
 export default function AddViolation() {
-  const [users, setUsers] = useState<InternetUser[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<InternetUser[]>([]);
+  const [users, setUsers] = useState<ViolationProps[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<ViolationProps[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState<InternetUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<ViolationProps | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await axios.get<InternetUser[]>("http://localhost:3000/internet_users");
+        const res = await axios.get<ViolationProps[]>("http://localhost:3000/internet_users");
         setUsers(res.data);
         setFilteredUsers(res.data);
       } catch (err) {
@@ -50,9 +37,6 @@ export default function AddViolation() {
           contentRef: printRef,
           documentTitle: 'Internet User Report',
         });
-
-
-
 
   return (
     <div className="min-h-screen flex bg-white">

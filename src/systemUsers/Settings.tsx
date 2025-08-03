@@ -2,8 +2,8 @@ import { useState, useEffect, type JSX } from "react";
 import { Mail, Lock, User } from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import Spinner from "./components/Spinner";
-import AnimatedSubmitButton from "./components/AnimatedButton";
+import Spinner from "../components/Spinner";
+import AnimatedSubmitButton from "../components/AnimatedButton";
 
 
 export default function SettingsPage() {

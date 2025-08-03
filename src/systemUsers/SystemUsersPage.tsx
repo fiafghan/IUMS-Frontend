@@ -1,15 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
-import GradientSidebar from "./components/Sidebar";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  isAdmin: boolean;
-  password?: string;
-}
+import GradientSidebar from "../components/Sidebar";
+import type { User } from "../types/types";
 
 export default function SystemUsersPage() {
   const [users, setUsers] = useState<User[]>([]);

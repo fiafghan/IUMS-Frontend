@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import {Settings, AlertOctagon, Users, LogOut,
-  Building2, ChevronDown, ChevronUp
+import {Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, type JSX } from "react";
@@ -9,7 +8,7 @@ import axios from "axios";
 export default function GradientSidebar(): JSX.Element {
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-  const isAdmin = currentUser?.isAdmin === true;
+  const isAdmin = currentUser?.user.role === 'Admin';
 
 const logout = async () => {
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -45,8 +44,6 @@ const logout = async () => {
   // Toggle states for nested sections
   const [userOpen, setUserOpen] = useState(false);
   const [systemUserOpen, setSystemUserOpen] = useState(false);
-  const [deputyOpen, setDeputyOpen] = useState(false);
-  const [directorateOpen, setDirectorateOpen] = useState(false);
 
   return (
     <aside className="w-64 min-h-screen bg-blue-400 text-white flex flex-col">
@@ -83,68 +80,6 @@ const logout = async () => {
               className="hover:text-white/80 transition py-1 text-left"
             >
               ➤ Add User
-            </button>
-          </div>
-        )}
-
-        {/* 🔹 All Deputy Ministries section */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setDeputyOpen(!deputyOpen)}
-          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-        >
-          <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5" />
-            Deputy Ministries
-          </div>
-          {deputyOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </motion.button>
-
-        {deputyOpen && (
-          <div className="ml-6 flex flex-col gap-1 text-white">
-            <button
-              onClick={() => navigate("/alldeputyministries")}
-              className="hover:text-white/80 transition py-1 text-left"
-            >
-              ➤ View All
-            </button>
-            <button
-              onClick={() => navigate("/newdeputyministry")}
-              className="hover:text-white/80 transition py-1 text-left"
-            >
-              ➤ Add New
-            </button>
-          </div>
-        )}
-
-        {/* 🔹 All Directorates section */}
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setDirectorateOpen(!directorateOpen)}
-          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-        >
-          <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5" />
-            Directorates
-          </div>
-          {directorateOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </motion.button>
-
-        {directorateOpen && (
-          <div className="ml-6 flex flex-col gap-1 text-white">
-            <button
-              onClick={() => navigate("/alldirectorates")}
-              className="hover:text-white/80 transition py-1 text-left"
-            >
-              ➤ View All
-            </button>
-            <button
-              onClick={() => navigate("/newdirectorate")}
-              className="hover:text-white/80 transition py-1 text-left"
-            >
-              ➤ Add New
             </button>
           </div>
         )}
