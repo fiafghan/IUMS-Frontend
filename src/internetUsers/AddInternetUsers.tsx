@@ -121,6 +121,8 @@ useEffect(() => {
     setLoading(true);
     try {
     const submitData = {
+      name: form.name,
+      lastname: form.last_name,
       username: form.username,
       email: form.email,
       phone: form.phone,
@@ -130,8 +132,6 @@ useEffect(() => {
       position: form.position,
       device_limit: form.device_limit,
       mac_address: form.mac_address || null,
-      name: form.name,
-      lastname: form.last_name,
     };
 
       await axios.post(`${route}/internet`, submitData);
