@@ -12,8 +12,9 @@ import { route } from "../config";
 
 
 const headers = [
-  "Name", "Username","Phone", "Directorate", "Deputy Ministry","Status", 
-  "Violations", "Comment", "Actions"
+  "Name", "Username", "Last Name", "Email", "Phone", "Employment Type", 
+  "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type", 
+  "MAC Address", "Status", "Violations", "Comment", "Actions"
 ];
 
 export default function InternetUsersList(): JSX.Element {
@@ -332,17 +333,26 @@ export default function InternetUsersList(): JSX.Element {
                       {/* Username */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
 
-                      {/* Lastname */}
+                      {/* Last Name */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
 
                       {/* Phone */}
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.email}</td>
+
+                      {/* Phone */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.phone}</td>
+
+                      <td className="px-3 py-2 text-gray-700 text-[10px]">{user.employment_type}</td>
 
                       {/* Directorate */}
                       <td className="px-3 py-2  text-gray-700 text-[9px]">{user.directorate}</td>
 
                       {/* Deputy Ministry */}
                       <td className="px-3 py-2 text-gray-700 text-[8px]">{user.deputy}</td>
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.position}</td>
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_limit}</td>
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_type}</td>
+                      <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
                       {/* Status */}
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.status || "-"}</td>
