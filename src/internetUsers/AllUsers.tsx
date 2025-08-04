@@ -339,7 +339,7 @@ export default function InternetUsersList(): JSX.Element {
                       <td className="px-3 py-2 text-gray-700 text-[10px]">{user.phone}</td>
 
                       {/* Directorate */}
-                      <td className="px-3 py-2  text-gray-700 text-[10px]">{user.directorate}</td>
+                      <td className="px-3 py-2  text-gray-700 text-[9px]">{user.directorate}</td>
 
                       {/* Deputy Ministry */}
                       <td className="px-3 py-2 text-gray-700 text-[8px]">{user.deputy}</td>
