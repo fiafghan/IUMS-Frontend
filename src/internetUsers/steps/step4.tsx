@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import type { FormState } from "../../types/types";
-import { CheckCircle, User, Mail, Phone, Briefcase, Building2, Laptop, Hash, Shield, MessageSquare } from "lucide-react";
+import { CheckCircle, User, Mail, Phone, Briefcase, Building2, Laptop, Hash } from "lucide-react";
 
 export function Step4({ form }: { form: FormState }): JSX.Element {
   // Group form fields by category for better organization
@@ -34,16 +34,6 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
         { key: "mac_address", label: "MAC Address", icon: <Hash className="w-4 h-4" /> },
       ]
     },
-    {
-      title: "Account Settings",
-      icon: <Shield className="w-5 h-5 text-orange-600" />,
-      fields: [
-        { key: "status", label: "Status", icon: <Shield className="w-4 h-4" /> },
-        { key: "violations", label: "Violations", icon: <Hash className="w-4 h-4" /> },
-        { key: "violation_type", label: "Violation Type", icon: <Shield className="w-4 h-4" /> },
-        { key: "comment", label: "Comment", icon: <MessageSquare className="w-4 h-4" /> },
-      ]
-    }
   ];
 
   return (

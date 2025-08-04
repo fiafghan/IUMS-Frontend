@@ -10,7 +10,6 @@ import { Step1 } from "./steps/step1";
 import { Step2 } from "./steps/step2";
 import { Step3 } from "./steps/step3";
 import { Step4 } from "./steps/step4";
-import { Step5 } from "./steps/step5";
 import { stepTitles } from "./steps/steps_titles";
 import { route } from "../config";
 
@@ -27,9 +26,6 @@ export default function InternetUserAddForm(): JSX.Element {
     device_limit: "",
     device_type: "",
     mac_address: "",
-    status: "Active",
-    violations: "0",
-    comment: "No Comment",
   });
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -96,13 +92,7 @@ useEffect(() => {
           form.device_limit.trim() !== "" &&
           form.device_type.trim() !== ""
         );
-
-      case 3:
-        return (
-          form.status.trim() !== "" &&
-          form.violations.trim() !== "" &&
-          form.comment.trim() !== ""
-        );
+        
       default:
         return true;
     }
@@ -143,9 +133,6 @@ useEffect(() => {
         device_limit: "",
         device_type: "",
         mac_address: "",
-        status: "Active",
-        violations: "0",
-        comment: "No Comment",
       });
       setCurrentStep(0);
       navigate("/");
@@ -226,8 +213,6 @@ useEffect(() => {
                     case 2:
                       return <Step3 form={form} onChange={handleChange} />;
                     case 3:
-                      return <Step5 form = {form} onChange = {handleChange} />;
-                    case 4:
                       return <Step4 form={form} />;
                     default:
                       return null;

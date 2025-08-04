@@ -66,10 +66,6 @@ export type FormState = {
   device_limit: string;
   device_type: string;
   mac_address: string;
-  status: string;
-  violations: string;
-  violation_type: string;
-  comment: string;
 };
 
 export type SelectOption = {
