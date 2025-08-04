@@ -56,6 +56,7 @@ export interface ViolationProps {
 
 export type FormState = {
   name: string;
+  last_name: string;
   username: string;
   email: string;
   phone: string;

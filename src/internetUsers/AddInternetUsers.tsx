@@ -16,6 +16,7 @@ import { route } from "../config";
 export default function InternetUserAddForm(): JSX.Element {
   const [form, setForm] = useState<FormState>({
     name: "",
+    last_name: "",
     username: "",
     email: "",
     phone: "",
@@ -119,10 +120,11 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/api/internet-users", form);
+      await axios.post(`${route}/internet`, form);
       alert("✅ User added successfully!");
       setForm({
         name: "",
+        last_name: "",
         username: "",
         email: "",
         phone: "",
