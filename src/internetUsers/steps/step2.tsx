@@ -18,7 +18,7 @@ export function Step2({
       | { target: { name: string; value: string } }
   ) => void;
   directorateOptions: any[];
-  employmentTypeOptions: string[];
+  employmentTypeOptions: {id:string, name:string}[];
 }): JSX.Element {
   
   // This handles directorate selection and sets deputy ministry accordingly
@@ -61,8 +61,7 @@ export function Step2({
         name="employment_type"
         value={form.employment_type}
         onChange={onChange}
-        options={employmentTypeOptions.map((et) => ({ value: et, label: et }))}
-      />
+        options={employmentTypeOptions.map((et) => ({ value: et.id, label: et.name }))}      />
 
       <SelectField
         label="Directorate"

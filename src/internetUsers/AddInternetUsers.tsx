@@ -27,6 +27,7 @@ export default function InternetUserAddForm(): JSX.Element {
     device_limit: "",
     device_type: "",
     mac_address: "",
+    status: "1",
   });
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,8 +35,7 @@ export default function InternetUserAddForm(): JSX.Element {
   const navigate = useNavigate();
   const [directorateOptions, setDirectorateOptions] = useState<string[]>([]);
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<string[]>([]);
-  const [employmentTypeOptions, setEmploymentTypeOptions] = useState<string[]>([]);
-  
+  const [employmentTypeOptions, setEmploymentTypeOptions] = useState<{id: string, name: string}[]>([]);  
 
 useEffect(() => {
   const fetchOptions = async () => {
@@ -53,7 +53,7 @@ useEffect(() => {
 
       setDirectorateOptions(directorates);
       setDeputyMinistryOptions(deputyMinistries);
-      setEmploymentTypeOptions(empTypeRes.data.map((d: any) => d.name));
+      setEmploymentTypeOptions(empTypeRes.data);
     } catch (error) {
       console.error("❌ Error fetching select options", error);
     }
@@ -120,28 +120,30 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      await axios.post(`${route}/internet`, form);
+    const submitData = {
+      username: form.username,
+      email: form.email,
+      phone: form.phone,
+      status: parseInt(form.status),
+      directorate_id: parseInt(form.directorate),
+      employee_type_id: parseInt(form.employment_type),
+      position: form.position,
+      device_limit: form.device_limit,
+      mac_address: form.mac_address || null,
+      name: form.name,
+      lastname: form.last_name,
+    };
+
+      await axios.post(`${route}/internet`, submitData);
       alert("✅ User added successfully!");
-      setForm({
-        name: "",
-        last_name: "",
-        username: "",
-        email: "",
-        phone: "",
-        position: "",
-        employment_type: "",
-        directorate: "",
-        deputyMinistry: "",
-        device_limit: "",
-        device_type: "",
-        mac_address: "",
-      });
       setCurrentStep(0);
       navigate("/");
-    } catch (error) {
-      console.error("Error adding user:", error);
-      alert("❌ Something went wrong while adding user.");
-    } finally {
+    } catch (error: any) {
+  console.error("Error adding user:", error);
+  console.error("Error response:", error.response?.data);
+  console.error("Error status:", error.response?.status);
+  alert("❌ Something went wrong while adding user.");
+} finally {
       setLoading(false);
     }
   };

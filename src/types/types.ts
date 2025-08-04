@@ -60,13 +60,14 @@ export type FormState = {
   username: string;
   email: string;
   phone: string;
-  employment_type:string;
+  employment_type: string;
   directorate: string;
   position: string;
   deputyMinistry: string;
   device_limit: string;
   device_type: string;
   mac_address: string;
+  status: string; // Add this line
 };
 
 export type SelectOption = {
