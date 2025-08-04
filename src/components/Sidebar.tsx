@@ -44,6 +44,7 @@ const logout = async () => {
   // Toggle states for nested sections
   const [userOpen, setUserOpen] = useState(false);
   const [systemUserOpen, setSystemUserOpen] = useState(false);
+  const [violationOpen, setViolationOpen] = useState(false);
 
   return (
     <aside className="w-64 min-h-screen bg-blue-400 text-white flex flex-col">
@@ -84,36 +85,43 @@ const logout = async () => {
           </div>
         )}
 
-        {/* 🔹 Violation Form */}
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => navigate("/addviolation")}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-        >
-          <AlertOctagon className="w-5 h-5" />
-          Violation Form
-        </motion.button>
+        {/* 🔹 Violations Section */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setViolationOpen((prev) => !prev)}
+            className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+          >
+            <div className="flex items-center gap-2">
+              <AlertOctagon className="w-5 h-5" />
+              Violations
+            </div>
+            {violationOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </motion.button>
 
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => navigate("/add-violation-type")}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-        >
-          <AlertOctagon className="w-5 h-5" />
-          Add Violation Type
-        </motion.button>
+          {violationOpen && (
+            <div className="ml-6 flex flex-col gap-1 text-white">
+              <button
+                onClick={() => navigate("/addviolation")}
+                className="hover:text-white/80 transition py-1 text-left"
+              >
+                ➤ Violation Form
+              </button>
+              <button
+                onClick={() => navigate("/add-violation-type")}
+                className="hover:text-white/80 transition py-1 text-left"
+              >
+                ➤ Add Violation Type
+              </button>
+              <button
+                onClick={() => navigate("/all-violation-types")}
+                className="hover:text-white/80 transition py-1 text-left"
+              >
+                ➤ All Violation Types
+              </button>
+            </div>
+          )}
 
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => navigate("/all-violation-types")}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-        >
-          <AlertOctagon className="w-5 h-5" />
-          All Violation Types
-        </motion.button>
 
         {/* 🔹 System Users (admin only) */}
         {isAdmin && (
