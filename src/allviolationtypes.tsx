@@ -5,13 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./components/Spinner";
 import { route } from "./config";
+import type { ViolationType } from "./types/types";
 
-interface ViolationType {
-  id: number;
-  name: string;
-  created_at: string;
-  updated_at: string;
-}
 
 export default function AllViolationTypes(): JSX.Element {
   const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
@@ -146,8 +141,8 @@ export default function AllViolationTypes(): JSX.Element {
                 <AlertTriangle className="w-6 h-6 text-blue-300" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">All Violation Types</h1>
-                <p className="text-gray-600">Manage violation types in the system</p>
+                <h1 className="text-3xl font-bold text-blue-400">All Violation Types</h1>
+                <p className="text-blue-300">Manage violation types in the system</p>
               </div>
             </div>
             <button
@@ -187,7 +182,7 @@ export default function AllViolationTypes(): JSX.Element {
             className="bg-white rounded-xl shadow-lg overflow-hidden"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ delay: 0.1, duration: 0.1 }}
           >
             <div className="overflow-x-auto">
               <table className="w-full">

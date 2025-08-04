@@ -5,13 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./components/Spinner";
 import { route } from "./config";
+import type { ViolationTypeForm } from "./types/types";
 
-interface ViolationForm {
-  name: string;
-}
 
 export default function AddViolationType(): JSX.Element {
-  const [form, setForm] = useState<ViolationForm>({
+  const [form, setForm] = useState<ViolationTypeForm>({
     name: ""
   });
   

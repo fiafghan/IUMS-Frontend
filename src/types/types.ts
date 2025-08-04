@@ -19,6 +19,18 @@ export type InternetUser = {
   comment?:string;
 };
 
+
+export interface ViolationTypeForm {
+  name: string;
+}
+
+export interface ViolationType {
+  id: number;
+  name: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface User {
   id: number;
   name: string;

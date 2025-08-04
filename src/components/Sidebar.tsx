@@ -95,6 +95,26 @@ const logout = async () => {
           Violation Form
         </motion.button>
 
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/add-violation-type")}
+          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <AlertOctagon className="w-5 h-5" />
+          Add Violation Type
+        </motion.button>
+
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/all-violation-types")}
+          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <AlertOctagon className="w-5 h-5" />
+          All Violation Types
+        </motion.button>
+
         {/* 🔹 System Users (admin only) */}
         {isAdmin && (
           <>

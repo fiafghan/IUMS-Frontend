@@ -4,7 +4,7 @@ import GradientSidebar from "../components/Sidebar";
 import { useReactToPrint } from "react-to-print";
 import type { ViolationProps } from "../types/types";
 
-export default function AddViolation() {
+export default function EmployeeViolationForm() {
   const [users, setUsers] = useState<ViolationProps[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<ViolationProps[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
