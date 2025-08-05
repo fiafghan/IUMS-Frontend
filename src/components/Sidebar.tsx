@@ -119,6 +119,12 @@ const logout = async () => {
               >
                 ➤ All Violation Types
               </button>
+              <button
+                onClick={() => navigate("/addviolationonauser")}
+                className="hover:text-white/80 transition py-1 text-left"
+              >
+                ➤ Add Violation On A User
+              </button>
             </div>
           )}
 

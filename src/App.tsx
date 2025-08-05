@@ -10,6 +10,7 @@ import NotFound from "./systemUsers/NotFound";
 import AddViolationType from "./addviolationType"
 import EmployeeViolationForm from "./internetUsers/employeeViolationForm"
 import AllViolationTypes from "./allviolationtypes"
+import AddViolationOnAUser from "./internetUsers/addViolationOnaUser"
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
       <Route path="/adduser" element={<PrivateRoute><InternetUserAddForm /></PrivateRoute>} />
       <Route path="/all-system-users" element={<SystemUsersPage />} />
       <Route path="/addviolation" element={<PrivateRoute><EmployeeViolationForm /></PrivateRoute>} />
+      <Route path="/addviolationonauser" element={<AddViolationOnAUser />} />
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/add-violation-type" element={<PrivateRoute><AddViolationType /></PrivateRoute>} />
       <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />

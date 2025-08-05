@@ -1,7 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import {
-  User, Eye, Edit, Trash,
+  User, Edit, Trash,
   Search, Users, Briefcase, Building2
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
