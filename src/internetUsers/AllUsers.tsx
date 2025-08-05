@@ -9,8 +9,6 @@ import { Combobox } from "@headlessui/react";
 import UserFilters from "../components/UserFilters";
 import type { InternetUser } from "../types/types";
 import { route } from "../config";
-import { DeviceType } from "../enums/device_type_enum";
-
 
 const headers = [
   "Name", "Username", "Last Name", "Email", "Phone", "Employment Type",
@@ -23,7 +21,6 @@ export default function InternetUsersList(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<InternetUser | null>(null);
-  const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
@@ -106,11 +103,7 @@ export default function InternetUsersList(): JSX.Element {
     fetchFilters();
   }, []);
 
-  const handleView = (user: InternetUser) => {
-    setSelectedUser(user);
-    setIsViewOpen(true);
-  };
-
+ 
   const handleEdit = (user: InternetUser) => {
     setSelectedUser(user);
     setEditForm({
@@ -327,7 +320,6 @@ export default function InternetUsersList(): JSX.Element {
                           {/* Name */}
                           <td className="px-3 py-2 text-gray-700 text-[10px] whitespace-nowrap 
                       flex items-center gap-1 font-medium">
-                            <User className="w-4 h-4 shrink-0" />
                             {user.name}
                             {isYellowCard && <span className="ml-1">🟨</span>}
                             {isRedCard && <span className="ml-1">🟥</span>}
@@ -376,13 +368,6 @@ export default function InternetUsersList(): JSX.Element {
                           <td className="px-3 py-2 text-blue-400 text-center">
                             <div className="flex justify-center gap-2">
                               <button
-                                onClick={() => handleView(user)}
-                                className="hover:text-blue-100"
-                                title="View"
-                              >
-                                <Eye className="w-5 h-5 hover:text-blue-300" />
-                              </button>
-                              <button
                                 onClick={() => handleEdit(user)}
                                 className="hover:text-blue-100"
                                 title="Edit"
@@ -407,30 +392,6 @@ export default function InternetUsersList(): JSX.Element {
           </div>
         )}
       </main>
-      {/* View Modal */}
-      {isViewOpen && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg shadow-lg">
-            <h2 className="text-2xl font-bold text-blue-400 mb-4">View User</h2>
-            <ul className="space-y-1 text-gray-800">
-              {Object.entries(selectedUser).map(([key, value]) => (
-                <li key={key}>
-                  <strong className="capitalize">{key.replace("_", " ")}:</strong>{" "}
-                  {value || "-"}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 text-right">
-              <button
-                onClick={() => setIsViewOpen(false)}
-                className="px-4 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Edit Modal */}
       {isEditOpen && selectedUser && (
