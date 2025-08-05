@@ -4,19 +4,19 @@ export type InternetUser = {
   id: string;
   name: string;
   username: string;
-  lastname:string;
+  lastname: string;
   email: string;
   phone: string;
   position?: string;
-  employment_type: string;
+  employment_type: string;  // Make sure this matches backend field name
   directorate: string;
   deputy: string;
   device_limit: string;
   device_type: string;
   mac_address?: string;
-  status?:"active" | "deactive";
-  violations?:"0" | "1" | "2";
-  comment?:string;
+  status?: "active" | "deactive";
+  violations?: "0" | "1" | "2";
+  comment?: string;
 };
 
 
