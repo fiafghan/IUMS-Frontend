@@ -35,8 +35,9 @@ export default function InternetUsersList(): JSX.Element {
   const [queryDeputyMinistryEdit, setQueryDeputyMinistryEdit] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const totalUsers = users.length;
-  const activeUsers = users.filter((user) => user.status === "active").length;
-  const deactiveUsers = users.filter((user) => user.status === "deactive").length;
+
+  const activeUsers = users.filter((user) => user.status === 1).length;
+  const deactiveUsers = users.filter((user) => user.status === 0).length;
 
   const employmentTypeCounts: Record<string, number> = users.reduce((acc, user) => {
     const type = user.employment_type || "Unknown";
@@ -103,7 +104,7 @@ export default function InternetUsersList(): JSX.Element {
     fetchFilters();
   }, []);
 
- 
+
   const handleEdit = (user: InternetUser) => {
     setSelectedUser(user);
     setEditForm({
@@ -148,7 +149,7 @@ export default function InternetUsersList(): JSX.Element {
     if (!confirm) return;
 
     try {
-      await axios.delete(`${route}/internet/${id}`, { headers: { Authorization: `Bearer ${token}` } }); 
+      await axios.delete(`${route}/internet/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err) {
       alert("Failed to delete user.");
