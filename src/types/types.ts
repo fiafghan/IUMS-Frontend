@@ -65,7 +65,7 @@ export type FormState = {
   position: string;
   deputyMinistry: string;
   device_limit: string;
-  device_type: string;
+  device_type: string | number;
   mac_address: string;
   status: string; // Add this line
 };

@@ -1,10 +1,8 @@
-import { Cpu, Hash, Laptop } from "lucide-react";
+import { Cpu, Hash } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
 import type { JSX } from "react";
-import { ApiDropdown } from "../../components/ApiDropDown";
 import { DeviceType, getDeviceTypeLabel } from "../../enums/device_type_enum";
-import { route } from "../../config";
 
 // Map device types to options format
 const deviceTypeOptions = [
@@ -13,17 +11,46 @@ const deviceTypeOptions = [
   { id: DeviceType.TABLET, name: getDeviceTypeLabel(DeviceType.TABLET) }
 ];
 
-export function Step3({ form, onChange }: { 
-  form: FormState; 
-  onChange: (e: React.ChangeEvent<HTMLInputElement> | { target: { name: string; value: string } }) => void 
+export function Step3({ form, onChange }: {
+  form: FormState;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: number } }) => void;
 }): JSX.Element {
   return (
     <div>
-      <InputField label="Device Limit" icon={<Hash className="w-5 h-5 text-gray-500" />} 
-      name="device_limit" type="number" placeholder="Number of devices allowed" value={form.device_limit} onChange={onChange} />
-      <ApiDropdown apiUrl={`${route}/device-types`} label="Device Type" name="device_type" value={form.device_type} onChange={onChange} icon={<Laptop className="w-5 h-5 text-gray-500" />} />
-      <InputField label="MAC Address" icon={<Cpu className="w-5 h-5 text-gray-500" />} 
-      name="mac_address" type="text" placeholder="00:00:00:00:00:00" value={form.mac_address} onChange={onChange} />
+      <InputField
+        label="Device Limit"
+        icon={<Hash className="w-5 h-5 text-gray-500" />}
+        name="device_limit"
+        type="number"
+        placeholder="Number of devices allowed"
+        value={form.device_limit}
+        onChange={onChange}
+      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Device Type</label>
+        <select
+          name="device_type"
+          value={form.device_type}
+          onChange={onChange}
+          className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option value="">Select Device Type</option>
+          {deviceTypeOptions.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <InputField
+        label="MAC Address"
+        icon={<Cpu className="w-5 h-5 text-gray-500" />}
+        name="mac_address"
+        type="text"
+        placeholder="00:00:00:00:00:00"
+        value={form.mac_address}
+        onChange={onChange}
+      />
     </div>
   );
 }
