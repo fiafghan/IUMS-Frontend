@@ -34,7 +34,7 @@ export default function InternetUserAddForm(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [directorateOptions, setDirectorateOptions] = useState<string[]>([]);
-  const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<string[]>([]);
+  const [, setDeputyMinistryOptions] = useState<string[]>([]);
   const [employmentTypeOptions, setEmploymentTypeOptions] = useState<{ id: string, name: string }[]>([]);
 
   useEffect(() => {
