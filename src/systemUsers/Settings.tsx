@@ -73,25 +73,44 @@ export default function SettingsPage() {
   // Handle form submission for updating profile
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Basic client validation
+    if (!form.name.trim() || !form.email.trim()) {
+      alert("Name and email cannot be empty.");
+      return;
+    }
     setLoading(true);
-
     const storedUser = localStorage.getItem("loggedInUser");
-    const token = storedUser ? JSON.parse(storedUser).token : '';
-
+    const token = storedUser ? JSON.parse(storedUser).token : "";
     try {
-      // Send PUT request to update user profile
-      await axios.put(`http://localhost:8000/api/update-profile/${userId}`, {
+      const payload: any = {
         name: form.name,
         email: form.email,
-        ...(form.password && { password: form.password }),
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      };
+      if (form.password && form.password.trim() !== "") {
+        payload.password = form.password;
+      }
+      console.log("Sending payload:", payload);
+      await axios.put(
+        `http://localhost:8000/api/update-profile/${userId}`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       alert("✅ Profile updated successfully.");
-    } catch (error) {
+      setForm((prev) => ({ ...prev, password: "" })); // Clear password field after update
+    } catch (error: any) {
       console.error("Update error:", error);
-      alert("❌ Failed to update profile.");
+      if (error.response && error.response.data && error.response.data.errors) {
+        // Show backend validation errors
+        const errors = error.response.data.errors;
+        const messages = Object.values(errors)
+          .map((errArr: any) => (Array.isArray(errArr) ? errArr.join(" ") : errArr))
+          .join("\n");
+        alert("❌ Failed to update profile:\n" + messages);
+      } else {
+        alert("❌ Failed to update profile.");
+      }
     } finally {
       setLoading(false);
     }

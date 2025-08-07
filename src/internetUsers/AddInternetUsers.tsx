@@ -45,6 +45,8 @@ export default function InternetUserAddForm(): JSX.Element {
           axios.get(`${route}/employment-type`),
         ]);
 
+        console.log(dirRes.data,'Naweed');
+
         // Directorates are those with directorate_type_id === 2
         const directorates = dirRes.data.filter((d: any) => d.directorate_type_id === 2);
 

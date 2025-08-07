@@ -13,7 +13,7 @@ const deviceTypeOptions = [
 
 export function Step3({ form, onChange }: {
   form: FormState;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: number } }) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }) => void;
 }): JSX.Element {
   return (
     <div>

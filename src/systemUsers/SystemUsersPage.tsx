@@ -3,6 +3,7 @@ import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import type { User } from "../types/types";
+import { route } from "../config";
 
 export default function SystemUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -44,7 +45,7 @@ export default function SystemUsersPage() {
     };
 
   useEffect(() => {
-    axios.get("http://localhost:3000/users").then((res) => {
+    axios.get(`${route}/user`).then((res) => {
       setUsers(res.data);
     });
   }, []);

@@ -53,7 +53,6 @@ export interface ViolationProps {
   
 }
 
-
 export type FormState = {
   name: string;
   last_name: string;
@@ -65,7 +64,7 @@ export type FormState = {
   position: string;
   deputyMinistry: string;
   device_limit: string;
-  device_type: string | number;
+  device_type: string;
   mac_address: string;
   status: string; // Add this line
 };

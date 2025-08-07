@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import AnimatedSubmitButton from "../components/AnimatedButton";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
+import { route } from "../config";
 
 export default function RegisterForm(): JSX.Element {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
     isAdmin: false,
   });
 
@@ -30,7 +31,7 @@ export default function RegisterForm(): JSX.Element {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (form.password !== form.confirmPassword) {
+    if (form.password !== form.password_confirmation) {
       alert("❌ Passwords do not match.");
       return;
     }
@@ -38,12 +39,20 @@ export default function RegisterForm(): JSX.Element {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const token: string | null = localStorage.getItem("token");
+      const response = await axios.post(`${route}/register`, {
         name: form.name,
         email: form.email,
         password: form.password,
-        isAdmin: form.isAdmin,
-      });
+        password_confirmation: form.password_confirmation,
+        role_id: form.isAdmin ? 1 : 2,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
       alert("✅ Registration successful!");
       console.log("Registered:", response.data);
@@ -52,7 +61,7 @@ export default function RegisterForm(): JSX.Element {
         name: "",
         email: "",
         password: "",
-        confirmPassword: "",
+        password_confirmation: "",
         isAdmin: false,
       });
       navigate('/');
@@ -157,10 +166,10 @@ export default function RegisterForm(): JSX.Element {
           <InputField
             label="Confirm Password"
             icon={<Lock className="w-5 h-5 text-gray-500" />}
-            name="confirmPassword"
+            name="password_confirmation"
             type="password"
             placeholder="••••••••"
-            value={form.confirmPassword}
+            value={form.password_confirmation}
             onChange={handleChange}
             animation={{ y: 40, opacity: 0 }}
             delay={0.7}

@@ -1,9 +1,11 @@
+
 import type { JSX } from "react";
 import type { FormState } from "../../types/types";
 import { Briefcase, User, Building2, Building } from "lucide-react";
 import { InputField } from "./InputField";
 import { SelectField } from "./selectfield";
 import { mapsid } from "../../enums/deputy_enum";
+
 
 export function Step2({
   form,
@@ -18,30 +20,41 @@ export function Step2({
       | { target: { name: string; value: string } }
   ) => void;
   directorateOptions: any[];
-  employmentTypeOptions: {id:string, name:string}[];
+  employmentTypeOptions: { id: string, name: string }[];
 }): JSX.Element {
-  
-  // This handles directorate selection and sets deputy ministry accordingly
-    function handleDirectorateChange(e: React.ChangeEvent<HTMLSelectElement>) {
-      const value = e.target.value;
-      onChange({ target: { name: "directorate", value } });
 
-      const selectedId = parseInt(value);
-      if (!isNaN(selectedId)) {
-        const deputyValue = mapsid[selectedId] ?? "";
-        onChange({ target: { name: "deputyMinistry", value: deputyValue } });
+  // This handles directorate selection and sets deputy ministry accordingly
+  function handleDirectorateChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const selectedDirectorateId = e.target.value;
+    
+    // 1. Update the directorate in the form state
+    onChange({ target: { name: "directorate", value: selectedDirectorateId } });
+    
+    // 2. Find the directorate object from directorateOptions using selectedDirectorateId
+    const selectedDirectorate = directorateOptions.find(
+      (d) => d.id === Number(selectedDirectorateId)
+    );
+    
+    // 3. If found, get its deputy ministry ID and update form.deputyMinistry
+    if (selectedDirectorate) {
+      // directorate_id corresponds to deputy ministry ID from your seeder
+      const deputyMinistryId = selectedDirectorate.directorate_id;
+      
+      if (deputyMinistryId !== undefined && deputyMinistryId !== null) {
+        onChange({ target: { name: "deputyMinistry", value: deputyMinistryId.toString() } });
       } else {
+        // Clear deputy ministry if none found
         onChange({ target: { name: "deputyMinistry", value: "" } });
       }
+    } else {
+      // If no directorate selected, clear deputy ministry
+      onChange({ target: { name: "deputyMinistry", value: "" } });
     }
+  }
+  
 
-  console.log("Current form.directorate:", form.directorate);
-  const matchedDirectorate = directorateOptions.find((d) => d.directorate_id === Number(form.directorate));
-  console.log("Matched directorate object:", matchedDirectorate);
+  const deputyMinistryValue = mapsid[parseInt(form.deputyMinistry)] ?? "";
 
-  // Derive deputy ministry value with fallback
-  const deputyMinistryValue = matchedDirectorate ? mapsid[matchedDirectorate.directorate_id] ?? "" : "";
-  console.log("Derived Deputy Ministry value:", deputyMinistryValue);
 
   return (
     <div>
@@ -61,7 +74,7 @@ export function Step2({
         name="employment_type"
         value={form.employment_type}
         onChange={onChange}
-        options={employmentTypeOptions.map((et) => ({ value: et.id, label: et.name }))}      />
+        options={employmentTypeOptions.map((et) => ({ value: et.id, label: et.name }))} />
 
       <SelectField
         label="Directorate"
@@ -72,9 +85,9 @@ export function Step2({
         options={[
           { value: "", label: "Select Directorate" },
           ...directorateOptions.map((d) => ({
-            value: d.directorate_id,
+            value: d.id,
             label: d.name,
-            key: d.directorate_id,
+            key: d.name,
           })),
         ]}
       />
@@ -87,7 +100,7 @@ export function Step2({
         type="text"
         placeholder="Deputy Ministry"
         disabled={true}
-        onChange={() => {}}
+        onChange={() => { }}
       />
     </div>
   );
