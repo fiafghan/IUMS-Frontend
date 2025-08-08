@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { User, Mail, Lock, Shield } from "lucide-react";
 import { route } from "../config";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
@@ -11,6 +12,8 @@ export default function RegisterForm() {
     password_confirmation: "",
     isAdmin: false,
   });
+
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -78,6 +81,7 @@ export default function RegisterForm() {
       );
 
       alert("Registration successful!");
+      navigate('/all-system-users');
       setForm({
         name: "",
         email: "",

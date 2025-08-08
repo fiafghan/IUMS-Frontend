@@ -4,12 +4,14 @@ import { Pencil, Trash2 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import type { User } from "../types/types";
 import { route } from "../config";
+import { useNavigate } from "react-router-dom";
 
 export default function SystemUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const navigate = useNavigate()
 
   const handleEditClick = (user: User) => {
     setEditUser(user);
@@ -67,8 +69,13 @@ export default function SystemUsersPage() {
       </div>
       <div className="p-6 w-full">
         <h1 className="text-xl font-bold mb-6 text-gray-800">All System Users</h1>
-
         <div className="overflow-x-auto rounded-sm shadow">
+          <button
+            className="mb-4 px-4 py-2 bg-blue-300 text-white rounded hover:bg-blue-200"
+            onClick={() => navigate("/register")}
+          >
+           <span className="text-xl mr-2">+</span>Add New System User
+          </button>
           <table className="w-full text-left border-collapse">
             <thead className="bg-blue-100">
               <tr>
