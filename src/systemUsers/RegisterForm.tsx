@@ -14,15 +14,19 @@ export default function RegisterForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailExists, setEmailExists] = useState(false);
 
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   if (!currentUser.token || currentUser.user.role !== "Admin") {
-    return <p className="text-red-500 text-center mt-10">شما اجازه ثبت نام ندارید. لطفاً با حساب ادمین وارد شوید.</p>;
+    return <p className="text-red-500 text-center mt-10">You have to be Admin to Proceed!</p>;
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    if (name === "email") {
+      checkEmailExists(value);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,9 +69,22 @@ export default function RegisterForm() {
     }
   };
 
+  const checkEmailExists = async (email: string) => {
+    try {
+      const response = await axios.post(`${route}/check-email`, { email });
+      if (response.data.exists) {
+        setEmailExists(true);
+      } else {
+        setEmailExists(false);
+      }
+    } catch (error) {
+      setEmailExists(false);
+    }
+  };
+
   return (
     <div className="max-w-md mx-auto mt-12 bg-white shadow-lg rounded-xl p-8 space-y-6 border border-gray-200">
-      <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded">
+      <h2 className="text-2xl font-bold text-center bg-white text-blue-300 py-2 rounded">
         Register New User
       </h2>
 
@@ -95,6 +112,7 @@ export default function RegisterForm() {
             required
             className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
+          {emailExists && <p className="text-red-500">Email already exists</p>}
         </div>
 
         <div className="relative">
@@ -132,7 +150,7 @@ export default function RegisterForm() {
             className="accent-indigo-500"
           />
           <Shield size={16} />
-          <span>Register as Admin</span>
+          <span className="text-blue-300">Register as Admin</span>
         </label>
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -140,7 +158,7 @@ export default function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2 rounded-md font-medium transition"
+          className="w-full bg-blue-300 hover:bg-blue-200 text-white py-2 rounded-md font-medium transition"
         >
           {loading ? "Registering..." : "Register"}
         </button>
