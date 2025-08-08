@@ -46,6 +46,7 @@ export default function SystemUsersPage() {
 
   useEffect(() => {
     axios.get(`${route}/user`).then((res) => {
+      console.log(res.data)
       setUsers(res.data);
     });
   }, []);
@@ -77,7 +78,7 @@ export default function SystemUsersPage() {
                 <td className="px-4 py-2 border-b border-r border-blue-300">{user.name}</td>
                 <td className="px-4 py-2 border-b border-blue-300">{user.email}</td>
                 <td className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white w-30">
-                  {user.isAdmin ? "✓" : "✗"}
+                  {user.role_name === "Admin" ? "✓" : "✗"}
                 </td>
                 <td className="px-4 py-2 border-b space-x-2 border-blue-300 bg-blue-300">
                 <button onClick={() => handleEditClick(user)} className="">
