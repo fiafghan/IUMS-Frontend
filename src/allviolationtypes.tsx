@@ -1,11 +1,12 @@
 import { useState, useEffect, type JSX } from "react";
-import { Edit, Trash2, Plus, AlertTriangle, Search, Home } from "lucide-react";
+import { Edit, Trash2, Plus, AlertTriangle, Search} from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./components/Spinner";
 import { route } from "./config";
 import type { ViolationType } from "./types/types";
+import GradientSidebar from "./components/Sidebar";
 
 
 export default function AllViolationTypes(): JSX.Element {
@@ -109,7 +110,8 @@ export default function AllViolationTypes(): JSX.Element {
   };
 
   return (
-    <>
+    <div  className="flex min-h-screen">
+      <GradientSidebar />
       {/* Loading Overlay */}
       <AnimatePresence>
         {loading && (
@@ -127,7 +129,7 @@ export default function AllViolationTypes(): JSX.Element {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-100 p-6">
+      <div className="min-h-screen bg-white p-10 ml-30">
         <motion.div
           className="max-w-6xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -141,18 +143,10 @@ export default function AllViolationTypes(): JSX.Element {
                 <AlertTriangle className="w-6 h-6 text-blue-300" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-blue-400">All Violation Types</h1>
+                <h1 className="text-3xl font-bold text-blue-400 mr-50">All Violation Types</h1>
                 <p className="text-blue-300">Manage violation types in the system</p>
               </div>
             </div>
-            <button
-              onClick={() => navigate("/")}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
-              hover:from-blue-500 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <Home className="w-5 h-5" />
-              Home
-            </button>
             <button
               onClick={() => navigate("/add-violation-type")}
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
@@ -282,6 +276,6 @@ export default function AllViolationTypes(): JSX.Element {
           </div>
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }

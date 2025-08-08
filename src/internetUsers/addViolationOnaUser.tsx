@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
 import { route } from "../config";
+import GradientSidebar from "../components/Sidebar";
 
 interface ViolationType {
     id: number;
@@ -94,12 +95,14 @@ export default function AddViolationForm() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded shadow">
-            <h2 className="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
-                Add Violation
+        <div  className="flex min-h-screen">
+            <GradientSidebar />
+        <div className="max-w-md mx-auto mt-5 p-5 bg-white rounded w-200">
+            <h2 className="text-2xl font-bold mb-10 text-center bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
+                Add Violation On A User
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-2">
                 <div>
                     <label className="block mb-1 font-semibold">Internet User</label>
                     <Select
@@ -152,6 +155,7 @@ export default function AddViolationForm() {
                     <p className="text-center mt-3 font-medium text-red-600">{message}</p>
                 )}
             </form>
+        </div>
         </div>
     );
 }

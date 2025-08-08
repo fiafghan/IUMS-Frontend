@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "./components/Spinner";
 import { route } from "./config";
 import type { ViolationTypeForm } from "./types/types";
+import GradientSidebar from "./components/Sidebar";
 
 
 export default function AddViolationType(): JSX.Element {
@@ -76,7 +77,8 @@ export default function AddViolationType(): JSX.Element {
   };
 
   return (
-    <>
+    <div  className="flex min-h-screen">
+      <GradientSidebar />
       {/* Loading Overlay */}
       <AnimatePresence>
         {loading && (
@@ -94,7 +96,7 @@ export default function AddViolationType(): JSX.Element {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-200 flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-white flex items-center ml-100 px-4 py-12">
         <motion.div
           className="w-full max-w-md bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12"
           initial={{ scale: 0.95, opacity: 0 }}
@@ -185,6 +187,6 @@ export default function AddViolationType(): JSX.Element {
           </form>
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }

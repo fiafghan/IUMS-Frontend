@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { route } from "../config";
+import GradientSidebar from "../components/Sidebar";
 
 interface Violation {
   id: number;
@@ -37,11 +38,12 @@ export default function AllViolationsFromUsers() {
   if (error) return <p className="text-center mt-6 text-red-600">{error}</p>;
 
   return (
+    <div  className="flex min-h-screen">
+    <GradientSidebar />
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+      <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">
         All Violations From Users
       </h1>
-
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 rounded">
           <thead className="bg-gray-100">
@@ -73,6 +75,7 @@ export default function AllViolationsFromUsers() {
           </tbody>
         </table>
       </div>
+    </div>
     </div>
   );
 }
