@@ -15,6 +15,7 @@ export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emailExists, setEmailExists] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   if (!currentUser.token || currentUser.user.role !== "Admin") {
@@ -24,8 +25,31 @@ export default function RegisterForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+
     if (name === "email") {
       checkEmailExists(value);
+    }
+
+    if (name === "password" || name === "password_confirmation") {
+      if (name === "password" && value.length < 6) {
+        setPasswordError("Password must be at least 6 characters!");
+      } else if (name === "password" && value.length >= 6) {
+        setPasswordError("");
+      }
+    }
+
+    // چک یکسان بودن رمز عبور و تایید آن
+    if (name === "password_confirmation") {
+      if (value !== form.password) {
+        setPasswordError("Password and Confirm password did not match!");
+      } else {
+        setPasswordError("");
+      }
+    }
+
+    // وقتی پسورد تغییر می‌کند، بررسی کن تاییدش هنوز باهاش یکی هست یا نه
+    if (name === "password" && form.password_confirmation && form.password_confirmation !== value) {
+      setPasswordError("");
     }
   };
 
@@ -36,7 +60,6 @@ export default function RegisterForm() {
 
     try {
       const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}").token;
-      console.log(token);
       await axios.post(
         `${route}/register`,
         {
@@ -139,7 +162,7 @@ export default function RegisterForm() {
             required
             className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
-        </div>
+          {passwordError && <p className="text-red-500 mt-1">{passwordError}</p>}        </div>
 
         <label className="flex items-center space-x-2 text-sm text-gray-600">
           <input
