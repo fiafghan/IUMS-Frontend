@@ -10,6 +10,8 @@ export default function SystemUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+
 
   const navigate = useNavigate()
 
@@ -74,7 +76,7 @@ export default function SystemUsersPage() {
             className="mb-4 px-4 py-2 bg-blue-300 text-white rounded hover:bg-blue-200"
             onClick={() => navigate("/register")}
           >
-           <span className="text-xl mr-2">+</span>Add New System User
+            <span className="text-xl mr-2">+</span>Add New System User
           </button>
           <table className="w-full text-left border-collapse">
             <thead className="bg-blue-100">
@@ -133,29 +135,40 @@ export default function SystemUsersPage() {
                       }
                       className="w-full border px-3 py-1.5 rounded"
                     />
-                  </label>
-                  <label className="block">
-                    Password:
-                    <input
-                      type="text"
-                      value={editUser.password || ""}
-                      onChange={(e) =>
-                        setEditUser({ ...editUser, password: e.target.value })
-                      }
-                      className="w-full border px-3 py-1.5 rounded"
-                    />
-                    <span className="text-sm text-gray-500">Leave empty to keep current password</span>
-                  </label>
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={editUser.isAdmin}
-                      onChange={(e) =>
-                        setEditUser({ ...editUser, isAdmin: e.target.checked })
-                      }
-                    />
-                    <span>Is Admin</span>
-                  </label>
+                    <label className="block">
+                      Password:
+                      <input
+                        type="text"
+                        value={editUser.password || ""}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setEditUser({ ...editUser, password: val });
+
+                          if (val.length > 0 && val.length < 6) {
+                            setPasswordError("Password Must Be At Least 6 Characters!");
+                          } else {
+                            setPasswordError("");
+                          }
+                        }}
+                        className="w-full border px-3 py-1.5 rounded"
+                      />
+                      <span className="text-sm text-gray-500">Leave empty to keep current password</span>
+                      {passwordError && (
+                        <p className="text-red-600 text-sm mt-1">{passwordError}</p>
+                      )}
+                    </label>
+                    </label>
+
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={editUser.isAdmin}
+                        onChange={(e) =>
+                          setEditUser({ ...editUser, isAdmin: e.target.checked })
+                        }
+                      />
+                      <span>Is Admin</span>
+                    </label>
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
