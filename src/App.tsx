@@ -11,6 +11,7 @@ import AddViolationType from "./addviolationType"
 import EmployeeViolationForm from "./internetUsers/employeeViolationForm"
 import AllViolationTypes from "./allviolationtypes"
 import AddViolationOnAUser from "./internetUsers/addViolationOnaUser"
+import AllViolationsFromUsers from "./internetUsers/AllViolationsFromUsers"
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
       <Route path="/add-violation-type" element={<PrivateRoute><AddViolationType /></PrivateRoute>} />
       <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />
+      <Route path="/all-violations-from-users" element={<PrivateRoute><AllViolationsFromUsers /></PrivateRoute>} />
       <Route
         path="/"
         element={
