@@ -46,7 +46,7 @@ export default function SystemUsersPage() {
 
   const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      axios.delete(`http://localhost:3000/users/${id}`).then(() => {
+      axios.delete(`${route}/user/${id}`).then(() => {
         setUsers((prev) => prev.filter((u) => u.id !== id));
       });
     }
