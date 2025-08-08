@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AnimatedSubmitButton from "../components/AnimatedButton";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
+import { route } from "../config";
 
 export default function LoginForm(): JSX.Element {
   const [form, setForm] = useState({
@@ -25,7 +26,7 @@ export default function LoginForm(): JSX.Element {
 
     try {
       
-      const response = await axios.post('http://localhost:8000/api/login', {
+      const response = await axios.post(`${route}/login`, {
         email: form.email,
         password: form.password,
         
@@ -34,7 +35,7 @@ export default function LoginForm(): JSX.Element {
       const user = response.data; 
 
       if (user) {
-        localStorage.setItem("loggedInUser", JSON.stringify(user)); 
+        localStorage.setItem("loggedInUser", JSON.stringify(response.data));
         alert(`✅ Login successful! Welcome back, ${user.name}.`);
         setForm({ email: "", password: "" });
         navigate('/'); 
