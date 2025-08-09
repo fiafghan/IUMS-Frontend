@@ -7,13 +7,14 @@ import Spinner from "./components/Spinner";
 import { route } from "./config";
 import type { ViolationTypeForm } from "./types/types";
 import GradientSidebar from "./components/Sidebar";
+import Swal from "sweetalert2";
 
 
 export default function AddViolationType(): JSX.Element {
   const [form, setForm] = useState<ViolationTypeForm>({
     name: ""
   });
-  
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function AddViolationType(): JSX.Element {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -30,42 +31,46 @@ export default function AddViolationType(): JSX.Element {
 
   const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!form.name.trim()) {
       newErrors.name = "Violation name is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-    
+
     try {
       const payload = {
         name: form.name.trim(),
       };
 
       await axios.post(`${route}/violation`, payload);
-      
-      alert("✅ Violation type added successfully!");
-      
+
+      Swal.fire({
+        icon: "success",
+        title: "Violation Type Created!",
+        text: "Violation Type Was Created Successfully!",
+        footer: 'Press Okay!'
+      });
       // Reset form
-      setForm({ name: ""});
-      
+      setForm({ name: "" });
+
       // Navigate back or to violations list
       navigate("/all-violation-types"); // Adjust route as needed
-      
+
     } catch (error: any) {
       console.error("Error adding violation:", error);
-      
+
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       } else {
@@ -77,7 +82,7 @@ export default function AddViolationType(): JSX.Element {
   };
 
   return (
-    <div  className="flex min-h-screen">
+    <div className="flex min-h-screen">
       <GradientSidebar />
       {/* Loading Overlay */}
       <AnimatePresence>
