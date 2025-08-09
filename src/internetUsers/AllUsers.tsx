@@ -303,7 +303,7 @@ export default function InternetUsersList(): JSX.Element {
                     .filter((user) =>
                       (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
                       (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
-                      (selectedStatus === "" || user.status === selectedStatus) &&
+                      (selectedStatus === "" || (selectedStatus === "active" && user.status === 1) || (selectedStatus === "deactive" && user.status === 0)) &&
                       (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         user.phone.toLowerCase().includes(searchTerm.toLowerCase()))
