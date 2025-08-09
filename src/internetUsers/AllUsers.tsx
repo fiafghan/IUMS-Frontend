@@ -62,10 +62,12 @@ export default function InternetUsersList(): JSX.Element {
 
   const filteredDeputyMinistriesEdit =
     queryDeputyMinistryEdit === ""
-      ? deputyMinistryOptions
-      : deputyMinistryOptions.filter((dm) =>
-        dm.name.toLowerCase().includes(queryDeputyMinistryEdit.toLowerCase())
-      );
+      ? deputyMinistryOptions.filter(dm => dm.id >= 1 && dm.id <= 5)
+      : deputyMinistryOptions
+        .filter(dm => dm.id >= 1 && dm.id <= 5)
+        .filter((dm) =>
+          dm.name.toLowerCase().includes(queryDeputyMinistryEdit.toLowerCase())
+        );
 
 
   useEffect(() => {
@@ -238,7 +240,9 @@ export default function InternetUsersList(): JSX.Element {
 
         <div className="flex gap-4 mb-4 mt-5 justify-center items-center">
           <UserFilters
-            deputyMinistryOptions={deputyMinistryOptions.map(dm => ({ ...dm, id: String(dm.id) }))}
+            deputyMinistryOptions={deputyMinistryOptions
+              .filter(dm => dm.id >= 1 && dm.id <= 5)
+              .map(dm => ({ ...dm, id: String(dm.id) }))}
             directorateOptions={directorateOptions.map(dir => ({ ...dir, id: String(dir.id) }))}
             selectedDeputyMinistry={selectedDeputyMinistry}
             setSelectedDeputyMinistry={setSelectedDeputyMinistry}
