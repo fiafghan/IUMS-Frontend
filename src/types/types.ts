@@ -17,6 +17,7 @@ export type InternetUser = {
   status?: "active" | "deactive" | 1 | 0;
   violations?: "0" | "1" | "2";
   comment?: string;
+  violation_type?: string;
 };
 
 

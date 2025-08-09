@@ -13,7 +13,7 @@ import { route } from "../config";
 const headers = [
   "Name", "Username", "Last Name", "Email", "Phone", "Employment Type",
   "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type",
-  "MAC Address", "Status", "Violations", "Comment", "Actions"
+  "MAC Address", "Status", "Violations","Violation Type", "Comment", "Actions"
 ];
 
 export default function InternetUsersList(): JSX.Element {
@@ -359,10 +359,15 @@ export default function InternetUsersList(): JSX.Element {
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
                           {/* Status */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.status || "-"}</td>
+                          <td className="px-3 py-2 text-gray-700 text-[10px]">
+                            {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
+                          </td>
 
                           {/* Violations */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violations || "0"}</td>
+                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violations}</td>
+
+                          {/* Violation type */}
+                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violation_type}</td>
 
                           {/* Comment */}
                           <td className="px-3 py-2 text-gray-700 text-[10px] truncate max-w-[120px]">
