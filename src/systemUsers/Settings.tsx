@@ -4,6 +4,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Spinner from "../components/Spinner";
 import AnimatedSubmitButton from "../components/AnimatedButton";
+import Swal from "sweetalert2";
 
 
 export default function SettingsPage() {
@@ -17,52 +18,52 @@ export default function SettingsPage() {
   const [userId, setUserId] = useState("");
 
   // Load user data on mount
- useEffect(() => {
-  const storedUser = localStorage.getItem("loggedInUser");
+  useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
 
-  if (!storedUser) {
-    console.error("User not logged in");
-    return;
-  }
-
-  try {
-    const userData = JSON.parse(storedUser);
-
-    // بررسی اینکه آیا توکن وجود دارد یا خیر
-    const token = userData.token;
-    if (!token) {
-      console.error("No token found in localStorage");
+    if (!storedUser) {
+      console.error("User not logged in");
       return;
     }
 
-    const userId = userData.user?.id;
+    try {
+      const userData = JSON.parse(storedUser);
 
-    if (!userId) {
-      console.error("User ID not found in localStorage data");
-      return;
+      // بررسی اینکه آیا توکن وجود دارد یا خیر
+      const token = userData.token;
+      if (!token) {
+        console.error("No token found in localStorage");
+        return;
+      }
+
+      const userId = userData.user?.id;
+
+      if (!userId) {
+        console.error("User ID not found in localStorage data");
+        return;
+      }
+
+      setUserId(userId);
+
+      // Fetch user profile data using API with token
+      axios.get("http://localhost:8000/api/profile", {
+        headers: { Authorization: `Bearer ${token}` },  // ارسال توکن در هدر
+      })
+        .then((response) => {
+          const user = response.data.user;
+          setForm({
+            name: user.name || "",
+            email: user.email || "",
+            password: "", // blank on purpose
+          });
+        })
+        .catch((error) => {
+          console.error("User fetch failed:", error);
+        });
+    } catch (e) {
+      console.error("Failed to parse user from localStorage", e);
     }
-
-    setUserId(userId);
-
-    // Fetch user profile data using API with token
-    axios.get("http://localhost:8000/api/profile", {
-      headers: { Authorization: `Bearer ${token}` },  // ارسال توکن در هدر
-    })
-    .then((response) => {
-      const user = response.data.user;
-      setForm({
-        name: user.name || "",
-        email: user.email || "",
-        password: "", // blank on purpose
-      });
-    })
-    .catch((error) => {
-      console.error("User fetch failed:", error);
-    });
-  } catch (e) {
-    console.error("Failed to parse user from localStorage", e);
-  }
-}, []);
+  }, []);
 
 
   // Handle form input changes
@@ -75,7 +76,12 @@ export default function SettingsPage() {
     e.preventDefault();
     // Basic client validation
     if (!form.name.trim() || !form.email.trim()) {
-      alert("Name and email cannot be empty.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Name and email cannot be empty.",
+        footer: 'Press Okay!'
+      });
       return;
     }
     setLoading(true);
@@ -97,7 +103,11 @@ export default function SettingsPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert("✅ Profile updated successfully.");
+      Swal.fire({
+        title: "✅ Profile updated successfully.",
+        icon: "success",
+        draggable: true
+      });
       setForm((prev) => ({ ...prev, password: "" })); // Clear password field after update
     } catch (error: any) {
       console.error("Update error:", error);
