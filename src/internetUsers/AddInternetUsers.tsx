@@ -12,6 +12,7 @@ import { Step3 } from "./steps/step3";
 import { Step4 } from "./steps/step4";
 import { stepTitles } from "./steps/steps_titles";
 import { route } from "../config";
+import Swal from 'sweetalert2'
 
 export default function InternetUserAddForm(): JSX.Element {
   const [form, setForm] = useState<FormState>({
@@ -103,8 +104,12 @@ export default function InternetUserAddForm(): JSX.Element {
 
   const nextStep = () => {
     if (!validateStep(currentStep)) {
-      alert("Please fill all required fields in this step.");
-      return;
+      Swal.fire({
+        icon: "error",
+        title: "Required Fields!!!",
+        text: "Please fill all the required fields!",
+        footer: 'Press Okay!'
+      }); return;
     }
     setCurrentStep((prev) => Math.min(prev + 1, stepTitles.length - 1));
   };
@@ -115,8 +120,12 @@ export default function InternetUserAddForm(): JSX.Element {
 
   const handleSubmit = async () => {
     if (!validateStep(2)) {
-      alert("Please fill all required fields before submitting.");
-      setCurrentStep(2);
+      Swal.fire({
+        icon: "error",
+        title: "Required Fields!!!",
+        text: "Please fill all the required fields!",
+        footer: 'Press Okay!'
+      }); setCurrentStep(2);
       return;
     }
 
@@ -138,8 +147,12 @@ export default function InternetUserAddForm(): JSX.Element {
       };
 
       await axios.post(`${route}/internet`, submitData);
-      alert("✅ User added successfully!");
-      setCurrentStep(0);
+      Swal.fire({
+        icon: "success",
+        title: "User Created!",
+        text: "Internet User Was Created Successfully!",
+        footer: 'Press Okay!'
+      }); setCurrentStep(0);
       navigate("/");
     } catch (error: any) {
       console.error("Error adding user:", error);
