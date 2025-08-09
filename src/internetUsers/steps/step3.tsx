@@ -1,8 +1,10 @@
 import { Cpu, Hash } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
-import type { JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { DeviceType, getDeviceTypeLabel } from "../../enums/device_type_enum";
+import axios from "axios";
+import { route } from "../../config";
 
 // Map device types to options format
 const deviceTypeOptions = [
@@ -11,10 +13,41 @@ const deviceTypeOptions = [
   { id: DeviceType.TABLET, name: getDeviceTypeLabel(DeviceType.TABLET) }
 ];
 
+
+
+
 export function Step3({ form, onChange }: {
   form: FormState;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }) => void;
 }): JSX.Element {
+
+  const [macError, setMacError] = useState<string | null>(null);
+
+  const checkMacAddress = (mac: string) => {
+    if (!mac) {
+      setMacError(null);
+      return;
+    }
+    axios.post(`${route}/check-mac-address`, { mac_address: mac })
+      .then(res => {
+        if (res.data.exists) {
+          setMacError(res.data.message);
+        } else {
+          setMacError(null);
+        }
+      })
+      .catch(() => {
+        setMacError(null);
+      });
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      checkMacAddress(form.mac_address);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form.mac_address]);
   return (
     <div>
       <InputField
@@ -51,6 +84,7 @@ export function Step3({ form, onChange }: {
         value={form.mac_address}
         onChange={onChange}
       />
+      {macError && <p className="text-red-600 text-sm mt-1">{macError}</p>}
     </div>
   );
 }
