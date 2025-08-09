@@ -1,5 +1,5 @@
 import { useState, useEffect, type JSX } from "react";
-import { Edit, Trash2, Plus, AlertTriangle, Search} from "lucide-react";
+import { Edit, Trash2, Plus, AlertTriangle, Search } from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import Spinner from "./components/Spinner";
 import { route } from "./config";
 import type { ViolationType } from "./types/types";
 import GradientSidebar from "./components/Sidebar";
+import Swal from "sweetalert2";
 
 
 export default function AllViolationTypes(): JSX.Element {
@@ -24,7 +25,8 @@ export default function AllViolationTypes(): JSX.Element {
       const response = await axios.get(`${route}/violation`);
       console.log("API Response:", response.data);
       const data = response.data.data || response.data || [];
-      setViolationTypes(Array.isArray(data) ? data : []);    } catch (error) {
+      setViolationTypes(Array.isArray(data) ? data : []);
+    } catch (error) {
       console.error("Error fetching violation types:", error);
       alert("❌ Failed to load violation types");
     } finally {
@@ -51,25 +53,33 @@ export default function AllViolationTypes(): JSX.Element {
   // Handle save edit
   const handleSaveEdit = async (id: number) => {
     if (!editName.trim()) {
-      alert("Violation type name cannot be empty");
-      return;
+      Swal.fire({
+        icon: "error",
+        title: "Violation Type Name!",
+        text: "Violation Type Name Can't Be Empty!!",
+        footer: 'Press Okay!'
+      }); return;
     }
 
     try {
-        await axios.put(`${route}/violation/${id}`, {
-          name: editName.trim(),
-        });
+      await axios.put(`${route}/violation/${id}`, {
+        name: editName.trim(),
+      });
       // Update local state
-      setViolationTypes(prev => 
-        prev.map(vt => 
+      setViolationTypes(prev =>
+        prev.map(vt =>
           vt.id === id ? { ...vt, name: editName.trim() } : vt
         )
       );
-      
+
       setEditingId(null);
       setEditName("");
-      alert("✅ Violation type updated successfully!");
-      
+      Swal.fire({
+        icon: "success",
+        title: "Violation Type Updated!",
+        text: "Violation Type Updated Successfully!",
+        footer: 'Press Okay!'
+      });
     } catch (error: any) {
       console.error("Error updating violation type:", error);
       if (error.response?.data?.message) {
@@ -94,11 +104,15 @@ export default function AllViolationTypes(): JSX.Element {
 
     try {
       await axios.delete(`${route}/violation/${id}`);
-      
+
       // Remove from local state
       setViolationTypes(prev => prev.filter(vt => vt.id !== id));
-      alert("✅ Violation type deleted successfully!");
-      
+      Swal.fire({
+        icon: "success",
+        title: "Violation Type Deleted!",
+        text: "Violation Type Deleted Successfully!",
+        footer: 'Press Okay!'
+      });
     } catch (error: any) {
       console.error("Error deleting violation type:", error);
       if (error.response?.data?.message) {
@@ -110,7 +124,7 @@ export default function AllViolationTypes(): JSX.Element {
   };
 
   return (
-    <div  className="flex min-h-screen">
+    <div className="flex min-h-screen">
       <GradientSidebar />
       {/* Loading Overlay */}
       <AnimatePresence>
