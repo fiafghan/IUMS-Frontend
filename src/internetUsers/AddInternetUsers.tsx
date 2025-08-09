@@ -37,6 +37,9 @@ export default function InternetUserAddForm(): JSX.Element {
   const [, setDeputyMinistryOptions] = useState<string[]>([]);
   const [employmentTypeOptions, setEmploymentTypeOptions] = useState<{ id: string, name: string }[]>([]);
 
+
+
+
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -45,7 +48,7 @@ export default function InternetUserAddForm(): JSX.Element {
           axios.get(`${route}/employment-type`),
         ]);
 
-        console.log(dirRes.data,'Naweed');
+        console.log(dirRes.data, 'Naweed');
 
         // Directorates are those with directorate_type_id === 2
         const directorates = dirRes.data.filter((d: any) => d.directorate_type_id === 2);

@@ -1,9 +1,37 @@
 import { Mail, Phone, User } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
-import type { JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
+import axios from "axios";
+import { route } from "../../config";
 
 export function Step1({ form, onChange }: { form: FormState; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }): JSX.Element {
+    const [usernameError, setUsernameError] = useState<string | null>(null);
+
+    
+
+      useEffect(() => {
+    if (!form.username) {
+      setUsernameError(null);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(() => {
+      axios.post(`${route}/check-username`, { username: form.username })  // مسیر api رو درست کن اگر فرق داره
+        .then(res => {
+          if (res.data.exists) {
+            setUsernameError("This User name is already taken try another one!");
+          } else {
+            setUsernameError(null);
+          }
+        })
+        .catch(() => {
+          setUsernameError(null);
+        });
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form.username]);
   return (
     <div>
       <InputField label="Name" icon={<User className="w-5 h-5 text-gray-500" />} 
@@ -12,6 +40,7 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
       name="last_name" type="text" placeholder="Ahmadi" value={form.last_name} onChange={onChange} />
       <InputField label="Username" icon={<User className="w-5 h-5 text-gray-500" />} 
       name="username" type="text" placeholder="Ahmadi-it" value={form.username} onChange={onChange} />
+          {usernameError && <p className="text-red-600 text-sm mt-1">{usernameError}</p>}
       <InputField label="Email" icon={<Mail className="w-5 h-5 text-gray-500" />} 
       name="email" type="email" placeholder="you@example.com" value={form.email} onChange={onChange} />
       <InputField label="Phone" icon={<Phone className="w-5 h-5 text-gray-500" />} 
