@@ -174,11 +174,11 @@ export default function InternetUsersList(): JSX.Element {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <User className="w-6 h-6 text-blue-400" />
-                <span className="text-blue-400 font-semibold text-sm">Total Users</span>
+                <span className="text-blue-400 text-sm">Total Users</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Summary</div>
             </div>
-            <div className="text-3xl font-bold text-blue-400 text-center">{totalUsers}</div>
+            <div className="text-4xl font-bold text-blue-400 text-center mt-10">{totalUsers}</div>
           </div>
           {/* 🟦 Active / Deactive */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
@@ -227,7 +227,7 @@ export default function InternetUsersList(): JSX.Element {
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Groups</div>
             </div>
-            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1">
+            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1 text-[10px]">
               {Object.entries(deputyMinistryCounts).map(([name, count]) => (
                 <li key={name} className="flex justify-between">
                   <span>{name}</span>
