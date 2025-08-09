@@ -149,7 +149,7 @@ export default function InternetUserAddForm(): JSX.Element {
       await axios.post(`${route}/internet`, submitData);
       Swal.fire({
         icon: "success",
-        title: "User Created!",
+        title: "Internet User Created!",
         text: "Internet User Was Created Successfully!",
         footer: 'Press Okay!'
       }); setCurrentStep(0);

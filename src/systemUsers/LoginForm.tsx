@@ -6,6 +6,7 @@ import AnimatedSubmitButton from "../components/AnimatedButton";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
 import { route } from "../config";
+import Swal from "sweetalert2";
 
 export default function LoginForm(): JSX.Element {
   const [form, setForm] = useState({
@@ -25,26 +26,42 @@ export default function LoginForm(): JSX.Element {
     setLoading(true);
 
     try {
-      
+
       const response = await axios.post(`${route}/login`, {
         email: form.email,
         password: form.password,
-        
+
       });
 
-      const user = response.data; 
+      const user = response.data;
 
       if (user) {
         localStorage.setItem("loggedInUser", JSON.stringify(response.data));
-        alert(`✅ Login successful! Welcome back, ${user.name}.`);
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Login Was Successfull!",
+          showConfirmButton: false,
+          timer: 1500
+        });
         setForm({ email: "", password: "" });
-        navigate('/'); 
+        navigate('/');
       } else {
-        alert("❌ Login failed: Invalid credentials!");
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Credentials!",
+          text: "Please Try Again!",
+          footer: 'Press Okay!'
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("❌ Something went wrong during login.");
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Credentials!",
+        text: "Please Try Again!",
+        footer: 'Press Okay!'
+      });
     } finally {
       setLoading(false);
     }
