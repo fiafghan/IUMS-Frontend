@@ -8,13 +8,40 @@ import { route } from "../../config";
 export function Step1({ form, onChange }: { form: FormState; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }): JSX.Element {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  const checkPhone = (phoneToCheck: string) => {
+    if (!phoneToCheck) {
+      setPhoneError(null);
+      return;
+    }
+    axios.post(`${route}/check-phone-of-internet-user`, { phone: phoneToCheck })
+      .then(res => {
+        if (res.data.exists) {
+          setPhoneError(res.data.message);
+        } else {
+          setPhoneError(null);
+        }
+      })
+      .catch(() => {
+        setPhoneError(null);
+      });
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      checkPhone(form.phone);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form.phone]);
 
   const checkEmail = (emailToCheck: string) => {
     if (!emailToCheck) {
       setEmailError(null);
       return;
     }
-    axios.post(`${route}/check-email-of-internet-users`, { email: emailToCheck })  // مسیر API را درست وارد کن
+    axios.post(`${route}/check-email-of-internet-users`, { email: emailToCheck })
       .then(res => {
         if (res.data.exists) {
           setEmailError(res.data.message || "This email is already registered! Please try another one!");
@@ -72,6 +99,7 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
       {emailError && <p className="text-red-600">{emailError}</p>}
       <InputField label="Phone" icon={<Phone className="w-5 h-5 text-gray-500" />}
         name="phone" type="tel" placeholder="+1234567890" value={form.phone} onChange={onChange} />
+        {phoneError && <p className="text-red-600 text-sm mt-1">{phoneError}</p>}
     </div>
   );
 }
