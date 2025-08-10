@@ -294,7 +294,7 @@ export default function InternetUserAddForm(): JSX.Element {
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="bg-gradient-to-l from-red-400 to-gray-50 w-25"
+                  className="bg-gradient-to-l from-red-400 to-gray-50 w-22"
                 >
                   Back
                 </button>
@@ -305,7 +305,7 @@ export default function InternetUserAddForm(): JSX.Element {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="px-6 py-2 rounded-xl bg-blue-400 text-white font-semibold hover:bg-indigo-700 transition"
+                  className="h-10 px-6 bg-gradient-to-r from-blue-300 to blue-200"
                 >
                   Next
                 </button>
