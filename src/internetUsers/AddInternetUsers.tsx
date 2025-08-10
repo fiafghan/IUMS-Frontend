@@ -26,6 +26,7 @@ export default function InternetUserAddForm(): JSX.Element {
     deputyMinistry: "",
     position: "",
     device_limit: "",
+    group_id:1,
     device_type: "",
     mac_address: "",
     status: "1",
@@ -189,6 +190,7 @@ export default function InternetUserAddForm(): JSX.Element {
         device_limit: form.device_limit,
         mac_address: form.mac_address || null,
         device_type_id: parseInt(form.device_type),
+        group_id: form.group_id,
       };
 
       await axios.post(`${route}/internet`, submitData);

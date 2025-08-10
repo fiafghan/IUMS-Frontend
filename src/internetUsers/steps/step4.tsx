@@ -30,6 +30,7 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
       icon: <Laptop className="w-5 h-5 text-purple-600" />,
       fields: [
         { key: "device_limit", label: "Device Limit", icon: <Hash className="w-4 h-4" /> },
+        { key: "group_id", label: "Group Type", icon: <Hash className="w-4 h-4" /> },
         { key: "device_type", label: "Device Type", icon: <Laptop className="w-4 h-4" /> },
         { key: "mac_address", label: "MAC Address", icon: <Hash className="w-4 h-4" /> },
       ]

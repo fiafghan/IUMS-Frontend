@@ -1,10 +1,11 @@
-import { Cpu, Hash } from "lucide-react";
+import { Cpu, Hash, Smartphone } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
 import { useEffect, useState, type JSX } from "react";
 import { DeviceType, getDeviceTypeLabel } from "../../enums/device_type_enum";
 import axios from "axios";
 import { route } from "../../config";
+import { ApiDropdown } from "../../components/ApiDropDown";
 
 // Map device types to options format
 const deviceTypeOptions = [
@@ -59,6 +60,19 @@ export function Step3({ form, onChange }: {
         value={form.device_limit}
         onChange={onChange}
       />
+
+      <ApiDropdown
+        apiUrl={`${route}/groups`} // your actual API endpoint to fetch device types
+        label="Group Type"
+        name="group_id"
+        value={form.group_id}
+        onChange={onChange}
+        icon={<Smartphone className="w-5 h-5 text-gray-500" />}
+        placeholder="Select Group Type"
+        className="mb-4"
+        // valueField and labelField default to "id" and "name", so no need to specify here if your API matches
+      />
+
       <div>
         <label className="block text-sm font-medium text-gray-700">Device Type</label>
         <select
@@ -84,9 +98,9 @@ export function Step3({ form, onChange }: {
         value={form.mac_address}
         onChange={(e) => {
           let mac = e.target.value
-            .toUpperCase()                  // حروف کوچک → بزرگ
-            .replace(/[^0-9A-F]/g, "")       // فقط اعداد و حروف هگز
-            .match(/.{1,2}/g)?.join(":") || ""; // هر ۲ کاراکتر → :
+            .toUpperCase()                  
+            .replace(/[^0-9A-F]/g, "")     // only from 0 to 9 and A to F
+            .match(/.{1,2}/g)?.join(":") || ""; // after each two characters put : 
 
           if (mac.length > 17) mac = mac.slice(0, 17); // طول بیش از حد نرود
 
