@@ -287,7 +287,7 @@ export default function InternetUsersList(): JSX.Element {
               onClick={() => setExpanded(!expanded)}
               className="px-3 py-1 text-sm bg-transparent text-blue-200 w-full hover:text-blue-300"
             >
-              {expanded ? "</> Collapse" : "<> Expand"}
+              {expanded ? "> Click To Collapse <" : "< Click To Expand >"}
             </button>
             <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
               <table className="table-auto w-full text-left text-sm">
@@ -359,7 +359,7 @@ export default function InternetUsersList(): JSX.Element {
                             {isYellowCard && <span className="ml-1">🟨</span>}
                             {isRedCard && <span className="ml-1">🟥</span>}
                           </td>
-                          
+
                           {/* Last Name */}
                           <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
 

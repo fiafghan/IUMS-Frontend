@@ -4,6 +4,7 @@ import {Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp
 import { motion } from "framer-motion";
 import { useState, type JSX } from "react";
 import axios from "axios";
+import { route } from "../config";
 
 export default function GradientSidebar(): JSX.Element {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const logout = async () => {
 
   try {
     await axios.post(
-      "http://localhost:8000/api/logout",
+      `${route}/logout`,
       {id:user_id},
       {
         headers: {
