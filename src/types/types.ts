@@ -18,7 +18,7 @@ export type InternetUser = {
   violations_count?: "0" | "1" | "2";
   comment?: string;
   violation_type?: string;
-  group_id:string;
+  groups:string;
 };
 
 
@@ -67,7 +67,7 @@ export type FormState = {
   position: string;
   deputyMinistry: string;
   device_limit: string;
-  groups:number;
+  group_id:number;
   device_type: string;
   mac_address: string;
   status: string; // Add this line

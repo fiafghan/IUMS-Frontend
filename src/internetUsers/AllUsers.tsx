@@ -12,7 +12,7 @@ import { route } from "../config";
 
 const headers = [
   "Name", "Username", "Last Name", "Email", "Phone", "Employment Type",
-  "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type",
+  "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type", "Group Type",
   "MAC Address", "Status", "Violations Count", "Violation Type", "Comment", "Actions"
 ];
 
@@ -361,6 +361,8 @@ export default function InternetUsersList(): JSX.Element {
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_limit}</td>
 
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_type}</td>
+
+                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
 
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
