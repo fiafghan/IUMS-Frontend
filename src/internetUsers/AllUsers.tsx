@@ -285,10 +285,39 @@ export default function InternetUsersList(): JSX.Element {
           border-gray-200 max-w-full">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="px-3 py-1 text-sm bg-transparent text-blue-200 w-full hover:text-blue-300"
+              aria-expanded={expanded}
+              className="
+                relative
+                w-full
+                px-6 py-2
+                text-sm font-semibold
+                text-white
+                bg-gradient-to-r from-blue-300 via-blue-200 to-gray-100
+                rounded-sm
+                overflow-hidden
+                shadow-lg
+                hover:from-blue-400 hover:via-blue-200 hover:to-gray-200
+                focus:outline-none focus:ring-opacity-50
+                transition
+                duration-300
+                ease-in-out
+              "
             >
-              {expanded ? "> Click To Collapse <" : "< Click To Expand >"}
+              {/* متن دکمه */}
+              {expanded ? "⯅ Click To Collapse ⯅" : "⯆ Click To Expand ⯆"}
+
+              {/* خط شمشیر متحرک */}
+              <span className="
+                absolute top-0 left-0 w-full h-full pointer-events-none
+                before:content-['']
+                before:absolute before:top-0 before:left-[-100%] before:w-[30%] before:h-full
+                before:bg-white before:opacity-20 before:transform before:-skew-x-12
+                before:transition-transform before:duration-500 before:ease-in-out
+                hover:before:left-full
+              "></span>
             </button>
+
+
             <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
               <table className="table-auto w-full text-left text-sm">
                 {/* Table Head */}
