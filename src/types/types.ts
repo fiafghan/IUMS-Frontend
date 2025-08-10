@@ -15,7 +15,7 @@ export type InternetUser = {
   device_type: string;
   mac_address?: string;
   status?: "active" | "deactive" | 1 | 0;
-  violations?: "0" | "1" | "2";
+  violations_count?: "0" | "1" | "2";
   comment?: string;
   violation_type?: string;
 };
@@ -46,11 +46,11 @@ export interface ViolationProps {
   username: string;
   name: string;
   position: string;
-  deputyMinistry: string;
+  deputy: string;
   directorate: string;
   user_signature: string;
   directorate_signature: string;
-  violations: string;
+  violations_count: string;
   comment: string;
   
 }

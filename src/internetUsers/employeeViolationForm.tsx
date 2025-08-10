@@ -3,6 +3,7 @@ import axios from "axios";
 import GradientSidebar from "../components/Sidebar";
 import { useReactToPrint } from "react-to-print";
 import type { ViolationProps } from "../types/types";
+import { route } from "../config";
 
 export default function EmployeeViolationForm() {
   const [users, setUsers] = useState<ViolationProps[]>([]);
@@ -15,7 +16,7 @@ export default function EmployeeViolationForm() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await axios.get<ViolationProps[]>("http://localhost:3000/internet_users");
+        const res = await axios.get<ViolationProps[]>(`${route}/internet`);
         setUsers(res.data);
         setFilteredUsers(res.data);
       } catch (err) {
@@ -118,7 +119,7 @@ export default function EmployeeViolationForm() {
                     <th className="px-3 py-2 border border-gray-300 text-center">تعداد تخلفات</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">توضیحات تخلف</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">امضای کارمند</th>
-                    <th className="px-3 py-2 border border-gray-300 text-center">امضای ریاست</th>
+                    <th className="px-3 py-2 border border-gray-300 text-center">امضای ریاست مربوطه</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -128,11 +129,11 @@ export default function EmployeeViolationForm() {
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.position}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
-                    max-w-[10ch]">{selectedUser.deputyMinistry}</td>
+                    max-w-[10ch]">{selectedUser.deputy}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.directorate}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
-                    max-w-[10ch]">{selectedUser.violations}</td>
+                    max-w-[10ch]">{selectedUser.violations_count}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.comment}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
