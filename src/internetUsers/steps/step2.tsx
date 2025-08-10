@@ -60,7 +60,7 @@ export function Step2({
     <div>
       <InputField
         label="Position"
-        icon={<Briefcase className="w-5 h-5 text-gray-500" />}
+        icon={<Briefcase className="w-5 h-5 text-blue-400" />}
         name="position"
         type="text"
         placeholder="Position"
@@ -70,7 +70,7 @@ export function Step2({
 
       <SelectField
         label="Employment Type"
-        icon={<User className="w-5 h-5 text-gray-500" />}
+        icon={<User className="w-5 h-5 text-blue-400" />}
         name="employment_type"
         value={form.employment_type}
         onChange={onChange}
@@ -78,7 +78,7 @@ export function Step2({
 
       <SelectField
         label="Directorate"
-        icon={<Building2 className="w-5 h-5 text-gray-500" />}
+        icon={<Building2 className="w-5 h-5 text-blue-400" />}
         name="directorate"
         value={form.directorate}
         onChange={handleDirectorateChange}
@@ -94,7 +94,7 @@ export function Step2({
 
       <InputField
         label="Deputy Ministry"
-        icon={<Building className="w-5 h-5 text-gray-500" />}
+        icon={<Building className="w-5 h-5 text-blue-400" />}
         name="deputyMinistry"
         value={deputyMinistryValue}
         type="text"

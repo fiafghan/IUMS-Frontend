@@ -102,17 +102,17 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
 
   return (
     <div>
-      <InputField label="Name" icon={<User className="w-5 h-5 text-gray-500" />}
+      <InputField label="Name" icon={<User className="w-5 h-5 text-blue-400" />}
         name="name" type="text" placeholder="Ahmad" value={form.name} onChange={onChange} />
-      <InputField label="Last Name" icon={<User className="w-5 h-5 text-gray-500" />}
+      <InputField label="Last Name" icon={<User className="w-5 h-5 text-blue-400" />}
         name="last_name" type="text" placeholder="Ahmadi" value={form.last_name} onChange={onChange} />
-      <InputField label="Username" icon={<User className="w-5 h-5 text-gray-500" />}
+      <InputField label="Username" icon={<User className="w-5 h-5 text-blue-400" />}
         name="username" type="text" placeholder="Ahmadi-it" value={form.username} onChange={onChange} />
       {usernameError && <p className="text-red-600 text-sm mt-1">{usernameError}</p>}
-      <InputField label="Email" icon={<Mail className="w-5 h-5 text-gray-500" />}
+      <InputField label="Email" icon={<Mail className="w-5 h-5 text-blue-400" />}
         name="email" type="email" placeholder="you@example.com" value={form.email} onChange={onChange} />
       {emailError && <p className="text-red-600">{emailError}</p>}
-      <InputField label="Phone" icon={<Phone className="w-5 h-5 text-gray-500" />}
+      <InputField label="Phone" icon={<Phone className="w-5 h-5 text-blue-400" />}
         name="phone" type="tel" placeholder="+1234567890" value={form.phone} onChange={onChange} />
       {phoneError && <p className="text-red-600 text-sm mt-1">{phoneError}</p>}
     </div>
