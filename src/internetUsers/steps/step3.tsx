@@ -82,8 +82,18 @@ export function Step3({ form, onChange }: {
         type="text"
         placeholder="00:00:00:00:00:00"
         value={form.mac_address}
-        onChange={onChange}
+        onChange={(e) => {
+          let mac = e.target.value
+            .toUpperCase()                  // حروف کوچک → بزرگ
+            .replace(/[^0-9A-F]/g, "")       // فقط اعداد و حروف هگز
+            .match(/.{1,2}/g)?.join(":") || ""; // هر ۲ کاراکتر → :
+
+          if (mac.length > 17) mac = mac.slice(0, 17); // طول بیش از حد نرود
+
+          onChange({ target: { name: "mac_address", value: mac } });
+        }}
       />
+
       {macError && <p className="text-red-600 text-sm mt-1">{macError}</p>}
     </div>
   );

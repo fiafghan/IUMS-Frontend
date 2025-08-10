@@ -98,6 +98,24 @@ export default function InternetUserAddForm(): JSX.Element {
       return;
     }
 
+    if (e.target.name === "mac_address") {
+      let mac = e.target.value
+        .toUpperCase() // حروف کوچک رو بزرگ کنه
+        .replace(/[^0-9A-F]/g, "") // فقط اعداد و حروف هگز بمانند
+        .match(/.{1,2}/g)?.join(":") || ""; // هر دو کاراکتر یک ":"
+
+      // طول نهایی رو محدود کنیم
+      if (mac.length > 17) {
+        mac = mac.slice(0, 17);
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        mac_address: mac,
+      }));
+      return;
+    }
+
 
     setForm((prev) => ({
       ...prev,
