@@ -15,7 +15,7 @@ const headers = [
   "MAC Address", "Status", "Violations Count", "Violation Type", "Comment", "Actions"
 ];
 
-const fixedHeaders = ["Name", "Username", "Last Name", "Email"];
+const fixedHeaders = ["Name", "Last Name", "Username", "Email"];
 
 export default function InternetUsersList(): JSX.Element {
   const [users, setUsers] = useState<InternetUser[]>([]);
@@ -262,7 +262,7 @@ export default function InternetUsersList(): JSX.Element {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search users..."
-              className="w-100 px-4 py-2 pl-10 rounded-sm shadow-sm border border-blue-200 
+              className="w-80 px-4 py-2 pl-10 rounded-sm shadow-sm border border-blue-200 
                     focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm 
                     placeholder:text-blue-300 text-gray-700 
                     bg-white"
@@ -283,12 +283,12 @@ export default function InternetUsersList(): JSX.Element {
           <div className="overflow-x-auto rounded-sm 
           shadow-lg bg-white border 
           border-gray-200 max-w-full">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="px-3 py-1 text-sm bg-transparent text-blue-200 w-full hover:text-blue-300"
-                >
-                  {expanded ? "</> Collapse" : "<> Expand"}
-                </button>
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="px-3 py-1 text-sm bg-transparent text-blue-200 w-full hover:text-blue-300"
+            >
+              {expanded ? "</> Collapse" : "<> Expand"}
+            </button>
             <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
               <table className="table-auto w-full text-left text-sm">
                 {/* Table Head */}
@@ -359,12 +359,12 @@ export default function InternetUsersList(): JSX.Element {
                             {isYellowCard && <span className="ml-1">🟨</span>}
                             {isRedCard && <span className="ml-1">🟥</span>}
                           </td>
+                          
+                          {/* Last Name */}
+                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
 
                           {/* Username */}
                           <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
-
-                          {/* Last Name */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
 
                           {/* email */}
                           <td className="px-3 py-2 text-gray-700 text-[10px]">{user.email}</td>
