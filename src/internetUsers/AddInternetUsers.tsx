@@ -26,7 +26,7 @@ export default function InternetUserAddForm(): JSX.Element {
     deputyMinistry: "",
     position: "",
     device_limit: "",
-    group_id:1,
+    group_id: 1,
     device_type: "",
     mac_address: "",
     status: "1",
@@ -243,11 +243,12 @@ export default function InternetUserAddForm(): JSX.Element {
           initial={false}
         >
           <motion.div
-            className="w-full max-w-lg bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12 relative z-10"
+            className="w-full max-w-7xl bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12 relative z-10"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
+
             <motion.h2
               className="text-3xl font-extrabold text-center text-gray-800 mb-6 tracking-tight"
               initial={{ opacity: 0, y: 20 }}
@@ -293,7 +294,7 @@ export default function InternetUserAddForm(): JSX.Element {
                 <button
                   type="button"
                   onClick={prevStep}
-                  className="px-6 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+                  className="bg-gradient-to-l from-red-400 to-gray-50 w-25"
                 >
                   Back
                 </button>
@@ -309,9 +310,9 @@ export default function InternetUserAddForm(): JSX.Element {
                   Next
                 </button>
               ) : (
-                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading}>
+                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading} className="h-10 px-6 bg-gradient-to-r from-blue-300 to blue-200" >
                   {loading ? (
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center gap-2">
                       <Spinner />
                       <span>Submitting...</span>
                     </div>
