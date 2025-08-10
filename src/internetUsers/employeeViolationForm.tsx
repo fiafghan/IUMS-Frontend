@@ -49,7 +49,7 @@ export default function EmployeeViolationForm() {
         <div   id = "printable-content" ref = {printRef} >
         {/* Logos Row */}
         <div className="flex items-center justify-between mb-1">
-          <img src="/moph.jpeg" alt="Logo Left" className="w-30" />
+          <img src="/moph.png" alt="Logo Left" className="w-30" />
                   <h1 className="text-center font-bold" style={{ fontFamily: 'BNazanin, sans-serif' }}>
                     وزارت صحت عامه
                   </h1>
@@ -83,11 +83,10 @@ export default function EmployeeViolationForm() {
               placeholder="جستجو یوزر..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-blue-300 rounded bg-white text-sm"
+              className="w-full px-3 py-2 rounded bg-white text-sm shadow-none border-none"
             />
             {searchTerm && (
-              <ul className="absolute top-full mt-1 right-0 left-0 bg-white border 
-              border-gray-300 rounded shadow max-h-48 overflow-y-auto z-50">
+              <ul className="absolute top-full mt-1 right-0 left-0 bg-white rounded shadow max-h-48 overflow-y-auto z-50">
                 {filteredUsers.map((user) => (
                   <li
                     key={user.id}
@@ -114,8 +113,8 @@ export default function EmployeeViolationForm() {
                     <th className="px-3 py-2 border 
                     border-gray-300 text-center">نام</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">وظیفه</th>
-                    <th className="px-3 py-2 border border-gray-300 text-center">معینیت</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">ریاست</th>
+                    <th className="px-3 py-2 border border-gray-300 text-center">معینیت</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">تعداد تخلفات</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">توضیحات تخلف</th>
                     <th className="px-3 py-2 border border-gray-300 text-center">امضای کارمند</th>
@@ -129,9 +128,9 @@ export default function EmployeeViolationForm() {
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.position}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
-                    max-w-[10ch]">{selectedUser.deputy}</td>
-                    <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.directorate}</td>
+                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
+                    max-w-[10ch]">{selectedUser.deputy}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.violations_count}</td>
                     <td className="px-3 py-2 border border-gray-300 text-center break-all 
