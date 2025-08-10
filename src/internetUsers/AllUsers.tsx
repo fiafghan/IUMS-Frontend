@@ -283,15 +283,13 @@ export default function InternetUsersList(): JSX.Element {
           <div className="overflow-x-auto rounded-sm 
           shadow-lg bg-white border 
           border-gray-200 max-w-full">
-            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
-              <div className="mt-2">
                 <button
                   onClick={() => setExpanded(!expanded)}
-                  className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
+                  className="px-3 py-1 text-sm bg-transparent text-blue-200 w-full hover:text-blue-300"
                 >
-                  {expanded ? "نمایش کمتر" : "نمایش همه ستون‌ها"}
+                  {expanded ? "</> Collapse" : "<> Expand"}
                 </button>
-              </div>
+            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
               <table className="table-auto w-full text-left text-sm">
                 {/* Table Head */}
                 <thead>
