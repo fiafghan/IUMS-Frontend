@@ -121,7 +121,7 @@ export default function LoginForm(): JSX.Element {
           {/* Email */}
           <InputField
             label="Email"
-            icon={<Mail className="w-5 h-5 text-gray-500" />}
+            icon={<Mail className="w-5 h-5 text-blue-400" />}
             name="email"
             type="email"
             placeholder="you@example.com"
@@ -134,7 +134,7 @@ export default function LoginForm(): JSX.Element {
           {/* Password */}
           <InputField
             label="Password"
-            icon={<Lock className="w-5 h-5 text-gray-500" />}
+            icon={<Lock className="w-5 h-5 text-blue-400" />}
             name="password"
             type="password"
             placeholder="••••••••"
