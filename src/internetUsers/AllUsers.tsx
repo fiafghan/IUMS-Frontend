@@ -12,10 +12,10 @@ import { route } from "../config";
 
 const headers = [
   "Phone", "Employment Type", "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type", "Group Type",
-  "MAC Address", "Status", "Violations Count", "Violation Type", "Comment"
+  "MAC Address", "Status", "Violations Count", "Violation Type", "Comment", "Actions"
 ];
 
-const fixedHeaders = ["Name", "Username", "Last Name", "Email", "Actions"];
+const fixedHeaders = ["Name", "Username", "Last Name", "Email"];
 
 export default function InternetUsersList(): JSX.Element {
   const [users, setUsers] = useState<InternetUser[]>([]);
@@ -289,7 +289,7 @@ export default function InternetUsersList(): JSX.Element {
                   onClick={() => setExpanded(!expanded)}
                   className="px-3 py-1 text-sm border rounded hover:bg-gray-100"
                 >
-                  {expanded ? "Compress" : "Expand"}
+                  {expanded ? "نمایش کمتر" : "نمایش همه ستون‌ها"}
                 </button>
               </div>
               <table className="table-auto w-full text-left text-sm">
@@ -409,29 +409,27 @@ export default function InternetUsersList(): JSX.Element {
                                 {user.comment || "-"}
                               </td>
 
-
+                              {/* Actions */}
+                              <td className="px-3 py-2 text-blue-400 text-center">
+                                <div className="flex justify-center gap-2">
+                                  <button
+                                    onClick={() => handleEdit(user)}
+                                    className="hover:text-blue-100"
+                                    title="Edit"
+                                  >
+                                    <Edit className="w-5 h-5 hover:text-blue-300" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(user.id)}
+                                    className="hover:text-blue-100"
+                                    title="Delete"
+                                  >
+                                    <Trash className="w-5 h-5 hover:text-blue-300" />
+                                  </button>
+                                </div>
+                              </td>
                             </>
                           )}
-
-                          {/* Actions */}
-                          <td className="px-3 py-2 text-blue-400 text-center">
-                            <div className="flex justify-center gap-2">
-                              <button
-                                onClick={() => handleEdit(user)}
-                                className="hover:text-blue-100"
-                                title="Edit"
-                              >
-                                <Edit className="w-5 h-5 hover:text-blue-300" />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(user.id)}
-                                className="hover:text-blue-100"
-                                title="Delete"
-                              >
-                                <Trash className="w-5 h-5 hover:text-blue-300" />
-                              </button>
-                            </div>
-                          </td>
                         </tr>
                       );
                     })}
