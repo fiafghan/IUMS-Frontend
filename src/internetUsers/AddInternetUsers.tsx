@@ -49,8 +49,6 @@ export default function InternetUserAddForm(): JSX.Element {
           axios.get(`${route}/employment-type`),
         ]);
 
-        console.log(dirRes.data, 'Naweed');
-
         // Directorates are those with directorate_type_id === 2
         const directorates = dirRes.data.filter((d: any) => d.directorate_type_id === 2);
 
@@ -72,6 +70,35 @@ export default function InternetUserAddForm(): JSX.Element {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: string } }
   ) => {
+    if (e.target.name === "phone") {
+      let phone = e.target.value;
+
+      // حذف فاصله‌ها و کاراکترهای غیرمجاز
+      phone = phone.replace(/\s+/g, "").replace(/[^0-9+]/g, "");
+
+      // اگر با +93 شروع نمی‌شود، اضافه‌اش کن
+      if (!phone.startsWith("+93")) {
+        // اگر کاربر صفر اول داده باشه، صفر رو حذف می‌کنیم
+        if (phone.startsWith("0")) {
+          phone = "+93" + phone.slice(1);
+        } else {
+          phone = "+93" + phone.replace(/^\+?93?/, "");
+        }
+      }
+
+      // محدود کردن طول به 12 رقم
+      if (phone.length > 12) {
+        phone = phone.slice(0, 12);
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        phone,
+      }));
+      return;
+    }
+
+
     setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,

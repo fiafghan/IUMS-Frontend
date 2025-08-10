@@ -10,11 +10,26 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
   const [emailError, setEmailError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
+
   const checkPhone = (phoneToCheck: string) => {
     if (!phoneToCheck) {
       setPhoneError(null);
       return;
     }
+
+    if (!phoneToCheck.startsWith("+93")) {
+      phoneToCheck = "+93" + phoneToCheck.replace(/^(\+93)?/, "");
+    }
+
+    if (phoneToCheck.length !== 12) {
+      setPhoneError("Phone number must be 10 characters!")
+    }
+
+    if (phoneToCheck[3] !== "7") {
+      setPhoneError("The phone number must be 7xxxxxxxx!");
+      return;
+    }
+
     axios.post(`${route}/check-phone-of-internet-user`, { phone: phoneToCheck })
       .then(res => {
         if (res.data.exists) {
@@ -99,7 +114,7 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
       {emailError && <p className="text-red-600">{emailError}</p>}
       <InputField label="Phone" icon={<Phone className="w-5 h-5 text-gray-500" />}
         name="phone" type="tel" placeholder="+1234567890" value={form.phone} onChange={onChange} />
-        {phoneError && <p className="text-red-600 text-sm mt-1">{phoneError}</p>}
+      {phoneError && <p className="text-red-600 text-sm mt-1">{phoneError}</p>}
     </div>
   );
 }
