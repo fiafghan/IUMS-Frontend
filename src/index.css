@@ -18,3 +18,31 @@
   }
 }
 
+
+/* استایل سفارشی اسکرول بار افقی */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 10px;
+}
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: linear-gradient(90deg, #e0e7ff, #c7d2fe);
+  border-radius: 10px;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #60A5FA, #BFDBFE);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background 0.3s ease;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #021e3f, #BFDBFE);
+}
+
+/* فایرفاکس */
+.scrollbar-custom {
+  scrollbar-width: thick;
+  scrollbar-color: #60A5FA #BFDBFE;
+}
+.scrollbar-custom:hover {
+  scrollbar-color: #BFDBFE #BFDBFE;
+}

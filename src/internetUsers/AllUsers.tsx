@@ -318,7 +318,7 @@ export default function InternetUsersList(): JSX.Element {
             </button>
 
 
-            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full">
+            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full scrollbar-custom">
               <table className="table-auto w-full text-left text-sm">
                 {/* Table Head */}
                 <thead>
