@@ -1,4 +1,4 @@
-import { Mail, Phone, User } from "lucide-react";
+import { AtSign, IdCard, Mail, Phone, User } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
 import { useEffect, useState, type JSX } from "react";
@@ -104,9 +104,9 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
     <div>
       <InputField label="Name" icon={<User className="w-5 h-5 text-blue-400" />}
         name="name" type="text" placeholder="Ahmad" value={form.name} onChange={onChange} />
-      <InputField label="Last Name" icon={<User className="w-5 h-5 text-blue-400" />}
+      <InputField label="Last Name" icon={<IdCard className="w-5 h-5 text-blue-400" />}
         name="last_name" type="text" placeholder="Ahmadi" value={form.last_name} onChange={onChange} />
-      <InputField label="Username" icon={<User className="w-5 h-5 text-blue-400" />}
+      <InputField label="Username" icon={<AtSign className="w-5 h-5 text-blue-400" />}
         name="username" type="text" placeholder="Ahmadi-it" value={form.username} onChange={onChange} />
       {usernameError && <p className="text-red-600 text-sm mt-1">{usernameError}</p>}
       <InputField label="Email" icon={<Mail className="w-5 h-5 text-blue-400" />}
