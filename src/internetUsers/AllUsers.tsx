@@ -217,7 +217,7 @@ export default function InternetUsersList(): JSX.Element {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white 
-        border border-blue-100 group">
+        border border-blue-100 group scale-70">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <User className="w-6 h-6 text-blue-400" />
@@ -228,7 +228,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="text-4xl font-bold text-blue-400 text-center mt-10">{totalUsers}</div>
           </div>
           {/* 🟦 Active / Deactive */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-70">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-blue-400" />
@@ -248,7 +248,7 @@ export default function InternetUsersList(): JSX.Element {
             </div>
           </div>
           {/* 👔 Employment Type */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-70">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Briefcase className="w-6 h-6 text-blue-400" />
@@ -266,7 +266,7 @@ export default function InternetUsersList(): JSX.Element {
             </ul>
           </div>
           {/* 🏛️ Deputy Ministry */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-70">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Building2 className="w-6 h-6 text-blue-400" />
@@ -323,119 +323,119 @@ export default function InternetUsersList(): JSX.Element {
         ) : users.length === 0 ? (
           <p className="text-center py-6 text-gray-500 font-medium">No users found.</p>
         ) : (
-          <div className="overflow-x-auto rounded-sm 
-          shadow-lg bg-white border 
-          border-gray-200 max-w-full">
-            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full scrollbar-custom">
-              <table className="table-auto w-full text-left text-sm">
-                {/* Table Head */}
-                <thead>
-                  <tr className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs uppercase 
-              tracking-wider select-none rounded-t-xl">
+          <div className="overflow-x-auto rounded-lg shadow-lg bg-white border border-blue-200 max-w-full scale-95">
+  <div className="overflow-x-auto rounded-lg shadow-md bg-white border border-blue-100 max-w-full scrollbar-thin scrollbar-thumb-blue-300 scrollbar-track-blue-50">
+    <table className="table-auto w-full text-left text-sm font-sans">
+      {/* Table Head */}
+      <thead>
+        <tr className="bg-gradient-to-r from-blue-400 to-blue-500 text-white text-xs uppercase tracking-wide select-none rounded-t-lg">
+          {headers.map((header) => (
+            <th
+              key={header}
+              className="px-4 py-3 border-r border-blue-500 last:border-r-0 text-blue-100 font-semibold text-[11px] drop-shadow-[0_1px_1px_rgba(0,0,0,0.15)]"
+            >
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
 
-                    {headers.map((header) => (
-                      <th
-                        key={header}
-                        className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[10px] font-semibold"
-                        style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
-                      >
-                        {header}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
+      {/* Table Body */}
+      <tbody>
+        {users
+          .filter(
+            (user) =>
+              (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
+              (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
+              (selectedStatus === "" ||
+                (selectedStatus === "active" && user.status === 1) ||
+                (selectedStatus === "deactive" && user.status === 0)) &&
+              (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.employment_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.device_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (user.violation_type && user.violation_type.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase()))
+          )
+          .map((user, idx) => {
+            const isRedCard = user.violations_count === 2;
+            const isYellowCard = user.violations_count === 1;
 
-                {/* Table Body */}
+            return (
+              <tr
+                key={user.id}
+                className={`transition-colors duration-300 cursor-pointer ${
+                  isRedCard
+                    ? "bg-red-50"
+                    : idx % 2 === 0
+                    ? "bg-blue-50"
+                    : "bg-white"
+                } hover:bg-blue-200`}
+              >
+                {/* Name */}
+                <td className="px-4 py-2 text-blue-900 text-[11px] whitespace-nowrap flex items-center gap-1 font-semibold">
+                  {user.name}
+                  {isYellowCard && <span className="ml-1">🟨</span>}
+                  {isRedCard && <span className="ml-1">🟥</span>}
+                </td>
 
-                <tbody>
-                  {users
-                    .filter((user) =>
-                      (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
-                      (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
-                      (selectedStatus === "" || (selectedStatus === "active" && user.status === 1) || (selectedStatus === "deactive" && user.status === 0)) &&
-                      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        user.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      user.employment_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      user.device_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      (user.violation_type && user.violation_type.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((user, idx) => {
-                      const isRedCard = user.violations_count === 2;
-                      const isYellowCard = user.violations_count === 1;
+                {/* Last Name */}
+                <td className="px-4 py-2 text-blue-800 text-[11px]">{user.lastname}</td>
 
-                      return (
-                        <tr
-                          key={user.id}
-                          className={`transition-colors duration-200 ${isRedCard
-                            ? "bg-red-50"
-                            : idx % 2 === 0
-                              ? "bg-gray-100"
-                              : "bg-white"
-                            } hover:bg-blue-100`}
-                        >
-                          {/* Name */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px] whitespace-nowrap 
-                      flex items-center gap-1 font-medium">
-                            {user.name}
-                            {isYellowCard && <span className="ml-1">🟨</span>}
-                            {isRedCard && <span className="ml-1">🟥</span>}
-                          </td>
+                {/* Username */}
+                <td className="px-4 py-2 text-blue-800 text-[11px]">{user.username}</td>
 
-                          {/* Last Name */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
+                {/* Directorate */}
+                <td className="px-4 py-2 text-blue-700 text-[9px]">{user.directorate}</td>
 
-                          {/* Username */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
+                {/* Position */}
+                <td className="px-4 py-2 text-blue-700 text-[9px]">{user.position}</td>
 
+                {/* Groups */}
+                <td className="px-4 py-2 text-blue-700 text-[9px]">{user.groups}</td>
 
+                {/* Status */}
+                <td
+                  className={`px-4 py-2 text-[11px] font-medium ${
+                    user.status === 1
+                      ? "text-green-600"
+                      : user.status === 0
+                      ? "text-red-600"
+                      : "text-blue-700"
+                  }`}
+                >
+                  {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
+                </td>
 
+                {/* Actions */}
+                <td className="px-4 py-2 text-blue-400 text-center">
+                  <div className="flex justify-center gap-3">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="hover:text-blue-600 transition-colors"
+                      title="Edit"
+                    >
+                      <Edit className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="hover:text-blue-600 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash className="w-5 h-5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-                          {/* Directorate */}
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.directorate}</td>
-
-
-
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.position}</td>
-
-
-
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
-
-
-                          {/* Status */}
-                          <td className={`px-3 py-2 text-[10px] ${user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700"}`}
-                          >
-                            {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
-                          </td>
-
-                          {/* Actions */}
-                          <td className="px-3 py-2 text-blue-400 text-center">
-                            <div className="flex justify-center gap-2">
-                              <button
-                                onClick={() => handleEdit(user)}
-                                className="hover:text-blue-100"
-                                title="Edit"
-                              >
-                                <Edit className="w-5 h-5 hover:text-blue-300" />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(user.id)}
-                                className="hover:text-blue-100"
-                                title="Delete"
-                              >
-                                <Trash className="w-5 h-5 hover:text-blue-300" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
         )}
       </main>
 
