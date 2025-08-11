@@ -443,7 +443,7 @@ export default function InternetUsersList(): JSX.Element {
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
                     && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
-                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" ? (
+                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
@@ -522,43 +522,25 @@ export default function InternetUsersList(): JSX.Element {
                 </div>
 
 
-                {/* deputy ministry  */}
+                {/* Deputy Ministry */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Deputy Ministry</label>
-                  <Combobox
-                    value={selectedDeputyMinistryEdit}
-                    onChange={(value) => {
-                      setSelectedDeputyMinistryEdit(value);
-                      setEditForm((prev) => ({ ...prev, deputyMinistry: value?.name || "" }));
-                    }}
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Deputy Ministry
+                  </label>
+                  <select
+                    className="block w-full rounded-md border border-blue-200 shadow-sm h-9 text-sm p-2"
+                    value={selectedDeputyMinistry}
+                    onChange={(e) => setSelectedDeputyMinistry(e.target.value)}
                   >
-                    <div className="relative mt-1">
-                      <Combobox.Input
-                        className="w-full border border-gray-300 rounded-md py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        displayValue={(dm: { name: string }) => dm?.name || ""}
-                        onChange={(e) => setQueryDeputyMinistryEdit(e.target.value)}
-                        placeholder="🔍 Search..."
-                      />
-                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg border border-gray-200 z-50">
-                        {filteredDeputyMinistriesEdit.length === 0 ? (
-                          <div className="px-4 py-2 text-gray-500">No results found.</div>
-                        ) : (
-                          filteredDeputyMinistriesEdit.map((dm) => (
-                            <Combobox.Option
-                              key={dm.id}
-                              value={dm}
-                              className={({ active }) =>
-                                `cursor-pointer select-none px-4 py-2 ${active ? "bg-blue-500 text-white" : "text-gray-800"
-                                }`
-                              }
-                            >
-                              {dm.name}
-                            </Combobox.Option>
-                          ))
-                        )}
-                      </Combobox.Options>
-                    </div>
-                  </Combobox>
+                    <option value="">{editForm.deputy}</option>
+                    {deputyMinistryOptions
+                      .filter(dep => dep.id >= 1 && dep.id <= 5) // فقط id های 1 تا 5
+                      .map((dep) => (
+                        <option key={dep.id} value={dep.name}>
+                          {dep.name}
+                        </option>
+                      ))}
+                  </select>
                 </div>
 
                 {/* Employment Type */}
