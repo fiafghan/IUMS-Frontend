@@ -7,7 +7,7 @@ import {
 import GradientSidebar from "../components/Sidebar";
 import { Combobox } from "@headlessui/react";
 import UserFilters from "../components/UserFilters";
-import type { InternetUser } from "../types/types";
+import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
 
 const headers = [
@@ -25,16 +25,17 @@ export default function InternetUsersList(): JSX.Element {
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
   const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
-  const [queryDirectorate, setQueryDirectorate] = useState("");
+  const [queryDirectorate,] = useState("");
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
-  const [selectedDirectorateEdit, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
+  const [, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [employmentTypes, setEmploymentTypes] = useState<{ id: number; name: string }[]>([]);
   const [selectedDeputyMinistryEdit, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
   const [queryDeputyMinistryEdit, setQueryDeputyMinistryEdit] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
+  const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
 
 
 
@@ -108,6 +109,16 @@ export default function InternetUsersList(): JSX.Element {
     }
     fetchFilters();
   }, []);
+
+  useEffect(() => {
+    fetch(`${route}/violation`)
+      .then(res => res.json())
+      .then((res) => {
+        setViolationTypes(res.data || []); // فقط آرایه‌ی data را ست می‌کنیم
+      })
+      .catch(err => console.error("Error fetching violation types:", err));
+  }, []);
+
 
   useEffect(() => {
     async function fetchDeviceTypes() {
@@ -431,7 +442,8 @@ export default function InternetUsersList(): JSX.Element {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
-                    && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id" && key !== "device_type" ? (
+                    && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
+                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
@@ -471,6 +483,42 @@ export default function InternetUsersList(): JSX.Element {
                       ))
                     }
                   </select>
+                </div>
+
+                {/* mac address */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 capitalize">Mac Address</label>
+                  <input
+                    type="text"
+                    name={"mac_address"}
+                    value={editForm.mac_address || ""}
+                    onChange={handleEditChange}
+                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+
+                {/* violation type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Violation Type</label>
+                  <select
+                    name="violation_type_id"
+                    value={editForm.violation_type || ""}
+                    onChange={(e) =>
+                      setEditForm((prev) => ({
+                        ...prev,
+                        violation_type_id: Number(e.target.value),
+                      }))
+                    }
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">{editForm.violation_type}</option>
+                    {violationTypes.map((vt) => (
+                      <option key={vt.id} value={vt.id}>
+                        {vt.name}
+                      </option>
+                    ))}
+                  </select>
+
                 </div>
 
 
