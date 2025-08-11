@@ -5,7 +5,6 @@ import {
   Search, Users, Briefcase, Building2
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
-import { Combobox } from "@headlessui/react";
 import UserFilters from "../components/UserFilters";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
@@ -31,11 +30,14 @@ export default function InternetUsersList(): JSX.Element {
   const [, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [employmentTypes, setEmploymentTypes] = useState<{ id: number; name: string }[]>([]);
-  const [selectedDeputyMinistryEdit, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
-  const [queryDeputyMinistryEdit, setQueryDeputyMinistryEdit] = useState("");
+  const [, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
+  const [queryDeputyMinistryEdit,] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
   const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
+  const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<string | number>("");
+
 
 
 
@@ -132,6 +134,24 @@ export default function InternetUsersList(): JSX.Element {
     fetchDeviceTypes();
   }, []);
 
+  useEffect(() => {
+    async function fetchGroups() {
+      try {
+        const res = await axios.get(`${route}/groups`);
+        if (Array.isArray(res.data.data)) {
+          setGroups(res.data.data);
+        } else if (Array.isArray(res.data)) {
+          setGroups(res.data);
+        } else {
+          console.error("Groups data format unexpected:", res.data);
+        }
+      } catch (error) {
+        console.error("Error fetching groups:", error);
+      }
+    }
+
+    fetchGroups();
+  }, []);
 
 
   const handleEdit = (user: InternetUser) => {
@@ -443,7 +463,7 @@ export default function InternetUsersList(): JSX.Element {
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
                     && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
-                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" ? (
+                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "groups" ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
@@ -542,6 +562,29 @@ export default function InternetUsersList(): JSX.Element {
                       ))}
                   </select>
                 </div>
+
+                {/* groups */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Groups</label>
+                  <select
+                    name="group_id"
+                    value={editForm.groups || selectedGroupId || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEditForm((prev) => ({ ...prev, group_id: val }));
+                      setSelectedGroupId(val);
+                    }}
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    <option value="">{editForm.groups}</option>
+                    {groups.map((group) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
 
                 {/* Employment Type */}
                 <div>
