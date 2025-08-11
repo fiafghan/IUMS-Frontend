@@ -11,7 +11,7 @@ import type { InternetUser } from "../types/types";
 import { route } from "../config";
 
 const headers = [
-  "Name", "Last Name", "Username","Directorate", "Position", "Group Type",
+  "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
   "Status", "Actions"
 ];
 
@@ -25,15 +25,17 @@ export default function InternetUsersList(): JSX.Element {
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
   const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
+  const [queryDirectorate, setQueryDirectorate] = useState("");
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
+  const [selectedDirectorateEdit, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [employmentTypes, setEmploymentTypes] = useState<{ id: number; name: string }[]>([]);
-  const [selectedDirectorateEdit, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
-  const [queryDirectorate, setQueryDirectorate] = useState("");
   const [selectedDeputyMinistryEdit, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
   const [queryDeputyMinistryEdit, setQueryDeputyMinistryEdit] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
+
 
 
   const totalUsers = users.length;
@@ -106,6 +108,19 @@ export default function InternetUsersList(): JSX.Element {
     }
     fetchFilters();
   }, []);
+
+  useEffect(() => {
+    async function fetchDeviceTypes() {
+      try {
+        const res = await axios.get(`${route}/device-types`);
+        setDeviceTypes(res.data);
+      } catch (err) {
+        console.error("Failed to fetch device types", err);
+      }
+    }
+    fetchDeviceTypes();
+  }, []);
+
 
 
   const handleEdit = (user: InternetUser) => {
@@ -343,13 +358,13 @@ export default function InternetUsersList(): JSX.Element {
                           {/* Username */}
                           <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
 
-                        
+
 
 
                           {/* Directorate */}
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.directorate}</td>
 
-                         
+
 
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.position}</td>
 
@@ -416,7 +431,7 @@ export default function InternetUsersList(): JSX.Element {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
-                    && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id" ? (
+                    && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id" && key !== "device_type" ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
@@ -432,43 +447,32 @@ export default function InternetUsersList(): JSX.Element {
 
                 {/* directorate type */}
 
-                <div className="">
-                  <label className="block text-sm font-medium text-gray-700">Directorate</label>
-                  <Combobox
-                    value={selectedDirectorateEdit}
-                    onChange={(value) => {
-                      setSelectedDirectorateEdit(value);
-                      setEditForm((prev) => ({ ...prev, directorate: value?.name || "" }));
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Directorate</label>
+                  <select
+                    name="directorate"
+                    value={editForm.directorate || ""}
+                    onChange={(e) => {
+                      const selectedName = e.target.value;
+                      setEditForm(prev => ({ ...prev, directorate: selectedName }));
+
+                      const selectedObj = directorateOptions.find(dir => dir.name === selectedName) || null;
+                      setSelectedDirectorateEdit(selectedObj);
                     }}
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <div className="relative mt-1">
-                      <Combobox.Input
-                        className="w-full border border-gray-300 rounded-md py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        displayValue={(dir: { name: string }) => dir?.name || ""}
-                        onChange={(e) => setQueryDirectorate(e.target.value)}
-                        placeholder="🔍 Search..."
-                      />
-                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg border border-gray-200 z-50">
-                        {filteredDirectorates.length === 0 ? (
-                          <div className="px-4 py-2 text-gray-500">No results found.</div>
-                        ) : (
-                          filteredDirectorates.map((dir) => (
-                            <Combobox.Option
-                              key={dir.id}
-                              value={dir}
-                              className={({ active }) =>
-                                `cursor-pointer select-none px-4 py-2 ${active ? "bg-blue-500 text-white" : "text-gray-800"
-                                }`
-                              }
-                            >
-                              {dir.name}
-                            </Combobox.Option>
-                          ))
-                        )}
-                      </Combobox.Options>
-                    </div>
-                  </Combobox>
+                    <option value="">Select Directorate</option>
+                    {directorateOptions
+                      .filter(dir => dir.id > 5)
+                      .map((dir) => (
+                        <option key={dir.id} value={dir.name}>
+                          {dir.name}
+                        </option>
+                      ))
+                    }
+                  </select>
                 </div>
+
 
                 {/* deputy ministry  */}
                 <div>
@@ -538,22 +542,26 @@ export default function InternetUsersList(): JSX.Element {
 
                 {/* Device Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Device Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
                   <select
-                    name="device_type"
-                    value={editForm.device_type}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 
-                  focus:ring-2 focus:ring-blue-400"
+                    name="device_type_id"
+                    value={String(editForm.device_type)}
+                    onChange={(e) => {
+                      const selectedId = Number(e.target.value);
+                      setEditForm(prev => ({ ...prev, device_type_id: selectedId }));
+                    }}
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">Select Device Type</option>
-                    {employmentTypes.map((type) => (
-                      <option key={type.id} value={type.name}>
-                        {type.name}
+                    <option value="">{editForm.device_type}</option>
+                    {deviceTypes.map((dt) => (
+                      <option key={dt.id} value={String(dt.id)}>
+                        {dt.name}
                       </option>
                     ))}
                   </select>
+
                 </div>
+
 
                 {/* Status */}
                 <div>
