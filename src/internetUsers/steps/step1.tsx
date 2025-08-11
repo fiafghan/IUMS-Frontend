@@ -5,6 +5,7 @@ import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import { route } from "../../config";
 
+
 export function Step1({ form, onChange }: { form: FormState; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }): JSX.Element {
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);

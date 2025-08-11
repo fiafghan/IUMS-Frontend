@@ -13,6 +13,7 @@ import { Step4 } from "./steps/step4";
 import { stepTitles } from "./steps/steps_titles";
 import { route } from "../config";
 import Swal from 'sweetalert2'
+import { ProgressBar } from "../components/ProgressBar";
 
 export default function InternetUserAddForm(): JSX.Element {
   const [form, setForm] = useState<FormState>({
@@ -248,6 +249,12 @@ export default function InternetUserAddForm(): JSX.Element {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
+
+            <ProgressBar
+              currentStep={currentStep}
+              totalSteps={stepTitles.length}
+              stepsLabels={stepTitles}
+            />
 
             <motion.h2
               className="text-3xl font-extrabold text-center text-gray-800 mb-6 tracking-tight"
