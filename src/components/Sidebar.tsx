@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import {Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp
+import {
+  Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, type JSX } from "react";
@@ -11,35 +12,33 @@ export default function GradientSidebar(): JSX.Element {
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isAdmin = currentUser?.user.role === 'Admin';
 
-const logout = async () => {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-  const token = loggedInUser.token;
-  const user_id = loggedInUser.id;  // assuming your backend sends token inside user object as 'token'
+  const logout = async () => {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    const token = loggedInUser.token;
+    const user_id = loggedInUser.id;  // assuming your backend sends token inside user object as 'token'
 
-  if (!token) {
-    console.error("❌ No token found. Cannot logout.");
-    return;
-  }
+    if (!token) {
+      console.error("❌ No token found. Cannot logout.");
+      return;
+    }
 
-  try {
-    await axios.post(
-      `${route}/logout`,
-      {id:user_id},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    try {
+      await axios.post(
+        `${route}/logout`,
+        { id: user_id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    localStorage.removeItem("loggedInUser");
-    navigate("/login");
-  } catch (error) {
-    console.error("❌ Logout failed", error);
-  }
-};
-
-
+      localStorage.removeItem("loggedInUser");
+      navigate("/login");
+    } catch (error) {
+      console.error("❌ Logout failed", error);
+    }
+  };
 
 
   // Toggle states for nested sections
@@ -51,7 +50,11 @@ const logout = async () => {
     <aside className="w-64 min-h-screen bg-blue-400 text-white flex flex-col">
       <div className="flex items-center justify-center flex-col py-6 px-4">
         <img src="moph.png" className="rounded-full w-30" />
-        <h1 className="text-center mt-5">IUMS</h1>
+        <h1
+          className="text-center mt-5 text-3xl font-extrabold bg-gradient-to-r from-gray-100 via-blue-100 to-blue-200 bg-clip-text text-transparent drop-shadow-lg animate-pulse"
+        >
+          IUMS
+        </h1>
       </div>
 
       <nav className="flex flex-col mt-4 gap-1 px-4 text-sm font-medium">
@@ -87,53 +90,53 @@ const logout = async () => {
         )}
 
         {/* 🔹 Violations Section */}
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setViolationOpen((prev) => !prev)}
-            className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
-          >
-            <div className="flex items-center gap-2">
-              <AlertOctagon className="w-5 h-5" />
-              Violations
-            </div>
-            {violationOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => setViolationOpen((prev) => !prev)}
+          className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
+        >
+          <div className="flex items-center gap-2">
+            <AlertOctagon className="w-5 h-5" />
+            Violations
+          </div>
+          {violationOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </motion.button>
 
-          {violationOpen && (
-            <div className="ml-6 flex flex-col gap-1 text-white">
-              <button
-                onClick={() => navigate("/addviolation")}
-                className="hover:text-white/80 transition py-1 text-left"
-              >
-                ➤ Violation Form
-              </button>
-              <button
-                onClick={() => navigate("/add-violation-type")}
-                className="hover:text-white/80 transition py-1 text-left"
-              >
-                ➤ Add Violation Type
-              </button>
-              <button
-                onClick={() => navigate("/all-violation-types")}
-                className="hover:text-white/80 transition py-1 text-left"
-              >
-                ➤ All Violation Types
-              </button>
-              <button
-                onClick={() => navigate("/addviolationonauser")}
-                className="hover:text-white/80 transition py-1 text-left"
-              >
-                ➤ Add Violation On A User
-              </button>
-              <button
-                onClick={() => navigate("/all-violations-from-users")}
-                className="hover:text-white/80 transition py-1 text-left"
-              >
-                ➤ All Violations From Users
-              </button>
-            </div>
-          )}
+        {violationOpen && (
+          <div className="ml-6 flex flex-col gap-1 text-white">
+            <button
+              onClick={() => navigate("/addviolation")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Violation Form
+            </button>
+            <button
+              onClick={() => navigate("/add-violation-type")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Add Violation Type
+            </button>
+            <button
+              onClick={() => navigate("/all-violation-types")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ All Violation Types
+            </button>
+            <button
+              onClick={() => navigate("/addviolationonauser")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ Add Violation On A User
+            </button>
+            <button
+              onClick={() => navigate("/all-violations-from-users")}
+              className="hover:text-white/80 transition py-1 text-left"
+            >
+              ➤ All Violations From Users
+            </button>
+          </div>
+        )}
 
 
         {/* 🔹 System Users (admin only) */}
