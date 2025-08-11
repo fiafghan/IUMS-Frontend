@@ -421,8 +421,10 @@ export default function InternetUsersList(): JSX.Element {
                               <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
                               {/* Status */}
-                              <td className="px-3 py-2 text-gray-700 text-[10px]">
-                                {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
+                              <td className={`px-3 py-2 text-[10px] ${
+                              user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700" }`}
+                              >
+                                {user.status === 1 ? "active"  : user.status === 0 ? "deactive" : "-"}
                               </td>
 
                               {/* Violations */}
