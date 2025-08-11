@@ -116,7 +116,7 @@ export default function InternetUsersList(): JSX.Element {
     setEditForm({
       ...user,
       status: user.status || "active",
-      violations_count: user.violations_count || "0",
+      violations_count: user.violations_count || 0,
       comment: user.comment || "No comment"
     });
 
@@ -291,22 +291,20 @@ export default function InternetUsersList(): JSX.Element {
                 w-full
                 px-6 py-2
                 text-sm font-semibold
-                text-white
-                bg-gradient-to-r from-blue-300 via-blue-200 to-gray-100
+                text-blue-300
+                bg-gradient-to-r from-gray-200 via-blue-50 to-gray-100
                 rounded-sm
                 overflow-hidden
                 shadow-lg
-                hover:from-blue-400 hover:via-blue-200 hover:to-gray-200
+                hover:from-gray-200 hover:via-gray-200 hover:to-gray-100
                 focus:outline-none focus:ring-opacity-50
                 transition
                 duration-300
                 ease-in-out
               "
             >
-              {/* متن دکمه */}
               {expanded ? "⯅ Click To Collapse ⯅" : "⯆ Click To Expand ⯆"}
 
-              {/* خط شمشیر متحرک */}
               <span className="
                 absolute top-0 left-0 w-full h-full pointer-events-none
                 before:content-['']
@@ -327,7 +325,7 @@ export default function InternetUsersList(): JSX.Element {
                     {fixedHeaders.map((header) => (
                       <th
                         key={header}
-                        className="px-3 py-2 border-r bg-blue-300 text-[10px] font-semibold"
+                        className="px-3 py-2 border-r border-white bg-gray-100 text-blue-400 text-[10px] font-semibold"
                         style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
                       >
                         {header}
@@ -340,7 +338,7 @@ export default function InternetUsersList(): JSX.Element {
                         {headers.map((header) => (
                           <th
                             key={header}
-                            className="px-3 py-2 border-r last:border-r-0 bg-blue-300 text-[10px] font-semibold"
+                            className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[10px] font-semibold"
                             style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
                           >
                             {header}
@@ -368,8 +366,8 @@ export default function InternetUsersList(): JSX.Element {
                       (user.violation_type && user.violation_type.toLowerCase().includes(searchTerm.toLowerCase())) ||
                       String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase()))
                     .map((user, idx) => {
-                      const isRedCard = user.violations_count === "2";
-                      const isYellowCard = user.violations_count === "1";
+                      const isRedCard = user.violations_count === 2;
+                      const isYellowCard = user.violations_count === 1;
 
                       return (
                         <tr
@@ -421,10 +419,9 @@ export default function InternetUsersList(): JSX.Element {
                               <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
                               {/* Status */}
-                              <td className={`px-3 py-2 text-[10px] ${
-                              user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700" }`}
+                              <td className={`px-3 py-2 text-[10px] ${user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700"}`}
                               >
-                                {user.status === 1 ? "active"  : user.status === 0 ? "deactive" : "-"}
+                                {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
                               </td>
 
                               {/* Violations */}

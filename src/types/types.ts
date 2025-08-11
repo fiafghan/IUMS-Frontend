@@ -15,7 +15,7 @@ export type InternetUser = {
   device_type: string;
   mac_address?: string;
   status?: "active" | "deactive" | 1 | 0;
-  violations_count?: "0" | "1" | "2";
+  violations_count?: number;
   comment?: string;
   violation_type?: string;
   groups:string;
