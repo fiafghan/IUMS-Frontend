@@ -11,8 +11,8 @@ import type { InternetUser } from "../types/types";
 import { route } from "../config";
 
 const headers = [
-  "Name", "Last Name", "Username", "Email", "Phone", "Employment Type", "Directorate", "Deputy Ministry", "Position", "Device Limit", "Device Type", "Group Type",
-  "MAC Address", "Status", "Violations Count", "Violation Type", "Comment", "Actions"
+  "Name", "Last Name", "Username","Directorate", "Position", "Group Type",
+  "Status", "Actions"
 ];
 
 
@@ -343,44 +343,25 @@ export default function InternetUsersList(): JSX.Element {
                           {/* Username */}
                           <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
 
-                          {/* email */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.email}</td>
-                          {/* Phone */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.phone}</td>
+                        
 
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.employment_type || "-"}</td>
 
                           {/* Directorate */}
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.directorate}</td>
 
-                          {/* Deputy Ministry */}
-                          <td className="px-3 py-2  text-gray-700 text-[9px]">{user.deputy}</td>
+                         
 
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.position}</td>
 
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_limit}</td>
 
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.device_type}</td>
 
                           <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
 
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.mac_address}</td>
 
                           {/* Status */}
                           <td className={`px-3 py-2 text-[10px] ${user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700"}`}
                           >
                             {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
-                          </td>
-
-                          {/* Violations */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violations_count}</td>
-
-                          {/* Violation type */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.violation_type}</td>
-
-                          {/* Comment */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px] truncate max-w-[120px]">
-                            {user.comment || "-"}
                           </td>
 
                           {/* Actions */}
