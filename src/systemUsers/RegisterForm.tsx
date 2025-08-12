@@ -115,7 +115,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-12 bg-white shadow-lg rounded-xl p-8 space-y-6 border border-gray-200">
+    <div className="max-w-md mx-auto mt-12 bg-white shadow-lg rounded-xl p-8 space-y-6 border border-gray-200 scale-70">
       <h2 className="text-2xl font-bold text-center bg-white text-blue-300 py-2 rounded">
         Register New User
       </h2>
