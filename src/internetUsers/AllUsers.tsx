@@ -220,8 +220,8 @@ export default function InternetUsersList(): JSX.Element {
         border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <User className="w-6 h-6 text-blue-400" />
-                <span className="text-blue-400 text-sm">Total Users</span>
+                <User className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
+                <span className="text-blue-400 text-[11px]">Total Users</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Summary</div>
             </div>
@@ -231,19 +231,19 @@ export default function InternetUsersList(): JSX.Element {
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Users className="w-6 h-6 text-blue-400" />
-                <span className="text-blue-400 font-semibold text-sm">Active / Deactive</span>
+                <Users className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
+                <span className="text-blue-400 text-[11px]">Active / Deactive</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Status</div>
             </div>
             <div className="space-y-1 text-blue-400">
               <div className="flex justify-between text-sm">
-                <span>Active</span>
-                <span className="font-bold">{activeUsers}</span>
+                <span className="text-green-400">Active</span>
+                <span className="font-bold text-green-400">{activeUsers}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>Deactive</span>
-                <span className="font-bold">{deactiveUsers}</span>
+                <span className="text-red-500">Deactive</span>
+                <span className="font-bold text-red-500">{deactiveUsers}</span>
               </div>
             </div>
           </div>
@@ -251,8 +251,8 @@ export default function InternetUsersList(): JSX.Element {
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Briefcase className="w-6 h-6 text-blue-400" />
-                <span className="text-blue-400 font-semibold text-sm">Employment Types</span>
+                <Briefcase className="w-6 h-6 text-white bg-blue-400 p-1 rounded-md" />
+                <span className="text-blue-400 font-semibold text-[11px]">Employment Types</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Type</div>
             </div>
@@ -269,8 +269,8 @@ export default function InternetUsersList(): JSX.Element {
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Building2 className="w-6 h-6 text-blue-400" />
-                <span className="text-blue-400 font-semibold text-sm">Deputy Ministries</span>
+                <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
+                <span className="text-blue-400 font-semibold text-[11px]">Deputy Ministries</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Groups</div>
             </div>
