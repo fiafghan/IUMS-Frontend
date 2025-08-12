@@ -10,15 +10,13 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
   return (
     <nav aria-label="Progress" className="w-full max-w-7xl mx-auto my-8 px-6 scale-80">
       <ol className="flex justify-between items-center relative">
-        {/* خط پس‌زمینه اتصال مراحل */}
         <div
           aria-hidden="true"
           className="absolute top-4 left-0 right-0 h-1 rounded-full bg-gray-300"
         />
-        {/* خط پیشرفت انیمیشنی */}
         <div
           aria-hidden="true"
-          className="absolute top-4 left-0 h-1 rounded-full bg-gradient-to-r from-blue-500 to-green-400 transition-all duration-700 ease-in-out"
+          className="absolute top-4 left-0 h-1 rounded-full bg-gradient-to-r from-blue-400 to-green-300 transition-all duration-700 ease-in-out"
           style={{ width: `${((currentStep) / (totalSteps - 1)) * 100}%` }}
         />
 

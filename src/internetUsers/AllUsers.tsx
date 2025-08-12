@@ -252,7 +252,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Briefcase className="w-6 h-6 text-white bg-blue-400 p-1 rounded-md" />
-                <span className="text-blue-400 font-semibold text-[11px]">Employment Types</span>
+                <span className="text-blue-400 text-[11px]">Employment Types</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Type</div>
             </div>
@@ -270,7 +270,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-                <span className="text-blue-400 font-semibold text-[11px]">Deputy Ministries</span>
+                <span className="text-blue-400 text-[11px]">Deputy Ministries</span>
               </div>
               <div className="text-blue-400 text-xs uppercase tracking-wider">Groups</div>
             </div>
@@ -300,7 +300,7 @@ export default function InternetUsersList(): JSX.Element {
           />
           <div className="relative w-full max-w-md mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 rounded-full bg-blue-400 p-1 text-white scale-120" />
+              <Search className="w-5 h-5 rounded-full bg-blue-400 p-1 text-white scale-120 shadow-md shadow-gray-500" />
             </div>
             <input
               type="search"
@@ -420,14 +420,14 @@ export default function InternetUsersList(): JSX.Element {
                                 className="hover:text-blue-100"
                                 title="Edit"
                               >
-                                <Edit className="w-5 h-5 hover:text-blue-300 scale-70" />
+                                <Edit className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-green-400 p-1" />
                               </button>
                               <button
                                 onClick={() => handleDelete(user.id)}
                                 className="hover:text-blue-100"
                                 title="Delete"
                               >
-                                <Trash className="w-5 h-5 hover:text-blue-300 scale-70" />
+                                <Trash className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-red-300 p-1" />
                               </button>
                             </div>
                           </td>
