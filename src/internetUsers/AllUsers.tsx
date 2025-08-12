@@ -300,7 +300,7 @@ export default function InternetUsersList(): JSX.Element {
           />
           <div className="relative w-full max-w-md mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 text-blue-300" />
+              <Search className="w-5 h-5 rounded-full bg-blue-400 p-1 text-white scale-120" />
             </div>
             <input
               type="search"
