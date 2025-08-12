@@ -222,7 +222,8 @@ export default function InternetUserAddForm(): JSX.Element {
             animate={{ opacity: 0.75 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center 
+            bg-black bg-opacity-50 backdrop-blur-sm scale-80"
             aria-label="Loading..."
             role="alert"
             aria-live="assertive"

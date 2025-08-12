@@ -8,7 +8,7 @@ interface ProgressBarProps {
 
 export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBarProps) {
   return (
-    <nav aria-label="Progress" className="w-full max-w-7xl mx-auto my-8 px-6">
+    <nav aria-label="Progress" className="w-full max-w-7xl mx-auto my-8 px-6 scale-80">
       <ol className="flex justify-between items-center relative">
         {/* خط پس‌زمینه اتصال مراحل */}
         <div

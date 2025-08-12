@@ -94,8 +94,9 @@ export default function LoginForm(): JSX.Element {
       </AnimatePresence>
 
       {/* Main form content */}
+      <div className="scale-70">
       <motion.div
-        className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex flex-col items-center justify-center px-4 py-12"
+        className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -156,8 +157,8 @@ export default function LoginForm(): JSX.Element {
             )}
           </AnimatedSubmitButton>
         </motion.form>
-
       </motion.div>
+      </div>
     </>
   );
 }
