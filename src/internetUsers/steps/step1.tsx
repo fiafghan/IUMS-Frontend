@@ -103,17 +103,17 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
 
   return (
     <div className="grid grid-cols-3 gap-5">
-      <InputField label="Name" icon={<User className="w-5 h-5 text-blue-400" />}
+      <InputField label="Name" icon={<User className="w-5 h-5 text-white bg-blue-400 rounded-md p-1" />}
         name="name" type="text" placeholder="Ahmad" value={form.name} onChange={onChange} />
-      <InputField label="Last Name" icon={<IdCard className="w-5 h-5 text-blue-400" />}
+      <InputField label="Last Name" icon={<IdCard className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="last_name" type="text" placeholder="Ahmadi" value={form.last_name} onChange={onChange} />
-      <InputField label="Username" icon={<User className="w-5 h-5 text-blue-400" />}
+      <InputField label="Username" icon={<User className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="username" type="text" placeholder="Ahmadi-it" value={form.username} onChange={onChange} />
       {usernameError && <p className="text-red-600 text-sm mt-1">{usernameError}</p>}
-      <InputField label="Email" icon={<Mail className="w-5 h-5 text-blue-400" />}
+      <InputField label="Email" icon={<Mail className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="email" type="email" placeholder="you@example.com" value={form.email} onChange={onChange} />
       {emailError && <p className="text-red-600">{emailError}</p>}
-      <InputField label="Phone" icon={<Phone className="w-5 h-5 text-blue-400" />}
+      <InputField label="Phone" icon={<Phone className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="phone" type="tel" placeholder="+937xxxxxxxx" value={form.phone} onChange={onChange} />
       {phoneError && <p className="text-red-600 text-sm mt-1">{phoneError}</p>}
     </div>

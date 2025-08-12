@@ -53,7 +53,7 @@ export function Step3({ form, onChange }: {
     <div className="grid grid-cols-3 gap-5">
       <InputField
         label="Device Limit"
-        icon={<Hash className="w-5 h-5 text-blue-400" />}
+        icon={<Hash className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="device_limit"
         type="number"
         placeholder="Number of devices allowed"
@@ -67,7 +67,7 @@ export function Step3({ form, onChange }: {
         name="group_id"
         value={form.group_id}
         onChange={onChange}
-        icon={<Group className="w-5 h-5 text-blue-400" />}
+        icon={<Group className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         placeholder="Select Group Type"
         className="mb-4"
       // valueField and labelField default to "id" and "name", so no need to specify here if your API matches
@@ -76,7 +76,8 @@ export function Step3({ form, onChange }: {
       <div>
         <label className="block text-sm font-medium text-gray-700">Device Type</label>
         <div className="relative w-full">
-          <Laptop className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 pointer-events-none" size={20} />
+          <Laptop className="absolute left-3 top-1/2 -translate-y-1/2  text-white bg-blue-400 
+          rounded-md p-1 pointer-events-none" size={20} />
           <select
             name="device_type"
             value={form.device_type}
@@ -95,7 +96,7 @@ export function Step3({ form, onChange }: {
       </div>
       <InputField
         label="MAC Address"
-        icon={<Cpu className="w-5 h-5 text-blue-400" />}
+        icon={<Cpu className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
         name="mac_address"
         type="text"
         placeholder="00:00:00:00:00:00"
