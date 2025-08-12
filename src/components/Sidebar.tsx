@@ -48,11 +48,11 @@ export default function GradientSidebar(): JSX.Element {
 
   return (
     <aside className="w-64 min-h-screen bg-gray-100 text-white flex flex-col">
-      <div className="flex items-center justify-center flex-col py-6 px-4">
+      <div className="flex items-center justify-center flex-col py-6 px-4 scale-80">
         <img src="moph.png" className="rounded-full w-30" />
         <h1
           className="text-center mt-5 text-3xl font-extrabold bg-blue-400 bg-clip-text 
-          text-transparent"
+          text-transparent scale-80"
         >
           IUMS
         </h1>
@@ -66,24 +66,24 @@ export default function GradientSidebar(): JSX.Element {
           onClick={() => setUserOpen(!userOpen)}
           className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
         >
-          <div className="flex items-center gap-2 text-blue-400">
-            <Users className="w-5 h-5" />
+          <div className="flex items-center gap-2 text-blue-400 scale-80">
+            <Users className="w-5 h-5 scale-80" />
             All Users
           </div>
-          {userOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-blue-400" />}
+          {userOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
         </motion.button>
 
         {userOpen && (
-          <div className="ml-6 flex flex-col gap-1 text-blue-400">
+          <div className="ml-6 flex flex-col gap-1 text-blue-400 scale-80">
             <button
               onClick={() => navigate("/")}
-              className="hover:text-white/80 transition py-1 text-left"
+              className="hover:text-white/80 transition py-1 text-left scale-80"
             >
               ➤ View All
             </button>
             <button
               onClick={() => navigate("/adduser")}
-              className="hover:text-white/80 transition py-1 text-left"
+              className="hover:text-white/80 transition py-1 text-left scale-80"
             >
               ➤ Add User
             </button>
@@ -97,42 +97,42 @@ export default function GradientSidebar(): JSX.Element {
           onClick={() => setViolationOpen((prev) => !prev)}
           className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
         >
-          <div className="flex items-center gap-2 text-blue-400">
-            <AlertOctagon className="w-5 h-5 text-blue-400" />
+          <div className="flex items-center gap-2 text-blue-400 scale-80">
+            <AlertOctagon className="w-5 h-5 text-blue-400 scale-80" />
             Violations
           </div>
-          {violationOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-blue-400" />}
+          {violationOpen ? <ChevronUp className="w-4 h-4 scale-80" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
         </motion.button>
 
         {violationOpen && (
-          <div className="ml-6 flex flex-col gap-1 text-blue-400">
+          <div className="ml-6 flex flex-col gap-1 text-blue-400 scale-80">
             <button
               onClick={() => navigate("/addviolation")}
-              className="hover:text-blue-100 transition py-1 text-left"
+              className="hover:text-blue-100 transition py-1 text-left scale-80"
             >
               ➤ Violation Form
             </button>
             <button
               onClick={() => navigate("/add-violation-type")}
-              className="hover:text-blue-100 transition py-1 text-left"
+              className="hover:text-blue-100 transition py-1 text-left scale-80"
             >
               ➤ Add Violation Type
             </button>
             <button
               onClick={() => navigate("/all-violation-types")}
-              className="hover:text-blue-100 transition py-1 text-left"
+              className="hover:text-blue-100 transition py-1 text-left scale-80"
             >
               ➤ All Violation Types
             </button>
             <button
               onClick={() => navigate("/addviolationonauser")}
-              className="hover:text-blue-100 transition py-1 text-left"
+              className="hover:text-blue-100 transition py-1 text-left scale-80"
             >
               ➤ Add Violation On A User
             </button>
             <button
               onClick={() => navigate("/all-violations-from-users")}
-              className="hover:text-blue-100 transition py-1 text-left"
+              className="hover:text-blue-100 transition py-1 text-left scale-80"
             >
               ➤ All Violations From Users
             </button>
@@ -149,24 +149,24 @@ export default function GradientSidebar(): JSX.Element {
               onClick={() => setSystemUserOpen(!systemUserOpen)}
               className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
             >
-              <div className="flex items-center gap-2 text-blue-400">
+              <div className="flex items-center gap-2 text-blue-400 scale-80">
                 <Users className="w-5 h-5 text-blue-400" />
                 System Users
               </div>
-              {systemUserOpen ? <ChevronUp className="w-4 h-4 text-blue-400" /> : <ChevronDown className="w-4 h-4 text-blue-400" />}
+              {systemUserOpen ? <ChevronUp className="w-4 h-4 text-blue-400 scale-80" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
             </motion.button>
 
             {systemUserOpen && (
-              <div className="ml-6 flex flex-col gap-1 text-blue-400">
+              <div className="ml-6 flex flex-col gap-1 text-blue-400 scale-80">
                 <button
                   onClick={() => navigate("/all-system-users")}
-                  className="hover:text-blue-100 transition py-1 text-left"
+                  className="hover:text-blue-100 transition py-1 text-left scale-80"
                 >
                   ➤ View All
                 </button>
                 <button
                   onClick={() => navigate("/register")}
-                  className="hover:text-blue-100 transition py-1 text-left text-blue-400"
+                  className="hover:text-blue-100 transition py-1 text-left text-blue-400 scale-80"
                 >
                   ➤ Add New
                 </button>
@@ -180,9 +180,9 @@ export default function GradientSidebar(): JSX.Element {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           onClick={() => navigate("/settings")}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400"
+          className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400 scale-80"
         >
-          <Settings className="w-5 h-5 text-blue-400" />
+          <Settings className="w-5 h-5 text-blue-400 scale-80" />
           Settings
         </motion.button>
 
@@ -191,7 +191,7 @@ export default function GradientSidebar(): JSX.Element {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.95 }}
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400 mt-4 text-blue-400"
+          className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 mt-4 text-blue-400 scale-80"
         >
           <LogOut className="w-5 h-5 text-blue-400" />
           Logout
