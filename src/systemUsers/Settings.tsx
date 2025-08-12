@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Spinner from "../components/Spinner";
 import AnimatedSubmitButton from "../components/AnimatedButton";
 import Swal from "sweetalert2";
+import { route } from "../config";
 
 
 export default function SettingsPage() {
@@ -46,7 +47,7 @@ export default function SettingsPage() {
       setUserId(userId);
 
       // Fetch user profile data using API with token
-      axios.get("http://localhost:8000/api/profile", {
+      axios.get(`${route}/profile`, {
         headers: { Authorization: `Bearer ${token}` },  // ارسال توکن در هدر
       })
         .then((response) => {
@@ -97,7 +98,7 @@ export default function SettingsPage() {
       }
       console.log("Sending payload:", payload);
       await axios.put(
-        `http://localhost:8000/api/update-profile/${userId}`,
+        `${route}/update-profile/${userId}`,
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -153,7 +154,7 @@ export default function SettingsPage() {
         <motion.form
           onSubmit={handleSubmit}
           className="w-full max-w-md bg-white shadow-2xl border border-gray-200 
-          rounded-3xl px-10 py-12 relative"
+          rounded-3xl px-10 py-12 relative scale-80"
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}

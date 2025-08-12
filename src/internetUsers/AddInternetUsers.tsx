@@ -223,7 +223,7 @@ export default function InternetUserAddForm(): JSX.Element {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-50 flex items-center justify-center 
-            bg-black bg-opacity-50 backdrop-blur-sm scale-80"
+            bg-black bg-opacity-50 backdrop-blur-sm"
             aria-label="Loading..."
             role="alert"
             aria-live="assertive"
@@ -241,11 +241,11 @@ export default function InternetUserAddForm(): JSX.Element {
       <div className="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100">
         <GradientSidebar />
         <motion.div
-          className="flex-1 flex flex-col items-center justify-center px-4 py-12"
+          className="flex-1 flex flex-col items-center justify-center px-4"
           initial={false}
         >
           <motion.div
-            className="w-full max-w-7xl bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12 relative z-10"
+            className="w-full max-w-7xl bg-white shadow-sm border border-gray-50 rounded-sm px-10 py-10 relative scale-70"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6 }}

@@ -373,7 +373,7 @@ export default function InternetUsersList(): JSX.Element {
                           className={`transition-colors duration-200 ${isRedCard
                             ? "bg-red-50"
                             : idx % 2 === 0
-                              ? "bg-gray-100"
+                              ? "bg-gray-50"
                               : "bg-white"
                             } hover:bg-blue-100`}
                         >

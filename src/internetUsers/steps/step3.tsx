@@ -50,7 +50,7 @@ export function Step3({ form, onChange }: {
     return () => clearTimeout(delayDebounceFn);
   }, [form.mac_address]);
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-5">
       <InputField
         label="Device Limit"
         icon={<Hash className="w-5 h-5 text-blue-400" />}

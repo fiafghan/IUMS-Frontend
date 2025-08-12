@@ -57,7 +57,7 @@ export function Step2({
 
 
   return (
-    <div>
+    <div className="grid grid-cols-3 gap-5">
       <InputField
         label="Position"
         icon={<Briefcase className="w-5 h-5 text-blue-400" />}
