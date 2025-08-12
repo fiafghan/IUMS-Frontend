@@ -310,7 +310,8 @@ export default function InternetUsersList(): JSX.Element {
               className="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300
                    text-gray-900 placeholder-gray-400 focus:outline-none
                    focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                   transition duration-150 ease-in-out sm:text-sm"
+                   transition duration-150 ease-in-out sm:text-sm border-r-blue-300 rounded-r-full 
+                   border-l-blue-300 border-l-2 border-r-2 rounded-l-full"
               autoComplete="off"
             />
           </div>
@@ -328,7 +329,7 @@ export default function InternetUsersList(): JSX.Element {
           <div className="overflow-x-auto rounded-sm 
           shadow-lg bg-white border 
           border-gray-200 max-w-full">
-            <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-white max-w-full scrollbar-custom">
+            <div className="overflow-x-auto rounded-sm shadow-md bg-white border border-white max-w-full scrollbar-custom">
               <table className="table-auto w-full text-left text-sm">
                 {/* Table Head */}
                 <thead>
@@ -338,8 +339,7 @@ export default function InternetUsersList(): JSX.Element {
                     {headers.map((header) => (
                       <th
                         key={header}
-                        className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[10px] font-semibold"
-                        style={{ textShadow: "0 1px 1px rgba(0,0,0,0.15)" }}
+                        className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[8px] font-semibold"
                       >
                         {header}
                       </th>
@@ -420,14 +420,14 @@ export default function InternetUsersList(): JSX.Element {
                                 className="hover:text-blue-100"
                                 title="Edit"
                               >
-                                <Edit className="w-5 h-5 hover:text-blue-300" />
+                                <Edit className="w-5 h-5 hover:text-blue-300 scale-70" />
                               </button>
                               <button
                                 onClick={() => handleDelete(user.id)}
                                 className="hover:text-blue-100"
                                 title="Delete"
                               >
-                                <Trash className="w-5 h-5 hover:text-blue-300" />
+                                <Trash className="w-5 h-5 hover:text-blue-300 scale-70" />
                               </button>
                             </div>
                           </td>
