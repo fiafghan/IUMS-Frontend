@@ -20,7 +20,7 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
   return (
     <div className="relative overflow-hidden rounded-md p-5 shadow-none
      bg-transparent w-full lg:w-[800px] text-blue-400 mx-auto">
-        <div className="text-center text-white text-2xl ml-35">Deputy Ministries Distribution</div>
+        <div className="text-center text-white text-2xl text-center">Deputy Ministries Distribution</div>
 
       <div className="flex items-center justify-between mb-4 text-blue-400">
 
@@ -36,8 +36,8 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
           >
             <defs>
               <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#2563eb" />
+                <stop offset="0%" stopColor="#bbd5ffff" />
+                <stop offset="100%" stopColor="#346de9ff" />
               </linearGradient>
             </defs>
 

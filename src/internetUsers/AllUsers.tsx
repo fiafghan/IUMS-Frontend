@@ -210,16 +210,17 @@ export default function InternetUsersList(): JSX.Element {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-l from-blue-200 to-gray-50 shadow-md shadow-indigo-700">
+    <div className="min-h-screen flex bg-white shadow-md shadow-indigo-700">
       <ScrollToTopButton />
       <div className="fixed top-0 left-0 bottom-0 w-64 border-r 
       border-gray-200 bg-white shadow-sm z-20">
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-gradient-to-b 
+        from-blue-400 via-blue-200 to-white rounded-md">
           {/* 🔵 Total Users */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
+          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
         border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -231,7 +232,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="text-4xl font-bold text-gray-100 text-center mt-25">{totalUsers}</div>
           </div>
           {/* 🟦 Active / Deactive */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm border border-blue-100 group scale-80 bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white border border-blue-100 group scale-80 bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
@@ -251,7 +252,7 @@ export default function InternetUsersList(): JSX.Element {
             </div>
           </div>
           {/* 👔 Employment Type */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border border-blue-100 group scale-80">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border border-blue-100 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Briefcase className="w-6 h-6 text-white bg-blue-400 p-1 rounded-md" />
@@ -271,13 +272,13 @@ export default function InternetUsersList(): JSX.Element {
           </div>
 
           {/* Group Pie Chart */}
-            <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border 
+            <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border 
             border-blue-100 group scale-80 pb-5">
               <GroupTypePieChart />
             </div>
 
             {/* deputy Ministry Chart */}
-            <div className="relative overflow-hidden rounded-sm p-1 shadow-none bg-gradient-to-b from-blue-400 via-blue-300 to-blue-100 
+            <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100 
           group scale-80 pb-5 col-span-4 text-center ">
               <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
           </div>
