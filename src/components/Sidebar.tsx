@@ -11,6 +11,7 @@ export default function GradientSidebar(): JSX.Element {
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isAdmin = currentUser?.user.role === 'Admin';
+  const isViewer = currentUser?.user.role === 'viewer';
 
   const logout = async () => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -81,12 +82,14 @@ export default function GradientSidebar(): JSX.Element {
             >
               ➤ View All
             </button>
+            {!isViewer && (
             <button
               onClick={() => navigate("/adduser")}
               className="hover:text-white/80 transition py-1 text-left scale-80"
             >
               ➤ Add User
             </button>
+            )}
           </div>
         )}
 
