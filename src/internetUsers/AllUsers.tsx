@@ -10,6 +10,7 @@ import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
 import DeputyMinistriesChart from "../components/deputyMinistrySummaryChart";
 import GroupTypePieChart from "../components/groupTypePieChart";
+import ScrollToTopButton from "../components/scrollToTop";
 
 const headers = [
   "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
@@ -210,6 +211,7 @@ export default function InternetUsersList(): JSX.Element {
 
   return (
     <div className="min-h-screen flex bg-white shadow-md shadow-indigo-700">
+      <ScrollToTopButton />
       <div className="fixed top-0 left-0 bottom-0 w-64 border-r 
       border-gray-200 bg-white shadow-sm z-20">
         <GradientSidebar />
