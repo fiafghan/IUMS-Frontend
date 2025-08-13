@@ -2,12 +2,14 @@ import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import {
   User, Edit, Trash,
-  Search, Users, Briefcase, Building2
+  Search, Users, Briefcase
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
+import DeputyMinistriesChart from "../components/deputyMinistrySummaryChart";
+import GroupTypePieChart from "../components/groupTypePieChart";
 
 const headers = [
   "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
@@ -213,7 +215,7 @@ export default function InternetUsersList(): JSX.Element {
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white 
         border border-blue-100 group scale-80">
@@ -263,26 +265,22 @@ export default function InternetUsersList(): JSX.Element {
                 </li>
               ))}
             </ul>
+            
           </div>
-          {/* 🏛️ Deputy Ministry */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-80">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-                <span className="text-blue-400 text-[11px]">Deputy Ministries</span>
-              </div>
-              <div className="text-white text-xs uppercase tracking-wider bg-blue-400 rounded-full p-2 scale-70">Groups</div>
-            </div>
-            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1 text-[10px]">
-              {Object.entries(deputyMinistryCounts).map(([name, count]) => (
-                <li key={name} className="flex justify-between">
-                  <span>{name}</span>
-                  <span className="text-white bg-blue-400 rounded-md p-1 w-10 text-center font-bold">{count}</span>
-                </li>
-              ))}
-            </ul>
+
+          {/* Group Pie Chart */}
+          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border border-blue-100 group scale-80 pb-5">
+           <GroupTypePieChart />
           </div>
+
+          {/* deputy Ministry Chart */}
+          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border border-blue-100  
+          group scale-80 pb-5 col-span-2 bg-gradient-to-r from-blue-600 via-blue-500 to-from-gray-500">
+           <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
+          </div>
+
         </div>
+      
 
         <div className="flex mb-4 mt-5 justify-center w-full">
           <UserFilters
