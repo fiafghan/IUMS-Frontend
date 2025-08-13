@@ -47,7 +47,7 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
               type="category"
               dataKey="name"
               width={140}
-              tick={{ fontSize: 12, fontWeight: 'bold', fill: 'blue' }}
+              tick={{ fontSize: 12, fontWeight: 'bold', fill: 'white' }}
             />
             <Tooltip
               contentStyle={{
