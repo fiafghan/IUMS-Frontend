@@ -30,20 +30,20 @@ export default function GroupTypePieChart() {
         }));
         setData(chartData);
       })
-      .catch(() => setError("خطا در گرفتن دیتای گروه‌ها"))
+      .catch(() => setError("Erorr in fetching the data!"))
       .finally(() => setLoading(false));
     return () => { mounted = false; };
   }, []);
 
-  if (loading) return <div className="text-sm text-gray-500">در حال لود...</div>;
+  if (loading) return <div className="text-sm text-gray-500">Loading...</div>;
   if (error) return <div className="text-sm text-red-500">{error}</div>;
-  if (!data.length) return <div className="text-sm text-gray-500">داده‌ای موجود نیست.</div>;
+  if (!data.length) return <div className="text-sm text-gray-500">No Data!</div>;
 
   return (
-    <div className="rounded-sm p-2 bg-white">
+    <div className="rounded-sm p-2 bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200">
       <div className="flex items-center gap-2 mb-3">
-        <Gauge className="w-5 h-5 text-blue-500" />
-        <h3 className="text-sm font-semibold text-blue-400">Group Type Analytics</h3>
+        <Gauge className="w-5 h-5 text-gray-100 text-[10px]" />
+        <h3 className="text-[10px] font-semibold text-gray-100">Group Type Analytics</h3>
       </div>
 
       <div className="h-64">

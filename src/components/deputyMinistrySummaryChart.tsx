@@ -24,14 +24,13 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
       <div className="flex items-center justify-between mb-4 text-blue-400">
         <div className="flex items-center gap-3 text-blue-400">
           <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-          <span className="text-white text-[11px] font-semibold">Deputy Ministries</span>
+          <span className="text-blue-400 text-[11px] font-semibold">Deputy Ministries</span>
         </div>
         <div className="text-blue-400 text-xs uppercase tracking-wider bg-white rounded-full p-2 scale-70">
           Groups
         </div>
       </div>
 
-      {/* اینجا ResponsiveContainer به 100% عرض والد و ارتفاع قابل تنظیم است */}
       <div className="w-full" style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
