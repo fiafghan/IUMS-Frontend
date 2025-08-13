@@ -47,7 +47,7 @@ export default function GradientSidebar(): JSX.Element {
   const [violationOpen, setViolationOpen] = useState(false);
 
   return (
-    <aside className="w-64 min-h-screen bg-gray-200 text-white flex flex-col">
+    <aside className="w-64 min-h-screen bg-gradient-to-r from-gray-300 via-gray-200 to-gray-100 text-white flex flex-col">
       <div className="flex items-center justify-center flex-col py-6 px-4 scale-80">
         <img src="moph.png" className="rounded-full w-30" />
         <h1

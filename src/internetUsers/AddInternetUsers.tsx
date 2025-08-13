@@ -136,6 +136,7 @@ export default function InternetUserAddForm(): JSX.Element {
         return (
           form.employment_type.trim() !== "" &&
           form.directorate.trim() !== "" &&
+          form.position.trim() !== "" &&
           form.deputyMinistry.trim() !== ""
         );
       case 2:
