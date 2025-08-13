@@ -243,11 +243,11 @@ export default function InternetUsersList(): JSX.Element {
             <div className="space-y-1 text-blue-400 mt-25">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-100">Active</span>
-                <span className="font-bold text-white bg-blue-400 rounded-md w-15 text-center p-1 scale-70">{activeUsers}</span>
+                <span className="font-bold text-green-400 bg-blue-400 rounded-md w-15 text-center p-1 scale-70">{activeUsers}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-100">Deactive</span>
-                <span className="font-bold text-white bg-blue-400 rounded-md text-center w-15 p-1 scale-70">{deactiveUsers}</span>
+                <span className="font-bold text-red-600 bg-blue-400 rounded-md text-center w-15 p-1 scale-70">{deactiveUsers}</span>
               </div>
             </div>
           </div>
