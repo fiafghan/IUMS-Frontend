@@ -8,8 +8,8 @@ type ApiRow = { group_type: string; total: number };
 type ChartRow = { name: string; value: number };
 
 const COLORS = [
-  "#3B82F6", "#16d0ffff", "#3df4faff", "#EF4444",
-  "#8B5CF6", "#06B6D4", "#84CC16", "#F472B6"
+  "#3B82F6", "#0e99bbff", "#1313f5ff", "#EF4444",
+  "#8B5CF6", "#2121f8ff", "#84CC16", "#F472B6"
 ];
 
 export default function GroupTypePieChart() {

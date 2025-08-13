@@ -1,4 +1,3 @@
-import { Building2 } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -21,16 +20,13 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
   return (
     <div className="relative overflow-hidden rounded-md p-5 shadow-none
      bg-transparent w-full lg:w-[800px] text-blue-400 mx-auto">
+        <div className="text-center text-white text-2xl ml-35">Deputy Ministries Distribution</div>
+
       <div className="flex items-center justify-between mb-4 text-blue-400">
+
         <div className="flex items-center gap-3 text-blue-400">
-          <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-          <span className="text-blue-400 text-[11px] font-semibold">Deputy Ministries</span>
-        </div>
-        <div className="text-blue-400 text-xs uppercase tracking-wider bg-white rounded-full p-2 scale-70">
-          Groups
         </div>
       </div>
-
       <div className="w-full" style={{ height: 300 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart

@@ -210,7 +210,7 @@ export default function InternetUsersList(): JSX.Element {
   };
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-l from-blue-100 to-gray-50 shadow-md shadow-indigo-700">
+    <div className="min-h-screen flex bg-gradient-to-l from-blue-200 to-gray-50 shadow-md shadow-indigo-700">
       <ScrollToTopButton />
       <div className="fixed top-0 left-0 bottom-0 w-64 border-r 
       border-gray-200 bg-white shadow-sm z-20">
@@ -277,12 +277,10 @@ export default function InternetUsersList(): JSX.Element {
             </div>
 
             {/* deputy Ministry Chart */}
-            <div className="relative overflow-hidden rounded-sm p-1 shadow-none bg-transparent  
-          group scale-80 pb-5 col-span-4 ">
+            <div className="relative overflow-hidden rounded-sm p-1 shadow-none bg-gradient-to-b from-blue-400 via-blue-300 to-blue-100 
+          group scale-80 pb-5 col-span-4 text-center ">
               <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
           </div>
-
-
         </div>
 
 

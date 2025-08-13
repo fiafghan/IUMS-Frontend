@@ -36,7 +36,7 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
                   shadow-lg
                   transition-all duration-500 ease-in-out
                   ${isCompleted ? "bg-gradient-to-br from-green-400 to-blue-500 border-green-500 shadow-green-400/60" : ""}
-                  ${isActive && !isCompleted ? "border-blue-500 bg-white shadow-blue-500/50 animate-pulse" : ""}
+                  ${isActive && !isCompleted ? "border-blue-500 bg-white shadow-blue-500/50" : ""}
                   ${!isCompleted && !isActive ? "bg-white border-gray-300" : ""}
                 `}
               >
