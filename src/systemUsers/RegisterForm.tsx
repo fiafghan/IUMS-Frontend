@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { User, Mail, Lock, Shield } from "lucide-react";
+import { User, Mail, Lock} from "lucide-react";
 import { route } from "../config";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -11,7 +11,7 @@ export default function RegisterForm() {
     email: "",
     password: "",
     password_confirmation: "",
-    isAdmin: false,
+    role:"User",
   });
 
   const navigate = useNavigate();
@@ -64,6 +64,7 @@ export default function RegisterForm() {
 
     try {
       const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}").token;
+      const roleId = form.role === "Admin" ? 1 : form.role === "User" ? 2 : 3;
       await axios.post(
         `${route}/register`,
         {
@@ -71,7 +72,7 @@ export default function RegisterForm() {
           email: form.email,
           password: form.password,
           password_confirmation: form.password_confirmation,
-          role_id: form.isAdmin ? 1 : 2,
+          role_id: roleId,
         },
         {
           headers: {
@@ -172,19 +173,23 @@ export default function RegisterForm() {
             className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
           {passwordError && <p className="text-red-500 mt-1">{passwordError}</p>}        </div>
-
-        <label className="flex items-center space-x-2 text-sm text-gray-600">
-          <input
-            type="checkbox"
-            name="isAdmin"
-            checked={form.isAdmin}
-            onChange={handleChange}
-            className="accent-indigo-500"
-          />
-          <Shield size={16} />
-          <span className="text-blue-300">Register as Admin</span>
-        </label>
-
+<div className="space-y-2">
+  <label className="block text-sm font-medium text-gray-700">Select Role</label>
+  <div className="flex gap-4">
+    {["Admin", "User", "Viewer"].map((r) => (
+      <label key={r} className="flex items-center gap-1">
+        <input
+          type="radio"
+          name="role"
+          value={r}
+          checked={form.role === r}
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
+        />
+        {r}
+      </label>
+    ))}
+  </div>
+</div>
         {error && <p className="text-sm text-red-500">{error}</p>}
 
         <button

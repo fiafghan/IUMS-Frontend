@@ -194,8 +194,10 @@ export default function InternetUserAddForm(): JSX.Element {
         device_type_id: parseInt(form.device_type),
         group_id: form.group_id,
       };
-
-      await axios.post(`${route}/internet`, submitData);
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      await axios.post(`${route}/internet`, submitData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       Swal.fire({
         icon: "success",
         title: "Internet User Created!",

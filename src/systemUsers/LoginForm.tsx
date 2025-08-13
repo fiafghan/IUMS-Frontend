@@ -45,6 +45,10 @@ export default function LoginForm(): JSX.Element {
           timer: 1500
         });
         setForm({ email: "", password: "" });
+        localStorage.setItem("loggedInUser", JSON.stringify({
+          token: response.data.token,
+          user: response.data.user
+        }));
         navigate('/');
       } else {
         Swal.fire({
