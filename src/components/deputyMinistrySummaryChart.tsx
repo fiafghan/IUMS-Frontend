@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  
 } from "recharts";
 
 type Props = {
@@ -20,8 +19,8 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
     .sort((a, b) => b.count - a.count);
 
   return (
-    <div className="relative overflow-hidden rounded-md p-6 shadow-none
-     border-blue-100 group w-100 lg:w-[600px] bg-transparent to-from-gray-500 text-blue-400">
+    <div className="relative overflow-hidden rounded-md p-5 shadow-none
+     bg-transparent w-full lg:w-[800px] text-blue-400 mx-auto">
       <div className="flex items-center justify-between mb-4 text-blue-400">
         <div className="flex items-center gap-3 text-blue-400">
           <Building2 className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
@@ -32,36 +31,37 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
         </div>
       </div>
 
-      <div style={{ width: "100%", height: 220 }}>
-        <ResponsiveContainer>
+      {/* اینجا ResponsiveContainer به 100% عرض والد و ارتفاع قابل تنظیم است */}
+      <div className="w-full" style={{ height: 300 }}>
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             layout="vertical"
             data={data}
             margin={{ top: 5, right: 20, left: 50, bottom: 5 }}
           >
-            {/* تعریف گرادیانت */}
             <defs>
               <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#ffffffff" />
-                <stop offset="100%" stopColor="#979797ff" />
+                <stop offset="0%" stopColor="#3b82f6" />
+                <stop offset="100%" stopColor="#2563eb" />
               </linearGradient>
             </defs>
 
-            {/* خطوط شبکه با رنگ آبی */}
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffffff" />
-
-            <XAxis type="number" />
-            <YAxis type="category" dataKey="name" width={140} tick={{ fontSize: 12, fontWeight: 'bold', fill:'white' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#3b82f6" />
+            <XAxis type="number" tick={{ fontSize: 12, fill: 'blue' }} />
+            <YAxis
+              type="category"
+              dataKey="name"
+              width={140}
+              tick={{ fontSize: 12, fontWeight: 'bold', fill: 'blue' }}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: "white",
                 borderRadius: "8px",
-                border: "1px solid #ffffffff",
+                border: "1px solid #ddd",
                 fontSize: '12px',
               }}
             />
-
-            {/* استفاده از گرادیانت */}
             <Bar dataKey="count" fill="url(#barGradient)" radius={[0, 6, 6, 0]} barSize={30} />
           </BarChart>
         </ResponsiveContainer>

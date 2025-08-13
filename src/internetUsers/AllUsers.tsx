@@ -215,7 +215,7 @@ export default function InternetUsersList(): JSX.Element {
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white 
         border border-blue-100 group scale-80">
@@ -226,7 +226,7 @@ export default function InternetUsersList(): JSX.Element {
               </div>
               <div className="text-white text-xs uppercase tracking-wider bg-blue-400 rounded-full p-2 scale-70">Summary</div>
             </div>
-            <div className="text-4xl font-bold text-blue-400 text-center mt-10">{totalUsers}</div>
+            <div className="text-4xl font-bold text-blue-400 text-center mt-25">{totalUsers}</div>
           </div>
           {/* 🟦 Active / Deactive */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-sm bg-white border border-blue-100 group scale-80">
@@ -237,7 +237,7 @@ export default function InternetUsersList(): JSX.Element {
               </div>
               <div className="text-white text-xs uppercase tracking-wide bg-blue-400 rounded-full p-2 scale-70">Status</div>
             </div>
-            <div className="space-y-1 text-blue-400">
+            <div className="space-y-1 text-blue-400 mt-25">
               <div className="flex justify-between text-sm">
                 <span className="text-green-400">Active</span>
                 <span className="font-bold text-white bg-green-400 rounded-md w-15 text-center p-1 scale-70">{activeUsers}</span>
@@ -257,7 +257,7 @@ export default function InternetUsersList(): JSX.Element {
               </div>
               <div className="text-white text-xs uppercase tracking-wider bg-blue-400 rounded-full p-2 scale-70">Type</div>
             </div>
-            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1">
+            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1 mt-25">
               {Object.entries(employmentTypeCounts).map(([type, count]) => (
                 <li key={type} className="flex justify-between">
                   <span>{type}</span>
@@ -265,22 +265,24 @@ export default function InternetUsersList(): JSX.Element {
                 </li>
               ))}
             </ul>
-            
+
           </div>
 
           {/* Group Pie Chart */}
-          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border border-blue-100 group scale-80 pb-5">
-           <GroupTypePieChart />
+            <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border 
+            border-blue-100 group scale-80 pb-5">
+              <GroupTypePieChart />
+            </div>
+
+            {/* deputy Ministry Chart */}
+            <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border border-blue-100  
+          group scale-80 pb-5 col-span-4 bg-gradient-to-r from-gray-100 via-white to-gray-100">
+              <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
           </div>
 
-          {/* deputy Ministry Chart */}
-          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-white border border-blue-100  
-          group scale-80 pb-5 col-span-2 bg-gradient-to-r from-blue-600 via-blue-500 to-from-gray-500">
-           <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
-          </div>
 
         </div>
-      
+
 
         <div className="flex mb-4 mt-5 justify-center w-full">
           <UserFilters
