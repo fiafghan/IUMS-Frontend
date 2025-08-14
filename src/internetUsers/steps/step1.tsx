@@ -77,7 +77,13 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
     }
 
     const delayDebounceFn = setTimeout(() => {
-      axios.post(`${route}/check-username`, { username: form.username })  // مسیر api رو درست کن اگر فرق داره
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      axios.post(`${route}/check-username`, { username: form.username }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })  // مسیر api رو درست کن اگر فرق داره
         .then(res => {
           if (res.data.exists) {
             setUsernameError("This User name is already taken try another one!");
