@@ -12,7 +12,7 @@ import EmployeeViolationForm from "./internetUsers/employeeViolationForm"
 import AllViolationTypes from "./allviolationtypes"
 import AddViolationOnAUser from "./internetUsers/addViolationOnaUser"
 import AllViolationsFromUsers from "./internetUsers/AllViolationsFromUsers"
-import RoleRoute from "./components/RoleRoute"
+import RoleChecker from "./components/RoleChecker"
 import AccessDenied from "./AccessDenied"
 
 function App() {
@@ -20,10 +20,10 @@ function App() {
   return (
     <>
       <Routes>
-      <Route path="/register" element={<PrivateRoute><RegisterForm /></PrivateRoute>} />
+      <Route path="/register" element={<PrivateRoute><RoleChecker allowedRoles={['Admin']}><RegisterForm /></RoleChecker></PrivateRoute>} />
       <Route path="/login" element={<LoginForm />} />
-      <Route path="/adduser" element={<PrivateRoute><RoleRoute allowedRoles={['Admin', 'User']}><InternetUserAddForm /></RoleRoute></PrivateRoute>} />
-      <Route path="/all-system-users" element={<SystemUsersPage />} />
+      <Route path="/adduser" element={<PrivateRoute><RoleChecker allowedRoles={['Admin', 'User']}><InternetUserAddForm /></RoleChecker></PrivateRoute>} />
+      <Route path="/all-system-users" element={<RoleChecker allowedRoles={['Admin']}><SystemUsersPage /></RoleChecker>} />
       <Route path="/addviolation" element={<PrivateRoute><EmployeeViolationForm /></PrivateRoute>} />
       <Route path="/addviolationonauser" element={<AddViolationOnAUser />} />
       <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />

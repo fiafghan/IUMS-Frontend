@@ -6,7 +6,7 @@ type RoleRouteProps = {
   allowedRoles: string[];
 };
 
-export default function RoleRoute({ children, allowedRoles }: RoleRouteProps) {
+export default function RoleChecker({ children, allowedRoles }: RoleRouteProps) {
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const userRole = currentUser?.user?.role || "";
 

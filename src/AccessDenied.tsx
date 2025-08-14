@@ -1,4 +1,7 @@
 import { XCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
 
 export default function AccessDenied() {
   return (
@@ -7,7 +10,13 @@ export default function AccessDenied() {
         <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Access Denied</h1>
         <p className="text-gray-600">
-          You Are Not Allowed to Do This!!!
+          You Are Not Allowed to Access This Page!!!
+          <div>
+            <button onClick={() => {
+              navigate('/')
+            }}>Back</button>
+          </div>
+
         </p>
       </div>
     </div>
