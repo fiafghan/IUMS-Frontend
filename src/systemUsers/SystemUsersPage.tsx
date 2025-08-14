@@ -32,8 +32,13 @@ export default function SystemUsersPage() {
     if (editUser.password && editUser.password.trim() !== "") {
       payload.password = editUser.password;
     }
-
-    axios.put(`${route}/user/${editUser.id}`, payload)
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    axios.put(`${route}/user/${editUser.id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(() => {
         setUsers((prev) =>
           prev.map((u) =>
@@ -50,14 +55,20 @@ export default function SystemUsersPage() {
 
   const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      axios.delete(`${route}/user/${id}`).then(() => {
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      axios.delete(`${route}/user/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(() => {
         setUsers((prev) => prev.filter((u) => u.id !== id));
       });
     }
   };
 
   useEffect(() => {
-    axios.get(`${route}/user`).then((res) => {
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    axios.get(`${route}/user`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then((res) => {
       console.log(res.data)
       setUsers(res.data);
     });
@@ -157,18 +168,18 @@ export default function SystemUsersPage() {
                         <p className="text-red-600 text-sm mt-1">{passwordError}</p>
                       )}
                     </label>
-                    </label>
+                  </label>
 
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={editUser.isAdmin}
-                        onChange={(e) =>
-                          setEditUser({ ...editUser, isAdmin: e.target.checked })
-                        }
-                      />
-                      <span>Is Admin</span>
-                    </label>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={editUser.isAdmin}
+                      onChange={(e) =>
+                        setEditUser({ ...editUser, isAdmin: e.target.checked })
+                      }
+                    />
+                    <span>Is Admin</span>
+                  </label>
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
