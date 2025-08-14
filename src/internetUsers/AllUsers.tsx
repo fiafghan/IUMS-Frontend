@@ -42,8 +42,6 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedGroupId, setSelectedGroupId] = useState<string | number>("");
 
 
-
-
   const totalUsers = users.length;
   const activeUsers = users.filter((user) => user.status === 1).length;
   const deactiveUsers = users.filter((user) => user.status === 0).length;

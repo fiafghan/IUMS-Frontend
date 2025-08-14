@@ -16,7 +16,7 @@ export default function GradientSidebar(): JSX.Element {
   const logout = async () => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     const token = loggedInUser.token;
-    const user_id = loggedInUser.id;  // assuming your backend sends token inside user object as 'token'
+    const user_id = loggedInUser.id;
 
     if (!token) {
       console.error("❌ No token found. Cannot logout.");
@@ -27,12 +27,9 @@ export default function GradientSidebar(): JSX.Element {
       await axios.post(
         `${route}/logout`,
         { id: user_id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+
 
       localStorage.removeItem("loggedInUser");
       navigate("/login");
@@ -83,12 +80,12 @@ export default function GradientSidebar(): JSX.Element {
               ➤ View All
             </button>
             {!isViewer && (
-            <button
-              onClick={() => navigate("/adduser")}
-              className="hover:text-white/80 transition py-1 text-left scale-80"
-            >
-              ➤ Add User
-            </button>
+              <button
+                onClick={() => navigate("/adduser")}
+                className="hover:text-white/80 transition py-1 text-left scale-80"
+              >
+                ➤ Add User
+              </button>
             )}
           </div>
         )}
