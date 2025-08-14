@@ -1,4 +1,3 @@
-// src/components/ApiDropdown.tsx
 import { useEffect, useState } from "react";
 
 interface ApiDropdownProps {
@@ -33,9 +32,15 @@ export function ApiDropdown({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     const fetchOptions = async () => {
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch options: ${response.statusText}`);
         }

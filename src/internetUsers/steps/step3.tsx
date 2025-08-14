@@ -29,7 +29,10 @@ export function Step3({ form, onChange }: {
       setMacError(null);
       return;
     }
-    axios.post(`${route}/check-mac-address`, { mac_address: mac })
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    axios.post(`${route}/check-mac-address`, { mac_address: mac }, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then(res => {
         if (res.data.exists) {
           setMacError(res.data.message);
