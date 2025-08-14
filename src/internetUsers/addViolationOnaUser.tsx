@@ -83,7 +83,12 @@ export default function AddViolationForm() {
                 violation_type_id: Number(form.violation_type_id),
                 comment: form.comment,
             };
-            const res = await axios.post(`${route}/violationOnaUser`, payload);
+            const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+            const res = await axios.post(`${route}/violationOnaUser`, payload,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
             if (res.status === 201) {
                 Swal.fire({
                     position: "top",
