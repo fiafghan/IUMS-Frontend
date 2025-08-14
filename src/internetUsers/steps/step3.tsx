@@ -2,18 +2,9 @@ import { Cpu, Group, Hash, Laptop } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
 import { useEffect, useState, type JSX } from "react";
-import { DeviceType, getDeviceTypeLabel } from "../../enums/device_type_enum";
 import axios from "axios";
 import { route } from "../../config";
 import { ApiDropdown } from "../../components/ApiDropDown";
-
-// Map device types to options format
-const deviceTypeOptions = [
-  { id: DeviceType.MOBILE, name: getDeviceTypeLabel(DeviceType.MOBILE) },
-  { id: DeviceType.COMPUTER, name: getDeviceTypeLabel(DeviceType.COMPUTER) },
-  { id: DeviceType.TABLET, name: getDeviceTypeLabel(DeviceType.TABLET) }
-];
-
 
 
 
@@ -23,6 +14,7 @@ export function Step3({ form, onChange }: {
 }): JSX.Element {
 
   const [macError, setMacError] = useState<string | null>(null);
+  const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
 
   const checkMacAddress = (mac: string) => {
     if (!mac) {
@@ -44,6 +36,20 @@ export function Step3({ form, onChange }: {
         setMacError(null);
       });
   };
+  useEffect(() => {
+    const fetchDeviceTypes = async () => {
+      try {
+        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+        const res = await axios.get(`${route}/device-types`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setDeviceTypes(res.data); // یا res.data.data بسته به ساختار API
+      } catch (error) {
+        console.error("Failed to fetch device types", error);
+      }
+    };
+    fetchDeviceTypes();
+  }, []);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -80,16 +86,16 @@ export function Step3({ form, onChange }: {
         <label className="block text-sm font-medium text-gray-700">Device Type</label>
         <div className="relative w-full">
           <Laptop className="absolute left-3 top-1/2 -translate-y-1/2  text-white bg-blue-400 
-          rounded-md p-1 pointer-events-none" size={20} />
+      rounded-md p-1 pointer-events-none" size={20} />
           <select
             name="device_type"
             value={form.device_type}
             onChange={onChange}
             className="block w-full pl-10 pr-4 py-2 bg-gray-100 border border-gray-300 rounded-xl focus-within:ring-2 
-            focus-within:ring-blue-400 focus-within:ring-offset-1 transition"
+      focus-within:ring-blue-400 focus-within:ring-offset-1 transition"
           >
             <option value="">Select Device Type</option>
-            {deviceTypeOptions.map((option) => (
+            {deviceTypes.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.name}
               </option>
@@ -97,6 +103,7 @@ export function Step3({ form, onChange }: {
           </select>
         </div>
       </div>
+
       <InputField
         label="MAC Address"
         icon={<Cpu className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
