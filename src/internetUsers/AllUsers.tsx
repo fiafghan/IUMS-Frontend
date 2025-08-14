@@ -88,7 +88,7 @@ export default function InternetUsersList(): JSX.Element {
         const response = await axios.get<InternetUser[]>(`${route}/internet`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        console.log("API Response:", response.data); // Add this line
+        console.log("API Response:", response.data);
         setUsers(response.data);
       } catch (err) {
         setError("Failed to fetch users. Please try again later.");
