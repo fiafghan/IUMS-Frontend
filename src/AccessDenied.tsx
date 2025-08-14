@@ -1,9 +1,10 @@
 import { XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const navigate = useNavigate();
 
 export default function AccessDenied() {
+const navigate = useNavigate();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
       <div className="bg-white rounded-xl shadow-md p-10 text-center">
@@ -14,7 +15,7 @@ export default function AccessDenied() {
           <div>
             <button onClick={() => {
               navigate('/')
-            }}>Back</button>
+            }} className="bg-blue-400 rounded-md p-1 text-white">Back</button>
           </div>
 
         </p>

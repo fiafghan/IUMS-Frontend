@@ -10,6 +10,7 @@ import GradientSidebar from "./components/Sidebar";
 import Swal from "sweetalert2";
 
 
+
 export default function AddViolationType(): JSX.Element {
   const [form, setForm] = useState<ViolationTypeForm>({
     name: ""
@@ -53,9 +54,12 @@ export default function AddViolationType(): JSX.Element {
       const payload = {
         name: form.name.trim(),
       };
-
-      await axios.post(`${route}/violation`, payload);
-
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      await axios.post(`${route}/violation`, payload,
+        {
+           headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       Swal.fire({
         icon: "success",
         title: "Violation Type Created!",

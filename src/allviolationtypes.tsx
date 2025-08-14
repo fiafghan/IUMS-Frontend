@@ -62,9 +62,12 @@ export default function AllViolationTypes(): JSX.Element {
     }
 
     try {
-      await axios.put(`${route}/violation/${id}`, {
-        name: editName.trim(),
-      });
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      await axios.put(
+        `${route}/violation/${id}`,
+        { name: editName.trim() }, 
+        { headers: { Authorization: `Bearer ${token}` } } 
+      );
       // Update local state
       setViolationTypes(prev =>
         prev.map(vt =>
@@ -103,7 +106,13 @@ export default function AllViolationTypes(): JSX.Element {
     }
 
     try {
-      await axios.delete(`${route}/violation/${id}`);
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      await axios.delete(`${route}/violation/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
       // Remove from local state
       setViolationTypes(prev => prev.filter(vt => vt.id !== id));
