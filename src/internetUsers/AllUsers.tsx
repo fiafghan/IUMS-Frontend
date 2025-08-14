@@ -84,7 +84,10 @@ export default function InternetUsersList(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get<InternetUser[]>(`${route}/internet`);
+        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+        const response = await axios.get<InternetUser[]>(`${route}/internet`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         console.log("API Response:", response.data); // Add this line
         setUsers(response.data);
       } catch (err) {
@@ -272,15 +275,15 @@ export default function InternetUsersList(): JSX.Element {
           </div>
 
           {/* Group Pie Chart */}
-            <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border 
+          <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border 
             border-blue-100 group scale-80 pb-5">
-              <GroupTypePieChart />
-            </div>
+            <GroupTypePieChart />
+          </div>
 
-            {/* deputy Ministry Chart */}
-            <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100 
+          {/* deputy Ministry Chart */}
+          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100 
           group scale-80 pb-5 col-span-4 text-center ">
-              <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
+            <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
           </div>
         </div>
 
