@@ -2,7 +2,8 @@ import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import {
   User, Edit, Trash,
-  Search, Users, Briefcase, Eye
+  Search, Users, Briefcase, Eye,
+  LayoutDashboard
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
@@ -270,6 +271,10 @@ export default function InternetUsersList(): JSX.Element {
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
+        <div className="ml-5 bg-gradient-to-b from-blue-500 via-blue-400 to-blue-50 rounded-sm p-2 mr-5 text-white flex">
+          <LayoutDashboard className="text-amber-300" />
+          <h1 className="ml-3">Summary</h1>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white rounded-md">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
