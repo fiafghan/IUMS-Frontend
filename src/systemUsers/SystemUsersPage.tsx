@@ -16,7 +16,16 @@ export default function SystemUsersPage() {
   const navigate = useNavigate()
 
   const handleEditClick = (user: User) => {
-    setEditUser(user);
+     setEditUser({
+    ...user,
+    role_id:
+      user.role_id ||
+      (user.role_name === "Admin"
+        ? 1
+        : user.role_name === "User"
+        ? 2
+        : user.role_name === "viewer" ? 3 : 0) // viewer
+  });
     setShowEditModal(true);
   };
 
@@ -24,9 +33,10 @@ export default function SystemUsersPage() {
     if (!editUser) return;
 
     const payload: any = {
+      id: editUser.id,
       name: editUser.name,
       email: editUser.email,
-      role_id: editUser.isAdmin ? 1 : 2,
+      role_id: editUser.role_id,
     };
 
     if (editUser.password && editUser.password.trim() !== "") {
@@ -43,7 +53,13 @@ export default function SystemUsersPage() {
         setUsers((prev) =>
           prev.map((u) =>
             u.id === editUser.id
-              ? { ...editUser, role_name: editUser.isAdmin ? "Admin" : "User" }
+              ? {
+                ...editUser,
+                role_name:
+                  editUser.role_id === 1 ? "Admin"
+                    : editUser.role_id === 2 ? "User"
+                      : editUser.role_id === 3 ? "Viewer" : "",
+              }
               : u
           )
         );
@@ -170,16 +186,22 @@ export default function SystemUsersPage() {
                     </label>
                   </label>
 
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={editUser.isAdmin}
+                  <label className="block">
+                    Role:
+                    <select
+                      value={editUser.role_id}
                       onChange={(e) =>
-                        setEditUser({ ...editUser, isAdmin: e.target.checked })
+                        setEditUser({ ...editUser, role_id: parseInt(e.target.value) })
                       }
-                    />
-                    <span>Is Admin</span>
+                      className="w-full border px-3 py-1.5 rounded"
+                    >
+                      <option value={1}>Admin</option>
+                      <option value={2}>User</option>
+                      <option value={3}>Viewer</option>
+                    </select>
                   </label>
+
+
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">
                   <button

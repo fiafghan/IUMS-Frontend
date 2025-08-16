@@ -39,7 +39,7 @@ export interface User {
   email: string;
   role_name: string;
   password?: string;
-  isAdmin?: boolean;
+  role_id: number;
 }
 
 export interface ViolationProps {
