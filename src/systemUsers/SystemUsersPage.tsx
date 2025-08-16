@@ -99,28 +99,29 @@ export default function SystemUsersPage() {
         <GradientSidebar />
       </div>
       <div className="p-6 w-full">
-        <h1 className="text-xl font-bold mb-6 text-gray-800">All System Users</h1>
+        <h1 className="text-xl font-bold mb-6 text-center bg-blue-300 rounded-md text-white py-2 border-l-3 border-l-amber-300">All System Users</h1>
         <div className="mb-4 flex items-center justify-between">
           <div className="relative w-1/3 ml-2">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 text-white bg-blue-300 rounded-full p-1 border-1 border-l-blue-400" />
+              <Search className="w-5 h-5 text-white bg-blue-300 rounded-full p-1 border-1 border-l-amber-400" />
             </span>
             <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-200 placeholder-gray-400"
+              className="w-full pl-10 pr-3 py-2 rounded-lg border shadow-sm focus:outline-none
+               focus:ring-blue-400 focus:border-blue-200 placeholder-gray-400 border-l-2 border-l-amber-300 border-blue-200"
             />
           </div>
           <button
             className="px-4 py-2 bg-blue-300 text-white rounded-lg hover:bg-blue-500 transition duration-200 mr-3"
             onClick={() => navigate("/register")}
           >
-            <span className="text-xl mr-2">+</span>Add New System User
+            <span className="text-xl mr-2 text-amber-400">+</span>Add User 
           </button>
         </div>
-        <div className="overflow-x-auto rounded-sm shadow overflow-y-auto max-h-[450px] ">
+        <div className="overflow-x-auto rounded-sm shadow overflow-y-auto max-h-[400px] ">
           <table className="w-full text-left border-collapse">
             <thead className="bg-blue-100">
               <tr>
