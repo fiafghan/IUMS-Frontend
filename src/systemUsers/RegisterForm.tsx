@@ -64,7 +64,7 @@ export default function RegisterForm() {
 
     try {
       const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}").token;
-      const roleId = form.role === "Admin" ? 1 : form.role === "User" ? 2 : 3;
+      const roleId = form.role === "Admin" ? 1 : form.role === "User" ? 2 : form.role === "Viewer" ? 3 : "";
       await axios.post(
         `${route}/register`,
         {
@@ -182,7 +182,7 @@ export default function RegisterForm() {
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">Select Role</label>
           <div className="flex gap-4 text-[13px]">
-            {["Admin (Full Access)", "User (Read/Write)", "Viewer (Read)"].map((r) => (
+            {["Admin", "User", "Viewer"].map((r) => (
               <label key={r} className="flex items-center gap-1">
                 <input
                   type="radio"
