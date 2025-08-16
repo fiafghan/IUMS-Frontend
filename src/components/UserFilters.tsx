@@ -34,8 +34,8 @@ export default function UserFilters({
     queryDirectorate === ""
       ? directorateOptions
       : directorateOptions.filter((dir) =>
-          dir.name.toLowerCase().includes(queryDirectorate.toLowerCase())
-        );
+        dir.name.toLowerCase().includes(queryDirectorate.toLowerCase())
+      );
 
   return (
     <div className="scale-80">
@@ -104,10 +104,9 @@ export default function UserFilters({
                           <Combobox.Option
                             value=""
                             className={({ active }) =>
-                              `cursor-pointer select-none px-4 py-2 ${
-                                active
-                                  ? "bg-blue-600 text-white"
-                                  : "text-gray-900"
+                              `cursor-pointer select-none px-4 py-2 ${active
+                                ? "bg-blue-600 text-white"
+                                : "text-gray-900"
                               }`
                             }
                           >
@@ -118,12 +117,13 @@ export default function UserFilters({
                               key={dir.id}
                               value={dir.name}
                               className={({ active }) =>
-                                `cursor-pointer select-none px-4 py-2 ${
-                                  active
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-900"
+                                `cursor-pointer select-none px-4 py-2 ${active
+                                  ? "bg-blue-600 text-white"
+                                  : "text-gray-900"
+
                                 }`
                               }
+                              onClick={() => setQueryDirectorate("")}
                             >
                               {dir.name}
                             </Combobox.Option>

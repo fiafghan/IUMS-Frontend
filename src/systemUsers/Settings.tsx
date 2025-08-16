@@ -30,7 +30,6 @@ export default function SettingsPage() {
     try {
       const userData = JSON.parse(storedUser);
 
-      // بررسی اینکه آیا توکن وجود دارد یا خیر
       const token = userData.token;
       if (!token) {
         console.error("No token found in localStorage");
@@ -48,7 +47,7 @@ export default function SettingsPage() {
 
       // Fetch user profile data using API with token
       axios.get(`${route}/profile`, {
-        headers: { Authorization: `Bearer ${token}` },  // ارسال توکن در هدر
+        headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => {
           const user = response.data.user;
