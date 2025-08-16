@@ -127,7 +127,7 @@ export default function RegisterForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="relative">
-          <User className="absolute top-3 left-3 text-gray-400" size={20} />
+          <User className="absolute top-3 left-3 text-white bg-blue-300  rounded-full p-1" size={20} />
           <input
             name="name"
             value={form.name}
@@ -139,7 +139,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="relative">
-          <Mail className="absolute top-3 left-3 text-gray-400" size={20} />
+          <Mail className="absolute top-3 left-3 text-white bg-blue-300 rounded-full p-1" size={20} />
           <input
             name="email"
             value={form.email}
@@ -153,7 +153,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="relative">
-          <Lock className="absolute top-3 left-3 text-gray-400" size={20} />
+          <Lock className="absolute top-3 left-3 text-white bg-blue-300 rounded-full p-1" size={20} />
           <input
             name="password"
             value={form.password}
@@ -166,7 +166,7 @@ export default function RegisterForm() {
         </div>
 
         <div className="relative">
-          <Lock className="absolute top-3 left-3 text-gray-400" size={20} />
+          <Lock className="absolute top-3 left-3 text-white bg-blue-300 rounded-full p-1" size={20} />
           <input
             name="password_confirmation"
             value={form.password_confirmation}
