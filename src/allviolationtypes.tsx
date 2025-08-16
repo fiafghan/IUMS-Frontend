@@ -18,6 +18,9 @@ export default function AllViolationTypes(): JSX.Element {
   const [editName, setEditName] = useState("");
   const navigate = useNavigate();
 
+  const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+
+
   // Fetch violation types from API
   const fetchViolationTypes = async () => {
     try {
@@ -176,14 +179,16 @@ export default function AllViolationTypes(): JSX.Element {
                 <p className="text-blue-300">Manage violation types in the system</p>
               </div>
             </div>
-            <button
-              onClick={() => navigate("/add-violation-type")}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
+            {currentUser?.user.role !== "viewer" && (
+              <button
+                onClick={() => navigate("/add-violation-type")}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
               hover:from-blue-500 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <Plus className="w-5 h-5" />
-              Add New Type
-            </button>
+              >
+                <Plus className="w-5 h-5" />
+                Add New Type
+              </button>
+            )}
           </div>
 
           {/* Search Bar */}

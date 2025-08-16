@@ -22,6 +22,7 @@ export default function AllViolationsFromUsers() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
+
   useEffect(() => {
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     axios
