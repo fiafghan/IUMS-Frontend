@@ -68,7 +68,7 @@ export default function GradientSidebar(): JSX.Element {
             <Users className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
             All Users
           </div>
-          {userOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
+          {userOpen ? <ChevronUp className="w-4 h-4 text-blue-400" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
         </motion.button>
 
         {userOpen && (
@@ -101,7 +101,7 @@ export default function GradientSidebar(): JSX.Element {
             <AlertOctagon className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
             Violations
           </div>
-          {violationOpen ? <ChevronUp className="w-4 h-4 scale-80" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
+          {violationOpen ? <ChevronUp className="w-4 h-4 scale-80 text-blue-400" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
         </motion.button>
 
         {violationOpen && (
