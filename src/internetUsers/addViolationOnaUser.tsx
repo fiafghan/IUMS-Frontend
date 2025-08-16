@@ -28,7 +28,11 @@ export default function AddViolationForm() {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        axios.get(`${route}/internet`)
+        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+        axios.get(`${route}/internet`,{headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }})
             .then(res => {
                 console.log("Internet users response:", res.data);
                 const options = (res.data || []).map((user: InternetUser) => ({
@@ -39,7 +43,10 @@ export default function AddViolationForm() {
             })
             .catch(() => setUsersOptions([]));
 
-        axios.get(`${route}/violation`)
+        axios.get(`${route}/violation`,{headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }})
             .then(res => setViolationTypes(res.data.data || []))
             .catch(() => setViolationTypes([]));
     }, []);

@@ -46,9 +46,10 @@ export default function InternetUserAddForm(): JSX.Element {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
+        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
         const [dirRes, empTypeRes] = await Promise.all([
-          axios.get(`${route}/directorate`),
-          axios.get(`${route}/employment-type`),
+          axios.get(`${route}/directorate`, { headers: {Authorization: `Bearer ${token}`,"Content-Type": "application/json"}}),
+          axios.get(`${route}/employment-type`, { headers: {Authorization: `Bearer ${token}`,"Content-Type": "application/json"}}),
         ]);
 
         // Directorates are those with directorate_type_id === 2

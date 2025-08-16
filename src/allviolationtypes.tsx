@@ -22,7 +22,13 @@ export default function AllViolationTypes(): JSX.Element {
   const fetchViolationTypes = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${route}/violation`);
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      const response = await axios.get(`${route}/violation`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
       console.log("API Response:", response.data);
       const data = response.data.data || response.data || [];
       setViolationTypes(Array.isArray(data) ? data : []);
@@ -65,8 +71,8 @@ export default function AllViolationTypes(): JSX.Element {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       await axios.put(
         `${route}/violation/${id}`,
-        { name: editName.trim() }, 
-        { headers: { Authorization: `Bearer ${token}` } } 
+        { name: editName.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       // Update local state
       setViolationTypes(prev =>

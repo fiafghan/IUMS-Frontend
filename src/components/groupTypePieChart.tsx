@@ -20,8 +20,14 @@ export default function GroupTypePieChart() {
   useEffect(() => {
     let mounted = true;
     setLoading(true);
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     axios
-      .get<ApiRow[]>(`${route}/group-type-counts`)
+      .get<ApiRow[]>(`${route}/group-type-counts`, {
+         headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then(res => {
         if (!mounted) return;
         const chartData = res.data.map(r => ({

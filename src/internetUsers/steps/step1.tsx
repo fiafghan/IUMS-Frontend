@@ -30,8 +30,13 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
       setPhoneError("The phone number must be 7xxxxxxxx!");
       return;
     }
-
-    axios.post(`${route}/check-phone-of-internet-user`, { phone: phoneToCheck })
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    axios.post(`${route}/check-phone-of-internet-user`, { phone: phoneToCheck }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
       .then(res => {
         if (res.data.exists) {
           setPhoneError(res.data.message);
@@ -57,7 +62,15 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
       setEmailError(null);
       return;
     }
-    axios.post(`${route}/check-email-of-internet-users`, { email: emailToCheck })
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    axios.post(`${route}/check-email-of-internet-users`, { email: emailToCheck },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then(res => {
         if (res.data.exists) {
           setEmailError(res.data.message || "This email is already registered! Please try another one!");
@@ -83,7 +96,7 @@ export function Step1({ form, onChange }: { form: FormState; onChange: (e: React
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      })  // مسیر api رو درست کن اگر فرق داره
+      })
         .then(res => {
           if (res.data.exists) {
             setUsernameError("This User name is already taken try another one!");

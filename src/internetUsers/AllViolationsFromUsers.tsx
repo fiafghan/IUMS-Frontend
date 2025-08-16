@@ -23,8 +23,12 @@ export default function AllViolationsFromUsers() {
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
+    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     axios
-      .get(`${route}/allViolationsFromUsers`)
+      .get(`${route}/allViolationsFromUsers`,{ headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }})
       .then((res) => {
         setViolations(res.data.data || []); 
       })
