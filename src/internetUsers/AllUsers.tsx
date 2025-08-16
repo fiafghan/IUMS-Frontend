@@ -258,8 +258,7 @@ export default function InternetUsersList(): JSX.Element {
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-gradient-to-b 
-        from-blue-400 via-blue-200 to-white rounded-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white rounded-md">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
         border border-blue-100 group scale-80">
@@ -320,7 +319,7 @@ export default function InternetUsersList(): JSX.Element {
 
           {/* deputy Ministry Chart */}
           <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100 
-          group scale-80 pb-5 col-span-4 text-center ">
+          group pb-5 col-span-4 text-center mx-7">
             <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
           </div>
         </div>

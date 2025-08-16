@@ -52,7 +52,7 @@ export default function GroupTypePieChart() {
         <h3 className="text-[10px] font-semibold text-gray-100">Group Type Analytics</h3>
       </div>
 
-      <div className="h-64">
+      <div className="h-64 text-[10px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
