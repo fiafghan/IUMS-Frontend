@@ -42,7 +42,6 @@ export default function RegisterForm() {
       }
     }
 
-    // چک یکسان بودن رمز عبور و تایید آن
     if (name === "password_confirmation") {
       if (value !== form.password) {
         setPasswordError("Password and Confirm password did not match!");
@@ -51,7 +50,6 @@ export default function RegisterForm() {
       }
     }
 
-    // وقتی پسورد تغییر می‌کند، بررسی کن تاییدش هنوز باهاش یکی هست یا نه
     if (name === "password" && form.password_confirmation && form.password_confirmation !== value) {
       setPasswordError("");
     }
@@ -93,7 +91,7 @@ export default function RegisterForm() {
         email: "",
         password: "",
         password_confirmation: "",
-        isAdmin: false,
+        role:"User"
       });
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed.");
