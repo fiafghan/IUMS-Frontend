@@ -278,24 +278,25 @@ export default function InternetUsersList(): JSX.Element {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white rounded-md">
           {/* 🔵 Total Users */}
           <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
-        border border-blue-100 group scale-80">
+        border border-blue-100 border-r-3 border-r-amber-300 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <User className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
                 <span className="text-gray-100 text-[11px]">Total Users</span>
               </div>
-              <div className="text-white text-xs uppercase tracking-wider bg-blue-400 rounded-full p-2 scale-70">Summary</div>
+              <div className="text-blue-500 text-xs uppercase tracking-wider bg-amber-400 rounded-full p-2 scale-70">Summary</div>
             </div>
             <div className="text-4xl font-bold text-gray-100 text-center mt-25">{totalUsers}</div>
           </div>
           {/* 🟦 Active / Deactive */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white border border-blue-100 group scale-80 bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white border border-blue-100 border-r-3 border-r-amber-300 group scale-80 bg-gradient-to-b 
+          from-blue-500 via-blue-300 to-blue-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
                 <span className="text-gray-100 text-[11px]">Active / Deactive</span>
               </div>
-              <div className="text-white text-xs uppercase tracking-wide bg-blue-400 rounded-full p-2 scale-70">Status</div>
+              <div className="text-blue-500 text-xs uppercase tracking-wide  bg-amber-400 rounded-full p-2 scale-70">Status</div>
             </div>
             <div className="space-y-1 text-blue-400 mt-25">
               <div className="flex justify-between text-sm">
@@ -309,13 +310,14 @@ export default function InternetUsersList(): JSX.Element {
             </div>
           </div>
           {/* 👔 Employment Type */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border border-blue-100 group scale-80">
+          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 
+          to-blue-200 border border-blue-100 border-r-3 border-r-amber-300 group scale-80">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <Briefcase className="w-6 h-6 text-white bg-blue-400 p-1 rounded-md" />
                 <span className="text-gray-100 text-[11px]">Employment Types</span>
               </div>
-              <div className="text-white text-xs uppercase tracking-wider bg-blue-400 rounded-full p-2 scale-70">Type</div>
+              <div className="text-blue-500 text-xs uppercase tracking-wider  bg-amber-400 rounded-full p-2 scale-70">Type</div>
             </div>
             <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1 mt-25">
               {Object.entries(employmentTypeCounts).map(([type, count]) => (
@@ -329,8 +331,8 @@ export default function InternetUsersList(): JSX.Element {
           </div>
 
           {/* Group Pie Chart */}
-          <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 border 
-            border-blue-100 group scale-80 pb-5">
+          <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 
+          to-blue-200 border border-blue-100 border-r-3 border-r-amber-300 group scale-80 pb-5">
             <GroupTypePieChart />
           </div>
 

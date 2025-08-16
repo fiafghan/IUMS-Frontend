@@ -48,8 +48,8 @@ export default function GroupTypePieChart() {
   return (
     <div className="rounded-sm p-2 bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200">
       <div className="flex items-center gap-2 mb-3">
-        <Gauge className="w-5 h-5 text-gray-100 text-[10px]" />
-        <h3 className="text-[10px] font-semibold text-gray-100">Group Type Analytics</h3>
+        <Gauge className="w-5 h-5 text-white bg-blue-400 p-1 text-[10px] rounded-md" />
+        <h3 className="text-[10px] font-semibold text-blue-500 bg-amber-400 rounded-full p-1">Group Type Analytics</h3>
       </div>
 
       <div className="h-64 text-[10px]">
