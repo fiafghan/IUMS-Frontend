@@ -56,6 +56,12 @@ export default function InternetUsersList(): JSX.Element {
   }, {} as Record<string, number>);
 
 
+  const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+  const isViewer = currentUser?.user.role === 'viewer';
+  const isAdmin = currentUser?.user.role === 'Admin';
+  const isUser = currentUser?.user.role === 'User';
+
+
   const filteredDirectorates =
     queryDirectorate === ""
       ? directorateOptions
@@ -464,27 +470,34 @@ export default function InternetUsersList(): JSX.Element {
                           <td className="px-3 py-2 text-blue-400 text-center">
                             <div className="flex justify-center gap-2">
                               {/* NEW: View */}
-                              <button
-                                onClick={() => handleView(user)}
-                                className="hover:text-blue-100"
-                                title="View"
-                              >
-                                <Eye className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-blue-400 p-1" />
-                              </button>
-                              <button
-                                onClick={() => handleEdit(user)}
-                                className="hover:text-blue-100"
-                                title="Edit"
-                              >
-                                <Edit className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-green-400 p-1" />
-                              </button>
-                              <button
-                                onClick={() => handleDelete(user.id)}
-                                className="hover:text-blue-100"
-                                title="Delete"
-                              >
-                                <Trash className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-red-300 p-1" />
-                              </button>
+                              {isViewer && (
+                                <button
+                                  onClick={() => handleView(user)}
+                                  className="hover:text-blue-100"
+                                  title="View"
+                                >
+                                  <Eye className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-blue-400 p-1" />
+                                </button>
+                              )}
+                              {isAdmin && isUser && (
+                                <>
+                                  <button
+                                    onClick={() => handleEdit(user)}
+                                    className="hover:text-blue-100"
+                                    title="Edit"
+                                  >
+                                    <Edit className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-green-400 p-1" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(user.id)}
+                                    className="hover:text-blue-100"
+                                    title="Delete"
+                                  >
+                                    <Trash className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-red-300 p-1" />
+                                  </button>
+                                </>
+
+                              )}
                             </div>
                           </td>
                         </tr>
