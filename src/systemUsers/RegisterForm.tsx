@@ -181,8 +181,8 @@ export default function RegisterForm() {
           {passwordError && <p className="text-red-500 mt-1">{passwordError}</p>}        </div>
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">Select Role</label>
-          <div className="flex gap-4">
-            {["Admin", "User", "Viewer"].map((r) => (
+          <div className="flex gap-4 text-[13px]">
+            {["Admin (Full Access)", "User (Read/Write)", "Viewer (Read)"].map((r) => (
               <label key={r} className="flex items-center gap-1">
                 <input
                   type="radio"
