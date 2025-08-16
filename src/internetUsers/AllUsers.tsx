@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import {
   User, Edit, Trash,
-  Search, Users, Briefcase
+  Search, Users, Briefcase, Eye
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
@@ -40,6 +40,9 @@ export default function InternetUsersList(): JSX.Element {
   const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string | number>("");
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [viewUser, setViewUser] = useState<InternetUser | null>(null);
+
 
 
   const totalUsers = users.length;
@@ -190,6 +193,11 @@ export default function InternetUsersList(): JSX.Element {
 
     fetchGroups();
   }, []);
+
+  const handleView = (user: InternetUser) => {
+    setViewUser(user);
+    setIsViewOpen(true);
+  };
 
 
   const handleEdit = (user: InternetUser) => {
@@ -455,6 +463,14 @@ export default function InternetUsersList(): JSX.Element {
                           {/* Actions */}
                           <td className="px-3 py-2 text-blue-400 text-center">
                             <div className="flex justify-center gap-2">
+                              {/* NEW: View */}
+                              <button
+                                onClick={() => handleView(user)}
+                                className="hover:text-blue-100"
+                                title="View"
+                              >
+                                <Eye className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-blue-400 p-1" />
+                              </button>
                               <button
                                 onClick={() => handleEdit(user)}
                                 className="hover:text-blue-100"
@@ -480,6 +496,113 @@ export default function InternetUsersList(): JSX.Element {
           </div>
         )}
       </main>
+
+      {/* View Modal */}
+      {isViewOpen && viewUser && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-white font-bold text-lg">User Details</h2>
+              <button
+                onClick={() => setIsViewOpen(false)}
+                className="text-white text-sm bg-white/20 hover:bg-white/30 rounded-md px-3 py-1"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 max-h-[75vh] overflow-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Name</div>
+                  <div className="font-medium">{viewUser.name || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Last Name</div>
+                  <div className="font-medium">{viewUser.lastname || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Username</div>
+                  <div className="font-medium">{viewUser.username || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Phone</div>
+                  <div className="font-medium">{viewUser.phone || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Directorate</div>
+                  <div className="font-medium">{viewUser.directorate || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Deputy Ministry</div>
+                  <div className="font-medium">{viewUser.deputy || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Position</div>
+                  <div className="font-medium">{viewUser.position || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Group</div>
+                  <div className="font-medium">
+                    {typeof viewUser.groups === "string" ? viewUser.groups : (viewUser.groups as any) ?? "-"}
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Employment Type</div>
+                  <div className="font-medium">{viewUser.employment_type || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Device Type</div>
+                  <div className="font-medium">{viewUser.device_type || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Device Limit</div>
+                  <div className="font-medium">{viewUser.device_limit ?? "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Mac Address</div>
+                  <div className="font-medium">{viewUser.mac_address || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Violation Type</div>
+                  <div className="font-medium">{viewUser.violation_type || "-"}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Violations Count</div>
+                  <div className="font-medium">{viewUser.violations_count ?? 0}</div>
+                </div>
+
+                <div className="border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Status</div>
+                  <div className="font-medium">
+                    {viewUser.status === 1 ? "active" : viewUser.status === 0 ? "deactive" : "-"}
+                  </div>
+                </div>
+
+                <div className="md:col-span-2 border rounded-lg p-3">
+                  <div className="text-gray-500 text-xs">Comment</div>
+                  <div className="font-medium whitespace-pre-wrap">{viewUser.comment || "-"}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Modal */}
       {isEditOpen && selectedUser && (
