@@ -106,30 +106,36 @@ export default function GradientSidebar(): JSX.Element {
 
         {violationOpen && (
           <div className="ml-6 flex flex-col gap-1 text-blue-400 scale-80">
+               {currentUser?.user.role !== "viewer" && (
             <button
               onClick={() => navigate("/addviolation")}
               className="hover:text-white transition py-1 text-left scale-80"
             >
               ➤ Violation Form
             </button>
+               )}
+            {currentUser?.user.role !== "viewer" && (
             <button
               onClick={() => navigate("/add-violation-type")}
               className="hover:text-white transition py-1 text-left scale-80"
             >
               ➤ Add Violation Type
             </button>
+             )}
             <button
               onClick={() => navigate("/all-violation-types")}
               className="hover:text-white transition py-1 text-left scale-80"
             >
               ➤ All Violation Types
             </button>
+            {currentUser?.user.role !== "viewer" && (
             <button
               onClick={() => navigate("/addviolationonauser")}
               className="hover:text-white transition py-1 text-left scale-80"
             >
               ➤ Add Violation On A User
             </button>
+            )}
             <button
               onClick={() => navigate("/all-violations-from-users")}
               className="hover:text-white transition py-1 text-left scale-80"
