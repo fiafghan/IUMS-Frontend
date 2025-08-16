@@ -1,3 +1,4 @@
+import { BuildingIcon } from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -20,10 +21,10 @@ export default function DeputyMinistriesChart({ deputyMinistryCounts }: Props) {
   return (
     <div className="relative overflow-hidden rounded-md p-5 shadow-none
      bg-transparent w-full lg:w-[800px] text-blue-400 mx-auto">
-        <div className="text-center text-white text-2xl text-center">Deputy Ministries Distribution</div>
-
+        <div className="text-center text-amber-300 rounded-md p-1 text-2xl" >
+          <BuildingIcon className="text-amber-300 bg-transparent rounded-full p-1 w-full text-2xl" />
+          Deputy Ministries Distribution</div>
       <div className="flex items-center justify-between mb-4 text-blue-400">
-
         <div className="flex items-center gap-3 text-blue-400">
         </div>
       </div>
