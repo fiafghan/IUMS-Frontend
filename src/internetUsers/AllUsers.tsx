@@ -58,8 +58,6 @@ export default function InternetUsersList(): JSX.Element {
 
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isViewer = currentUser?.user.role === 'viewer';
-  const isAdmin = currentUser?.user.role === 'Admin';
-  const isUser = currentUser?.user.role === 'User';
 
 
   const filteredDirectorates =
@@ -479,8 +477,8 @@ export default function InternetUsersList(): JSX.Element {
                                   <Eye className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-blue-400 p-1" />
                                 </button>
                               )}
-                              {isAdmin && isUser && (
-                                <>
+                              {currentUser?.user.role !== "viewer" && (
+                                <div>
                                   <button
                                     onClick={() => handleEdit(user)}
                                     className="hover:text-blue-100"
@@ -495,7 +493,7 @@ export default function InternetUsersList(): JSX.Element {
                                   >
                                     <Trash className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-red-300 p-1" />
                                   </button>
-                                </>
+                                </div>
 
                               )}
                             </div>
