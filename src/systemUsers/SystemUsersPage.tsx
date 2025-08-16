@@ -95,7 +95,7 @@ export default function SystemUsersPage() {
                 <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">ID</th>
                 <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Name</th>
                 <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Email</th>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Admin</th>
+                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Role</th>
                 <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Actions</th>
               </tr>
             </thead>
@@ -106,7 +106,7 @@ export default function SystemUsersPage() {
                   <td className="px-4 py-2 border-b border-r border-blue-300">{user.name}</td>
                   <td className="px-4 py-2 border-b border-blue-300">{user.email}</td>
                   <td className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white w-30">
-                    {user.role_name === "Admin" ? "✓" : "✗"}
+                    {user.role_name === "Admin" ? "Admin" : user.role_name === "User" ? "User" : "Viewer"}
                   </td>
                   <td className="px-4 py-2 border-b space-x-2 border-blue-300 bg-blue-300">
                     <button onClick={() => handleEditClick(user)} className="">
