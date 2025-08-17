@@ -25,7 +25,7 @@ export default function ScrollToTopButton() {
       {visible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-gradient-to-r from-blue-400 to-gray-200 text-white shadow-lg hover:bg-blue-600 transition"
+          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-gradient-to-r from-blue-400 to-gray-200 text-white shadow-lg hover:bg-blue-600 transition scale-50"
           title="Back to top"
         >
           <ArrowUp className="w-5 h-5" />
