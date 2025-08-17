@@ -626,8 +626,8 @@ export default function InternetUsersList(): JSX.Element {
 
       {/* Edit Modal */}
       {isEditOpen && selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl border border-gray-200 flex flex-col lg:flex-row">
+        <div className="fixed inset-0 bg-transparent bg-opacity-20 flex justify-center items-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl border border-gray-200 flex flex-col lg:flex-row scale-80">
 
             {/* Left - Preview */}
             <div className="lg:w-1/2 w-full bg-gradient-to-br from-blue-100 to-blue-200 p-8 flex flex-col justify-center">

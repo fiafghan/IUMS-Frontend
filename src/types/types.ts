@@ -9,16 +9,16 @@ export type InternetUser = {
   phone: string;
   position?: string;
   employment_type: string;  // Make sure this matches backend field name
-  directorate_id: number;
+  directorate: number;
   deputy: string;
   device_limit: number;
-  device_type_id: number;
+  device_type: number;
   mac_address?: string;
   status?: "active" | "deactive" | 1 | 0;
   violations_count?: number;
   comment?: string;
   violation_type?: string;
-  group_id:number;
+  groups:number;
 };
 
 
