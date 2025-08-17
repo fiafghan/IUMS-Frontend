@@ -648,7 +648,7 @@ export default function InternetUsersList(): JSX.Element {
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
                     && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
-                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "groups" ? (
+                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "group_id"  && key !== "violation_type_id"  && key !== "employee_type_id"   && key !== "device_type_id"  && key !== "directorate_id"  ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
