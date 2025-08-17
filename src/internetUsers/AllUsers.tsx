@@ -205,21 +205,20 @@ export default function InternetUsersList(): JSX.Element {
   };
 
 
-  const handleEdit = (user: InternetUser) => {
+  const handleEdit = (user) => {
     setSelectedUser(user);
     setEditForm({
       ...user,
-      status: user.status || "active",
-      violations_count: user.violations_count || 0,
-      comment: user.comment || "No comment"
+      employee_type_id: user.employee_type_id || null,
+      directorate_id: user.directorate_id || null,
+      group_id: user.group_id || null,
+      device_type_id: user.device_type_id || null,
+      violation_type_id: user.violation_type_id || null,
+      status: user.status === 1 ? "active" : "deactive",
     });
-
-    // Preselect directorate object
-    const matchingDepMinistry = deputyMinistryOptions.find((d) => d.name === user.deputy);
-    setSelectedDeputyMinistryEdit(matchingDepMinistry || null);
     setIsEditOpen(true);
-
   };
+
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -227,27 +226,28 @@ export default function InternetUsersList(): JSX.Element {
   };
 
   const handleUpdate = async () => {
-    if (!selectedUser) return;
+    const payload = {
+      ...editForm,
+      status: editForm.status === "active" ? 1 : 0,
+      employee_type_id: Number(editForm.employee_type_id),
+      directorate_id: Number(editForm.directorate_id),
+      group_id: Number(editForm.group_id),
+      device_type_id: Number(editForm.device_type_id),
+      violation_type_id: Number(editForm.violation_type_id),
+    };
+
     try {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-      const response = await axios.put(
-        `${route}/internet/${selectedUser.id}`,
-        editForm, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }
-      }
-      );
-      setUsers((prev) =>
-        prev.map((u) => (u.id === selectedUser.id ? response.data : u))
-      );
+      await axios.put(`${route}/internet/${selectedUser.id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setIsEditOpen(false);
+      // refresh data
     } catch (err) {
-      console.error("Update failed", err);
-      alert("Failed to update user.");
+      console.error(err.response?.data || err);
     }
   };
+
 
   const handleDelete = async (id: string) => {
     const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}").token;
@@ -262,6 +262,8 @@ export default function InternetUsersList(): JSX.Element {
       console.error(err);
     }
   };
+
+  
 
   return (
     <div className="min-h-screen flex bg-white shadow-md shadow-indigo-700">
@@ -462,7 +464,7 @@ export default function InternetUsersList(): JSX.Element {
 
 
 
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
+                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.group_id}</td>
 
 
                           {/* Status */}
@@ -555,7 +557,7 @@ export default function InternetUsersList(): JSX.Element {
 
                 <div className="border rounded-lg p-3">
                   <div className="text-gray-500 text-xs">Directorate</div>
-                  <div className="font-medium">{viewUser.directorate || "-"}</div>
+                  <div className="font-medium">{viewUser.directorate_id || "-"}</div>
                 </div>
 
                 <div className="border rounded-lg p-3">
@@ -571,7 +573,7 @@ export default function InternetUsersList(): JSX.Element {
                 <div className="border rounded-lg p-3">
                   <div className="text-gray-500 text-xs">Group</div>
                   <div className="font-medium">
-                    {typeof viewUser.groups === "string" ? viewUser.groups : (viewUser.groups as any) ?? "-"}
+                    {typeof viewUser.group_id === "number" ? viewUser.group_id : (viewUser.group_id as any) ?? "-"}
                   </div>
                 </div>
 
@@ -582,7 +584,7 @@ export default function InternetUsersList(): JSX.Element {
 
                 <div className="border rounded-lg p-3">
                   <div className="text-gray-500 text-xs">Device Type</div>
-                  <div className="font-medium">{viewUser.device_type || "-"}</div>
+                  <div className="font-medium">{viewUser.device_type_id || "-"}</div>
                 </div>
 
                 <div className="border rounded-lg p-3">
@@ -660,33 +662,24 @@ export default function InternetUsersList(): JSX.Element {
                   ) : null
                 )}
 
-                {/* directorate type */}
-
+                {/* Directorate */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Directorate</label>
                   <select
-                    name="directorate"
-                    value={editForm.directorate || ""}
-                    onChange={(e) => {
-                      const selectedName = e.target.value;
-                      setEditForm(prev => ({ ...prev, directorate: selectedName }));
-
-                      const selectedObj = directorateOptions.find(dir => dir.name === selectedName) || null;
-                      setSelectedDirectorateEdit(selectedObj);
-                    }}
+                    name="directorate_id"
+                    value={editForm.directorate_id || ""}
+                    onChange={(e) =>
+                      setEditForm(prev => ({ ...prev, directorate_id: Number(e.target.value) }))
+                    }
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="">Select Directorate</option>
-                    {directorateOptions
-                      .filter(dir => dir.id > 5)
-                      .map((dir) => (
-                        <option key={dir.id} value={dir.name}>
-                          {dir.name}
-                        </option>
-                      ))
-                    }
+                    {directorateOptions.map(dir => (
+                      <option key={dir.id} value={dir.id}>{dir.name}</option>
+                    ))}
                   </select>
                 </div>
+
 
                 {/* mac address */}
                 <div>
@@ -725,45 +718,18 @@ export default function InternetUsersList(): JSX.Element {
                 </div>
 
 
-                {/* Deputy Ministry */}
+                {/* Groups */}
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
-                    Deputy Ministry
-                  </label>
-                  <select
-                    className="block w-full rounded-md border border-blue-200 shadow-sm h-9 text-sm p-2"
-                    value={selectedDeputyMinistry}
-                    onChange={(e) => setSelectedDeputyMinistry(e.target.value)}
-                  >
-                    <option value="">{editForm.deputy}</option>
-                    {deputyMinistryOptions
-                      .filter(dep => dep.id >= 1 && dep.id <= 5) // فقط id های 1 تا 5
-                      .map((dep) => (
-                        <option key={dep.id} value={dep.name}>
-                          {dep.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-
-                {/* groups */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Groups</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Group</label>
                   <select
                     name="group_id"
-                    value={editForm.groups || selectedGroupId || ""}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setEditForm((prev) => ({ ...prev, group_id: val }));
-                      setSelectedGroupId(val);
-                    }}
+                    value={editForm.group_id || ""}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, group_id: Number(e.target.value) }))}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">{editForm.groups}</option>
-                    {groups.map((group) => (
-                      <option key={group.id} value={group.id}>
-                        {group.name}
-                      </option>
+                    <option value="">Select Group</option>
+                    {groups.map(group => (
+                      <option key={group.id} value={group.id}>{group.name}</option>
                     ))}
                   </select>
                 </div>
@@ -771,22 +737,26 @@ export default function InternetUsersList(): JSX.Element {
 
                 {/* Employment Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Employment Type</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
                   <select
-                    name="employment_type"
-                    value={editForm.employment_type || ""}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 
-                  focus:ring-2 focus:ring-blue-400"
+                    name="employee_type_id"
+                    value={editForm.employee_type_id || ""}
+                    onChange={(e) => {
+                      const selectedType = employmentTypes.find(type => type.id === Number(e.target.value));
+                      setEditForm(prev => ({
+                        ...prev,
+                        employee_type_id: selectedType?.id || null,
+                      }));
+                    }}
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="">Select Employment Type</option>
-                    {employmentTypes.map((type) => (
-                      <option key={type.id} value={type.name}>
-                        {type.name}
-                      </option>
+                    {employmentTypes.map(type => (
+                      <option key={type.id} value={type.id}>{type.name}</option>
                     ))}
                   </select>
                 </div>
+
 
                 {/* Device limit */}
                 <div>
@@ -801,21 +771,15 @@ export default function InternetUsersList(): JSX.Element {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
                   <select
                     name="device_type_id"
-                    value={String(editForm.device_type)}
-                    onChange={(e) => {
-                      const selectedId = Number(e.target.value);
-                      setEditForm(prev => ({ ...prev, device_type_id: selectedId }));
-                    }}
+                    value={editForm.device_type_id || ""}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, device_type_id: Number(e.target.value) }))}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">{editForm.device_type}</option>
-                    {deviceTypes.map((dt) => (
-                      <option key={dt.id} value={String(dt.id)}>
-                        {dt.name}
-                      </option>
+                    <option value="">Select Device Type</option>
+                    {deviceTypes.map(dt => (
+                      <option key={dt.id} value={dt.id}>{dt.name}</option>
                     ))}
                   </select>
-
                 </div>
 
 
