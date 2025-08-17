@@ -9,7 +9,7 @@ export type InternetUser = {
   phone: string;
   position?: string;
   employment_type: string;  // Make sure this matches backend field name
-  directorate: number;
+  directorate_id: number;
   deputy: string;
   device_limit: number;
   device_type_id: number;

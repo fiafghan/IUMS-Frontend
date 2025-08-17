@@ -22,7 +22,7 @@ export default function GroupTypePieChart() {
     setLoading(true);
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     axios
-      .get<ApiRow[]>(`${route}/group-type-counts`, {
+      .get<ApiRow[]>(`${route}/group-count`, {
          headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

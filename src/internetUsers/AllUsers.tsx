@@ -464,7 +464,7 @@ export default function InternetUsersList(): JSX.Element {
 
 
 
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.group_id}</td>
+                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
 
 
                           {/* Status */}
@@ -646,7 +646,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="lg:w-1/2 w-full p-8 bg-white overflow-y-auto max-h-[90vh]">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.keys(editForm).map((key) =>
-                  key !== "status" && key !== "violations" && key !== "comment" && key !== "employment_type"
+                  key !== "status" && key !== "violations_count" && key !== "comment" && key !== "employment_type"
                     && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
                     && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "group_id" 
                      && key !== "violation_type_id"  && key !== "employee_type_id"   && key !== "device_type_id"  && key !== "directorate_id"  && key !== "groups"  ? (
