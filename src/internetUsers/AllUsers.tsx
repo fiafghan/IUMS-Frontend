@@ -633,7 +633,7 @@ export default function InternetUsersList(): JSX.Element {
             <div className="lg:w-1/2 w-full bg-gradient-to-br from-blue-100 to-blue-200 p-8 flex flex-col justify-center">
               <h2 className="text-3xl font-bold text-blue-800 mb-2">Edit User</h2>
               <p className="text-sm text-blue-700 mb-4">Make changes to this user's profile.</p>
-              <ul className="space-y-2 text-sm text-blue-900 overflow-auto max-h-[80vh] pr-2">
+              <ul className="space-y-2 text-sm text-blue-900 overflow-auto pr-2">
                 {Object.entries(selectedUser).map(([key, value]) => (
                   <li key={key}>
                     <strong className="capitalize">{key.replace("_", " ")}:</strong> {value || "-"}
