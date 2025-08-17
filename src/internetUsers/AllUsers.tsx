@@ -643,7 +643,7 @@ export default function InternetUsersList(): JSX.Element {
             </div>
 
             {/* Right - Form */}
-            <div className="lg:w-1/2 w-full p-8 bg-white overflow-y-auto max-h-[90vh]">
+            <div className="lg:w-1/2 w-full p-8 bg-white max-h-[90vh] scale-80">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations_count" && key !== "comment" && key !== "employment_type"
