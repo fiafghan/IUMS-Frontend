@@ -674,7 +674,7 @@ export default function InternetUsersList(): JSX.Element {
                     }
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">Select Directorate</option>
+                    <option value="directorate_id">Select Directorate</option>
                     {directorateOptions.map(dir => (
                       <option key={dir.id} value={dir.id}>{dir.name}</option>
                     ))}
