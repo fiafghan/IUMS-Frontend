@@ -23,10 +23,12 @@ export default function AllViolationsFromUsers() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [expandedUsers, setExpandedUsers] = useState<Record<string, boolean>>({});
-  const toggleUser = (username: string) => {
-    setExpandedUsers(prev => ({ ...prev, [username]: !prev[username] }));
-  };
   const [mergedUsers, setMergedUsers] = useState<Record<string, boolean>>({});
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+
+
+
 
   const toggleMerge = (username: string) => {
     if (mergedUsers[username]) {
@@ -72,6 +74,18 @@ export default function AllViolationsFromUsers() {
     groupedViolations[username].push(v);
   });
 
+  const filteredGroupedViolations: Record<string, Violation[]> = {};
+  Object.entries(groupedViolations).forEach(([username, userViolations]) => {
+    const filtered = userViolations.filter(v =>
+      username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      v.violation_type?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (v.comment || "").toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    if (filtered.length > 0) {
+      filteredGroupedViolations[username] = filtered;
+    }
+  });
+
   return (
     <div className="flex min-h-screen">
       <GradientSidebar />
@@ -80,6 +94,17 @@ export default function AllViolationsFromUsers() {
           All Violations From Users
         </h1>
         <div className="overflow-x-auto">
+          <div className="mb-4 flex justify-center">
+            <input
+              type="text"
+              placeholder="🔍 Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full max-w-md px-4 py-2 border-2 border-b-blue-400 border-l-blue-400 
+              border-r-blue-400 border-t-gray-200 rounded shadow 
+              focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
           <table className="min-w-full border border-gray-300 rounded">
             <thead className="bg-gray-100">
               <tr>
@@ -91,14 +116,12 @@ export default function AllViolationsFromUsers() {
               </tr>
             </thead>
             <tbody>
-              {violations.length === 0 && (
+              {Object.entries(filteredGroupedViolations).length === 0 && (
                 <tr>
-                  <td colSpan={5} className="text-center py-4">
-                    No violations found.
-                  </td>
+                  <td colSpan={5} className="text-center py-4">No violations found.</td>
                 </tr>
               )}
-              {Object.entries(groupedViolations).map(([username, userViolations]) => (
+              {Object.entries(filteredGroupedViolations).map(([username, userViolations]) => (
                 <React.Fragment key={username}>
                   {mergedUsers[username] !== false && (
                     <tr
@@ -108,20 +131,26 @@ export default function AllViolationsFromUsers() {
                       <td className="border px-4 py-2">{userViolations.map(v => v.id).join(", ")}</td>
                       <td className="border px-4 py-2">
                         {username}
-                        {userViolations.length > 1 ? (
-                          <span className="text-white rounded-full bg-red-600 p-1 text-xs ml-2">
+                        {usernameCounts[username] > 1 ? (
+                          <span className="text-white bg-red-600 p-1 text-[7px] ml-2">
                             D
                           </span>
                         ) : (
-                          <span className="text-white rounded-full bg-green-600 p-1 text-xs ml-2">
-                            Activated
+                          <span className="text-white bg-green-600 p-1 text-[7px] ml-2">
+                            A
                           </span>
                         )}
                         <button className="ml-2">{expandedUsers[username] ? "" : ""}</button>
                       </td>
                       <td className="border px-4 py-2">{userViolations.map(v => v.violation_type?.name).join(", ")}</td>
                       <td className="border px-4 py-2">{userViolations.map(v => v.comment || "-").join(", ")}</td>
-                      <td className="border px-4 py-2">{userViolations.map(v => new Date(v.created_at).toLocaleString()).join(", ")}</td>
+                      <td className="border px-4 py-2">
+                        {userViolations.map(v => {
+                          const dateStr = new Date(v.created_at)
+                            .toLocaleDateString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' });
+                          return dateStr.length > 30 ? dateStr.slice(0, 30) + "..." : dateStr;
+                        }).join(", ")}
+                      </td>
                     </tr>
                   )}
 
