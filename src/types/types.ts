@@ -8,17 +8,22 @@ export type InternetUser = {
   email: string;
   phone: string;
   position?: string;
-  employment_type: string;  // Make sure this matches backend field name
+  employee_type_id: number;  // Make sure this matches backend field name
+  employee_type: string;
+  employment_type: string;
+  directorate_id: number;
   directorate: number;
   deputy: string;
   device_limit: number;
-  device_type: number;
+  device_type_id: number;
   mac_address?: string;
   status?: "active" | "deactive" | 1 | 0;
   violations_count?: number;
   comment?: string;
+  violation_type_id?: number;
   violation_type?: string;
-  groups:number;
+  group_id:number;
+  groups  :number;
 };
 
 

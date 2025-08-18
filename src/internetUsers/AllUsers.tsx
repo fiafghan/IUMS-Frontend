@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   User, Edit, Trash,
   Search, Users, Briefcase, Eye,
-  LayoutDashboard
+  LayoutDashboard,
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
@@ -28,19 +28,14 @@ export default function InternetUsersList(): JSX.Element {
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
   const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
-  const [queryDirectorate,] = useState("");
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
-  const [, setSelectedDirectorateEdit] = useState<{ id: number; name: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [employmentTypes, setEmploymentTypes] = useState<{ id: number; name: string }[]>([]);
-  const [, setSelectedDeputyMinistryEdit] = useState<{ id: number; name: string } | null>(null);
-  const [queryDeputyMinistryEdit,] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
   const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
-  const [selectedGroupId, setSelectedGroupId] = useState<string | number>("");
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
 
@@ -60,30 +55,11 @@ export default function InternetUsersList(): JSX.Element {
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isViewer = currentUser?.user.role === 'viewer';
 
-
-  const filteredDirectorates =
-    queryDirectorate === ""
-      ? directorateOptions
-      : directorateOptions.filter((dir) =>
-        dir.name.toLowerCase().includes(queryDirectorate.toLowerCase())
-      );
-
   const deputyMinistryCounts: Record<string, number> = users.reduce((acc, user) => {
     const ministry = user.deputy || "Unknown";
     acc[ministry] = (acc[ministry] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-
-
-  const filteredDeputyMinistriesEdit =
-    queryDeputyMinistryEdit === ""
-      ? deputyMinistryOptions.filter(dm => dm.id >= 1 && dm.id <= 5)
-      : deputyMinistryOptions
-        .filter(dm => dm.id >= 1 && dm.id <= 5)
-        .filter((dm) =>
-          dm.name.toLowerCase().includes(queryDeputyMinistryEdit.toLowerCase())
-        );
-
 
   useEffect(() => {
     async function fetchUsers() {
@@ -205,16 +181,10 @@ export default function InternetUsersList(): JSX.Element {
   };
 
 
-  const handleEdit = (user) => {
+  const handleEdit = (user: any) => {
     setSelectedUser(user);
     setEditForm({
-      ...user,
-      employee_type_id: user.employee_type_id || null,
-      directorate_id: user.directorate_id || null,
-      group_id: user.group_id || null,
-      device_type_id: user.device_type_id || null,
-      violation_type_id: user.violation_type_id || null,
-      status: user.status === 1 ? "active" : "deactive",
+      ...user
     });
     setIsEditOpen(true);
   };
@@ -226,14 +196,9 @@ export default function InternetUsersList(): JSX.Element {
   };
 
   const handleUpdate = async () => {
+    if (!selectedUser) return;
     const payload = {
-      ...editForm,
-      status: editForm.status === "active" ? 1 : 0,
-      employee_type_id: Number(editForm.employee_type_id),
-      directorate_id: Number(editForm.directorate_id),
-      group_id: Number(editForm.group_id),
-      device_type_id: Number(editForm.device_type_id),
-      violation_type_id: Number(editForm.violation_type_id),
+      ...editForm
     };
 
     try {
@@ -243,7 +208,7 @@ export default function InternetUsersList(): JSX.Element {
       });
       setIsEditOpen(false);
       // refresh data
-    } catch (err) {
+    } catch (err: any) {
       console.error(err.response?.data || err);
     }
   };
@@ -263,7 +228,7 @@ export default function InternetUsersList(): JSX.Element {
     }
   };
 
-  
+
 
   return (
     <div className="min-h-screen flex bg-white shadow-md shadow-indigo-700">
@@ -414,15 +379,15 @@ export default function InternetUsersList(): JSX.Element {
                   {users
                     .filter((user) =>
                       (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
-                      (selectedDirectorate === "" || user.directorate === selectedDirectorate) &&
+                      (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
                       (selectedStatus === "" || (selectedStatus === "active" && user.status === 1) || (selectedStatus === "deactive" && user.status === 0)) &&
                       (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         user.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      user.employment_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      user.device_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      String(user.employee_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      String(user.device_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
                       user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      (user.violation_type && user.violation_type.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                      (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(searchTerm.toLowerCase())) ||
                       String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase()))
                     .map((user, idx) => {
                       const isRedCard = user.violations_count === 2;
@@ -579,7 +544,7 @@ export default function InternetUsersList(): JSX.Element {
 
                 <div className="border rounded-lg p-3">
                   <div className="text-gray-500 text-xs">Employment Type</div>
-                  <div className="font-medium">{viewUser.employment_type || "-"}</div>
+                  <div className="font-medium">{viewUser.employee_type || "-"}</div>
                 </div>
 
                 <div className="border rounded-lg p-3">
@@ -626,30 +591,35 @@ export default function InternetUsersList(): JSX.Element {
 
       {/* Edit Modal */}
       {isEditOpen && selectedUser && (
-        <div className="fixed inset-0 bg-transparent bg-opacity-20 flex justify-center items-center z-50 px-4 rounded-md">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl border border-gray-200 flex flex-col lg:flex-row scale-80">
+        <div className="fixed inset-0 bg-gradient-to-r from-blue-400 via-blue-300 to-blue-100 flex justify-center 
+        items-center z-50 px-4 rounded-md">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl border border-gray-200 
+          flex flex-col lg:flex-row scale-80">
 
             {/* Left - Preview */}
-            <div className="lg:w-1/2 w-full bg-gradient-to-br from-blue-100 to-blue-200 p-8 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold text-blue-800 mb-2">Edit User</h2>
-              <p className="text-sm text-blue-700 mb-4">Make changes to this user's profile.</p>
-              <ul className="space-y-2 text-sm text-blue-900 overflow-auto pr-2">
-                {Object.entries(selectedUser).map(([key, value]) => (
-                  <li key={key}>
-                    <strong className="capitalize">{key.replace("_", " ")}:</strong> {value || "-"}
-                  </li>
-                ))}
+            <div className="lg:w-1/2 w-full bg-gradient-to-br from-blue-100 to-blue-200 
+            p-8 flex flex-col justify-center">
+              <h2 className="text-xl font-bold text-blue-800 mb-2">Edit User</h2>
+              <p className="text-[13px] text-blue-700 mb-4">Make changes to this user's profile.</p>
+              <ul className="space-y-2 text-[11px] text-blue-900 overflow-auto pr-2">
+                {Object.entries(selectedUser).map(([key, value]) =>
+                  key !== "status" ? (
+                    <li key={key}>
+                      <strong className="capitalize">{key.replace("_", " ")}:</strong> {value || "-"}
+                    </li>
+                  ) : null)}
               </ul>
             </div>
 
             {/* Right - Form */}
             <div className="lg:w-1/2 w-full p-8 bg-white max-h-[90vh] scale-80">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-3  gap-4">
                 {Object.keys(editForm).map((key) =>
                   key !== "status" && key !== "violations_count" && key !== "comment" && key !== "employment_type"
                     && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
-                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "group_id" 
-                     && key !== "violation_type_id"  && key !== "employee_type_id"   && key !== "device_type_id"  && key !== "directorate_id"  && key !== "groups"  ? (
+                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "group_id"
+                    && key !== "violation_type_id" && key !== "employee_type_id" && key !== "device_type_id"
+                    && key !== "directorate_id" && key !== "groups" && key !== "device_limit" && key !== "violations" ? (
                     <div key={key}>
                       <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
                       <input
@@ -664,6 +634,7 @@ export default function InternetUsersList(): JSX.Element {
                 )}
 
                 {/* Directorate */}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Directorate</label>
                   <select
@@ -674,7 +645,6 @@ export default function InternetUsersList(): JSX.Element {
                     }
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="directorate_id">Select Directorate</option>
                     {directorateOptions.map(dir => (
                       <option key={dir.id} value={dir.id}>{dir.name}</option>
                     ))}
@@ -699,7 +669,7 @@ export default function InternetUsersList(): JSX.Element {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Violation Type</label>
                   <select
                     name="violation_type_id"
-                    value={editForm.violation_type || ""}
+                    value={editForm.violation_type_id || ""}
                     onChange={(e) =>
                       setEditForm((prev) => ({
                         ...prev,
@@ -708,7 +678,6 @@ export default function InternetUsersList(): JSX.Element {
                     }
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">{editForm.violation_type}</option>
                     {violationTypes.map((vt) => (
                       <option key={vt.id} value={vt.id}>
                         {vt.name}
@@ -728,7 +697,6 @@ export default function InternetUsersList(): JSX.Element {
                     onChange={(e) => setEditForm(prev => ({ ...prev, group_id: Number(e.target.value) }))}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">Select Group</option>
                     {groups.map(group => (
                       <option key={group.id} value={group.id}>{group.name}</option>
                     ))}
@@ -742,18 +710,11 @@ export default function InternetUsersList(): JSX.Element {
                   <select
                     name="employee_type_id"
                     value={editForm.employee_type_id || ""}
-                    onChange={(e) => {
-                      const selectedType = employmentTypes.find(type => type.id === Number(e.target.value));
-                      setEditForm(prev => ({
-                        ...prev,
-                        employee_type_id: selectedType?.id || null,
-                      }));
-                    }}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, employee_type_id: Number(e.target.value) }))}
                     className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">Select Employment Type</option>
-                    {employmentTypes.map(type => (
-                      <option key={type.id} value={type.id}>{type.name}</option>
+                    {employmentTypes.map(emp_type => (
+                      <option key={emp_type.id} value={emp_type.id}>{emp_type.name}</option>
                     ))}
                   </select>
                 </div>
@@ -774,28 +735,12 @@ export default function InternetUsersList(): JSX.Element {
                     name="device_type_id"
                     value={editForm.device_type_id || ""}
                     onChange={(e) => setEditForm(prev => ({ ...prev, device_type_id: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
-                    <option value="">Select Device Type</option>
                     {deviceTypes.map(dt => (
                       <option key={dt.id} value={dt.id}>{dt.name}</option>
                     ))}
-                  </select>
-                </div>
-
-
-                {/* Status */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Status</label>
-                  <select
-                    name="status"
-                    value={editForm.status || "active"}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 
-              focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="active">Active</option>
-                    <option value="deactive">Deactive</option>
                   </select>
                 </div>
 
@@ -803,7 +748,7 @@ export default function InternetUsersList(): JSX.Element {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Violations</label>
                   <select
-                    name="violations"
+                    name="violations_count"
                     value={editForm.violations_count || "0"}
                     onChange={handleEditChange}
                     className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 

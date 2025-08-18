@@ -65,7 +65,7 @@ export default function GradientSidebar(): JSX.Element {
           className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
         >
           <div className="flex items-center gap-2 text-blue-400 scale-80">
-            <Users className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
+            <Users className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
             All Users
           </div>
           {userOpen ? <ChevronUp className="w-4 h-4 text-blue-400" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
@@ -98,7 +98,7 @@ export default function GradientSidebar(): JSX.Element {
           className="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-white hover:text-blue-400"
         >
           <div className="flex items-center gap-2 text-blue-400 scale-80">
-            <AlertOctagon className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
+            <AlertOctagon className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
             Violations
           </div>
           {violationOpen ? <ChevronUp className="w-4 h-4 scale-80 text-blue-400" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
@@ -156,7 +156,7 @@ export default function GradientSidebar(): JSX.Element {
               className="flex items-center justify-between px-3 py-3 rounded-sm hover:bg-white hover:text-blue-400"
             >
               <div className="flex items-center gap-2 text-blue-400 scale-80">
-                <Users className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
+                <Users className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
                 System Users
               </div>
               {systemUserOpen ? <ChevronUp className="w-4 h-4 text-blue-400 scale-80" /> : <ChevronDown className="w-4 h-4 text-blue-400 scale-80" />}
@@ -188,7 +188,7 @@ export default function GradientSidebar(): JSX.Element {
           onClick={() => navigate("/settings")}
           className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400 scale-80"
         >
-          <Settings className="w-5 h-5 text-blue-400 bg-blue-400 text-white rounded-md p-1" />
+          <Settings className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
           Settings
         </motion.button>
 
@@ -199,7 +199,7 @@ export default function GradientSidebar(): JSX.Element {
           onClick={logout}
           className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 mt-4 text-blue-400 scale-80"
         >
-          <LogOut className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
+          <LogOut className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
           Logout
         </motion.button>
       </nav>
