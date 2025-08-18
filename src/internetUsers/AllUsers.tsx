@@ -106,7 +106,7 @@ export default function InternetUsersList(): JSX.Element {
         ]);
 
 
-        setDeputyMinistryOptions(depRes.data); // Already array of { id, name }
+        setDeputyMinistryOptions(depRes.data); 
         setDirectorateOptions(dirRes.data);
         setEmploymentTypes(empTypeRes.data);
       } catch (err) {
@@ -126,7 +126,7 @@ export default function InternetUsersList(): JSX.Element {
     })
       .then(res => res.json())
       .then((res) => {
-        setViolationTypes(res.data || []); // فقط آرایه‌ی data را ست می‌کنیم
+        setViolationTypes(res.data || []); 
       })
       .catch(err => console.error("Error fetching violation types:", err));
   }, []);

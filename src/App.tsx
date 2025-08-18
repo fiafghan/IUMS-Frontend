@@ -14,6 +14,7 @@ import AddViolationOnAUser from "./internetUsers/addViolationOnaUser"
 import AllViolationsFromUsers from "./internetUsers/AllViolationsFromUsers"
 import RoleChecker from "./components/RoleChecker"
 import AccessDenied from "./AccessDenied"
+import ReactivateUserForm from "./internetUsers/reActivation"
 
 function App() {
 
@@ -26,11 +27,13 @@ function App() {
         <Route path="/all-system-users" element={<RoleChecker allowedRoles={['Admin']}><SystemUsersPage /></RoleChecker>} />
         <Route path="/addviolation" element={<RoleChecker allowedRoles={['Admin', 'User']}><EmployeeViolationForm /></RoleChecker>} />
         <Route path="/addviolationonauser" element={<RoleChecker allowedRoles={['Admin', 'User']}><AddViolationOnAUser /></RoleChecker>} />
+        <Route path="/re-activate" element={<RoleChecker allowedRoles={['Admin', 'User']}><ReactivateUserForm /></RoleChecker>} />
         <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
         <Route path="/add-violation-type" element={<RoleChecker allowedRoles={['Admin', 'User']}><AddViolationType /></RoleChecker>} />
         <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />
         <Route path="/all-violations-from-users" element={<PrivateRoute><AllViolationsFromUsers /></PrivateRoute>} />
         <Route path="/access-denied" element={<PrivateRoute><AccessDenied /></PrivateRoute>} />
+        
         <Route
           path="/"
           element={
