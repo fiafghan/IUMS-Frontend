@@ -109,7 +109,6 @@ export default function ReactivateUserForm() {
                     </div>
                 )}
 
-
                 {results.length > 0 && (
                     <ul className="absolute left-0 right-0 mt-1 max-h-44 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                         {results.map((user, index) => (
@@ -144,7 +143,7 @@ export default function ReactivateUserForm() {
 
             <button
                 type="submit"
-                className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-200 text-white font-semibold rounded-xl hover:from-pink-500 hover:to-blue-500 transition"
+                className="w-full py-3 px-4 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-200 text-white font-semibold rounded-xl hover:from-blue-400 hover:to-blue-100 transition"
             >
                 Submit Request
             </button>
