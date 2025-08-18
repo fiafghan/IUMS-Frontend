@@ -196,35 +196,6 @@ export default function InternetUsersList(): JSX.Element {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
-
-  const handleEditClick = async (userId: number) => {
-  try {
-    const res = await axios.get(`/api/internet-users/${userId}/edit`);
-    setSelectedUser(res.data.data);  // ستون چپ برای نمایش پیش‌نمایش
-    setEditForm({
-      name: res.data.data.person.name,
-      lastname: res.data.data.person.lastname,
-      email: res.data.data.person.email,
-      phone: res.data.data.person.phone,
-      position: res.data.data.person.position,
-      directorate_id: res.data.data.person.directorate_id,
-      employee_type_id: res.data.data.person.employment_type_id,
-      group_id: res.data.data.group_id,
-      device_type_id: res.data.data.device_type_id,
-      device_limit: res.data.data.device_limit,
-      username: res.data.data.username,
-      status: res.data.data.status,
-      violations_count: res.data.data.violations_count ?? 0,
-      comment: res.data.data.comment ?? '',
-      mac_address: res.data.data.mac_address
-    });
-    setIsEditOpen(true); 
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
   const handleUpdate = async () => {
     if (!selectedUser) return;
     const payload = {
