@@ -208,8 +208,12 @@ export default function InternetUsersList(): JSX.Element {
       });
       setIsEditOpen(false);
       // refresh data
-    } catch (err: any) {
-      console.error(err.response?.data || err);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error(err.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
