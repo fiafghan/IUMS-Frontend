@@ -6,6 +6,7 @@ import { route } from "../config";
 import ScrollToTopButton from "../components/scrollToTop";
 import UserRow from "../components/userRow";
 import UserFiltersPanel from "../components/UserFilters";
+import EditUserModal from "./editModal";
 
 const headers = [
   "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
@@ -18,7 +19,6 @@ export default function InternetUsersList(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<InternetUser | null>(null);
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
@@ -26,7 +26,7 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
   const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
   const employmentTypes: { id: number; name: string }[] = [];
@@ -99,15 +99,37 @@ export default function InternetUsersList(): JSX.Element {
     setIsViewOpen(true);
   };
 
+  const handleEditClick = (user: InternetUser) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
 
-  const handleEdit = (user: any) => {
+  const handleUserSave = (updatedUser: Partial<InternetUser>) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === updatedUser.id ? { ...u, ...updatedUser } : u
+      )
+    );
+  };
+
+  const handleEdit = (user: InternetUser) => {
     setSelectedUser(user);
     setEditForm({
-      ...user,
-      directorate_id: Number(user.directorate_id)
+      id: user.id,
+      name: user.name,
+      lastname: user.lastname,
+      username: user.username,
+      directorate_id: user.directorate_id,
+      group_id: user.group_id,
+      violation_type_id: user.violation_type_id,
+      employee_type_id: user.employee_type_id,
+      device_type_id: user.device_type_id,
+      violations_count: user.violations_count,
+      device_limit: user.device_limit,
     });
-    setIsEditOpen(true);
+    setIsModalOpen(true);
   };
+
 
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -115,26 +137,34 @@ export default function InternetUsersList(): JSX.Element {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = async () => {
-    if (!selectedUser) return;
-    const payload = {
-      ...editForm
-    };
+ const handleUpdate = async () => {
+  if (!selectedUser) return;
 
-    try {
-      await axios.put(`${route}/internet/${selectedUser.id}`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setIsEditOpen(false);
-      // refresh data
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        console.error(err.response?.data);
-      } else {
-        console.error(err);
-      }
-    }
+  const payload = {
+    id: editForm.id,
+    name: editForm.name,
+    lastname: editForm.lastname,
+    username: editForm.username,
+    directorate_id: Number(editForm.directorate_id),
+    group_id: Number(editForm.group_id),
+    violation_type_id: Number(editForm.violation_type_id),
+    employee_type_id: Number(editForm.employee_type_id),
+    device_type_id: Number(editForm.device_type_id),
+    violations_count: Number(editForm.violations_count),
+    device_limit: Number(editForm.device_limit),
   };
+
+  try {
+    await axios.put(`${route}/internet/${selectedUser.id}`, payload);
+
+    const res = await axios.get(`${route}/internet`);
+    setUsers(res.data);
+
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
   const handleDelete = async (id: string) => {
@@ -381,207 +411,17 @@ export default function InternetUsersList(): JSX.Element {
       )}
 
       {/* Edit Modal */}
-      {isEditOpen && selectedUser && (
-        <div className="fixed inset-0 bg-gradient-to-r from-blue-400 via-blue-300 to-blue-100 flex justify-center 
-        items-center z-50 px-4 rounded-md">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl border border-gray-200 
-          flex flex-col lg:flex-row scale-80">
-
-            {/* Left - Preview */}
-            <div className="lg:w-1/2 w-full bg-gradient-to-br from-blue-100 to-blue-200 
-            p-8 flex flex-col justify-center">
-              <h2 className="text-xl font-bold text-blue-800 mb-2">Edit User</h2>
-              <p className="text-[13px] text-blue-700 mb-4">Make changes to this user's profile.</p>
-              <ul className="space-y-2 text-[11px] text-blue-900 overflow-auto pr-2">
-                {Object.entries(selectedUser).map(([key, value]) =>
-                  key !== "status" ? (
-                    <li key={key}>
-                      <strong className="capitalize">{key.replace("_", " ")}:</strong> {value || "-"}
-                    </li>
-                  ) : null)}
-              </ul>
-            </div>
-
-            {/* Right - Form */}
-            <div className="lg:w-1/2 w-full p-8 bg-white max-h-[90vh] scale-80">
-              <div className="grid grid-cols-3  gap-4">
-                {Object.keys(editForm).map((key) =>
-                  key !== "status" && key !== "violations_count" && key !== "comment" && key !== "employment_type"
-                    && key !== "directorate" && key !== "deputyMinistry" && key !== "count" && key !== "id"
-                    && key !== "device_type" && key !== "mac_address" && key !== "violation_type" && key !== "deputy" && key !== "group_id"
-                    && key !== "violation_type_id" && key !== "employee_type_id" && key !== "device_type_id"
-                    && key !== "directorate_id" && key !== "groups" && key !== "device_limit" && key !== "violations" ? (
-                    <div key={key}>
-                      <label className="block text-sm font-medium text-gray-700 capitalize">{key.replace("_", " ")}</label>
-                      <input
-                        type="text"
-                        name={key}
-                        value={(editForm as any)[key] || ""}
-                        onChange={handleEditChange}
-                        className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      />
-                    </div>
-                  ) : null
-                )}
-
-                {/* Directorate */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Directorate</label>
-                  <select
-                    name="directorate_id"
-                    value={editForm.directorate_id || ""}
-                    onChange={(e) =>
-                      setEditForm(prev => ({ ...prev, directorate_id: Number(e.target.value) }))
-                    }
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {directorateOptions.map(dir => (
-                      <option key={dir.id} value={dir.id}>{dir.name}</option>
-                    ))}
-                  </select>
-                </div>
+      {isModalOpen && selectedUser && (
+        <EditUserModal
+          user={selectedUser as InternetUser}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleUserSave}
+          violationTypes={violationTypes}   // ای لست ره باید در پدر فیچ کنی
+          deputyMinistryOptions={[]}        // اگر داشتی پاس بتی، اگر نداشتی خالی بده
+        />
 
 
-                {/* mac address */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 capitalize">Mac Address</label>
-                  <input
-                    type="text"
-                    name={"mac_address"}
-                    value={editForm.mac_address || ""}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  />
-                </div>
-
-                {/* violation type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Violation Type</label>
-                  <select
-                    name="violation_type_id"
-                    value={editForm.violation_type_id || ""}
-                    onChange={(e) =>
-                      setEditForm((prev) => ({
-                        ...prev,
-                        violation_type_id: Number(e.target.value),
-                      }))
-                    }
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {violationTypes.map((vt) => (
-                      <option key={vt.id} value={vt.id}>
-                        {vt.name}
-                      </option>
-                    ))}
-                  </select>
-
-                </div>
-
-
-                {/* Groups */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Group</label>
-                  <select
-                    name="group_id"
-                    value={editForm.group_id || ""}
-                    onChange={(e) => setEditForm(prev => ({ ...prev, group_id: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {groups.map(group => (
-                      <option key={group.id} value={group.id}>{group.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-
-                {/* Employment Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
-                  <select
-                    name="employee_type_id"
-                    value={editForm.employee_type_id || ""}
-                    onChange={(e) => setEditForm(prev => ({ ...prev, employee_type_id: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {employmentTypes.map(emp_type => (
-                      <option key={emp_type.id} value={emp_type.id}>{emp_type.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-
-                {/* Device limit */}
-                <div>
-                  <label htmlFor="">Device limit</label>
-                  <input type="text" className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 
-              focus:ring-2 focus:ring-blue-40" value={editForm.device_limit} />
-                </div>
-
-
-                {/* Device Type */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
-                  <select
-                    name="device_type_id"
-                    value={editForm.device_type_id || ""}
-                    onChange={(e) => setEditForm(prev => ({ ...prev, device_type_id: Number(e.target.value) }))}
-                    className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm 
-                    focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {deviceTypes.map(dt => (
-                      <option key={dt.id} value={dt.id}>{dt.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Violations */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Violations</label>
-                  <select
-                    name="violations_count"
-                    value={editForm.violations_count || "0"}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none 
-              focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="0">0</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                  </select>
-                </div>
-
-                {/* Comment */}
-                <div className="md:col-span-3">
-                  <label className="block text-sm font-medium text-gray-700">Comment</label>
-                  <textarea
-                    name="comment"
-                    value={editForm.comment || ""}
-                    onChange={handleEditChange}
-                    className="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    rows={3}
-                    placeholder="Write a comment..."
-                  />
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="mt-6 flex justify-end gap-4 border-t pt-4 border-gray-200">
-                <button
-                  onClick={() => setIsEditOpen(false)}
-                  className="px-5 py-2 rounded-md text-sm bg-white border border-gray-300 hover:bg-gray-100 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  className="px-5 py-2 rounded-md text-sm text-white bg-blue-500 hover:bg-blue-600 transition shadow"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
 
