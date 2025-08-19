@@ -160,18 +160,16 @@ export default function EditUserModal({
     }, [user, allGroupsList]);
 
     useEffect(() => {
-        if (user && allDeviceList.length > 0) {
-            const deviceId = typeof (user as any).device_type_id === "string" ? Number((user as any).device_type_id) : (user as any).device_type_id;
-            let found = allDeviceList.find(d => d.id === deviceId);
-
-            if (!found && (user as any).device_type) {
-                const name = String((user as any).device_type).toLowerCase();
-                found = allDeviceList.find(d => d.name.toLowerCase() === name);
+        if (user && allEmploymentList.length > 0) {
+            const empId = Number((user as any).employee_type_id);
+            let found = allEmploymentList.find(e => Number(e.id) === empId);
+            if (!found && (user as any).employment_type) {
+                const name = String((user as any).employment_type).toLowerCase();
+                found = allEmploymentList.find(e => e.name.toLowerCase() === name);
             }
-
-            setSelectedDevice(found || null);
+            setSelectedEmployment(found || null);
         }
-    }, [user, allDeviceList]);
+    }, [user, allEmploymentList]);
 
     useEffect(() => {
         const fetchAllDeviceTypes = async () => {
