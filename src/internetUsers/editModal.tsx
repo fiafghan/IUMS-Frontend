@@ -25,6 +25,8 @@ function InputWithIcon({
     placeholder,
     icon,
     onChange,
+    error,
+    isLoading,
 }: {
     label: string;
     name: string;
@@ -33,6 +35,8 @@ function InputWithIcon({
     placeholder: string;
     icon: JSX.Element;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    error?: string;
+    isLoading?: boolean;
 }) {
     return (
         <div className="w-full">
@@ -47,9 +51,19 @@ function InputWithIcon({
                     value={value as any}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className="w-full pl-10 pr-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300"
+                    className={`w-full pl-10 pr-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 ${
+                        error ? 'border-red-500' : 'border-gray-300'
+                    }`}
                 />
+                {isLoading && (
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                    </div>
+                )}
             </div>
+            {error && (
+                <p className="text-xs text-red-600 mt-1">{error}</p>
+            )}
         </div>
     );
 }
@@ -144,10 +158,117 @@ export default function EditUserModal({
     const [qDevice, setQDevice] = useState("");
     const [qDeputy, setQDeputy] = useState("");
 
+    // Validation states
+    const [emailError, setEmailError] = useState("");
+    const [phoneError, setPhoneError] = useState("");
+    const [macError, setMacError] = useState("");
+    const [isCheckingEmail, setIsCheckingEmail] = useState(false);
+    const [isCheckingPhone, setIsCheckingPhone] = useState(false);
+    const [isCheckingMac, setIsCheckingMac] = useState(false);
+
+    // Add debouncing for API calls
+    const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
+    const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
+    const [macTimeout, setMacTimeout] = useState<number | null>(null);
+
+    // Validation functions
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) return "";
+        if (!email.includes('@')) return "Email must contain @ symbol";
+        if (!emailRegex.test(email)) return "Please enter a valid email address";
+        return "";
+    };
+
+    const validatePhone = (phone: string) => {
+        const phoneRegex = /^\+93[0-9]{8}$/;
+        if (!phone) return "";
+        if (!phone.startsWith('+93')) return "Phone must start with +93";
+        if (!phoneRegex.test(phone)) return "Phone must be in format: +937xxxxxxxx";
+        return "";
+    };
+
+    const validateMacAddress = (mac: string) => {
+        if (!mac) return "";
+        // Allow partial MAC addresses during typing
+        if (mac.length < 17) return "";
+        const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+        if (!macRegex.test(mac)) return "MAC address must be in format: XX:XX:XX:XX:XX:XX";
+        return "";
+    };
+
+    const formatMacAddress = (value: string) => {
+        // Remove all non-alphanumeric characters
+        const cleaned = value.replace(/[^0-9A-Fa-f]/g, '');
+        // Limit to 12 characters (6 pairs)
+        const limited = cleaned.slice(0, 12);
+        // Add colons every 2 characters
+        const formatted = limited.match(/.{1,2}/g)?.join(':') || '';
+        return formatted.toUpperCase();
+    };
+
+    // API check functions
+    const checkEmailExists = async (email: string) => {
+        if (!email) return;
+        setIsCheckingEmail(true);
+        try {
+            const response = await axios.post(`${route}/check-email-of-internet-users`, 
+                { email }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.data.exists) {
+                setEmailError("This email is already registered");
+            }
+        } catch (err) {
+            console.error("Error checking email:", err);
+        } finally {
+            setIsCheckingEmail(false);
+        }
+    };
+
+    const checkPhoneExists = async (phone: string) => {
+        if (!phone) return;
+        setIsCheckingPhone(true);
+        try {
+            const response = await axios.post(`${route}/check-phone-of-internet-user`, 
+                { phone }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.data.exists) {
+                setPhoneError("This phone number is already registered");
+            }
+        } catch (err) {
+            console.error("Error checking phone:", err);
+        } finally {
+            setIsCheckingPhone(false);
+        }
+    };
+
+    const checkMacExists = async (mac: string) => {
+        if (!mac) return;
+        setIsCheckingMac(true);
+        try {
+            const response = await axios.post(`${route}/check-mac-address`, 
+                { mac_address: mac }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.data.exists) {
+                setMacError("This MAC address is already registered");
+            }
+        } catch (err) {
+            console.error("Error checking MAC:", err);
+        } finally {
+            setIsCheckingMac(false);
+        }
+    };
+
     // Load base user into form (only when modal opens or selected user changes)
     useEffect(() => {
         if (!isOpen) return;
         setEditForm({ ...user });
+        setEmailError("");
+        setPhoneError("");
+        setMacError("");
     }, [isOpen, user?.id]);
 
     // Fetch lists
@@ -221,6 +342,79 @@ export default function EditUserModal({
 
     const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
+        
+        // Handle MAC address formatting
+        if (name === 'mac_address') {
+            const formatted = formatMacAddress(value);
+            setEditForm((prev) => ({ ...prev, [name]: formatted }));
+            
+            // Clear previous error and validate
+            setMacError("");
+            const macValidation = validateMacAddress(formatted);
+            if (macValidation) {
+                setMacError(macValidation);
+            } else if (formatted.length >= 8) { // Start checking when we have at least 4 characters (XX:XX)
+                // Clear existing timeout
+                if (macTimeout) {
+                    clearTimeout(macTimeout);
+                    setMacTimeout(null);
+                }
+                // Set new timeout for API call
+                const timeout = setTimeout(() => checkMacExists(formatted), 500);
+                setMacTimeout(timeout);
+            }
+            return;
+        }
+        
+        // Handle phone formatting
+        if (name === 'phone') {
+            let formatted = value;
+            if (!value.startsWith('+93') && value.length > 0) {
+                formatted = '+93' + value.replace(/^\+93/, '');
+            }
+            setEditForm((prev) => ({ ...prev, [name]: formatted }));
+            
+            // Clear previous error and validate
+            setPhoneError("");
+            const phoneValidation = validatePhone(formatted);
+            if (phoneValidation) {
+                setPhoneError(phoneValidation);
+            } else if (formatted.length >= 6) { // Start checking when we have +93 plus at least 3 digits
+                // Clear existing timeout
+                if (phoneTimeout) {
+                    clearTimeout(phoneTimeout);
+                    setPhoneTimeout(null);
+                }
+                // Set new timeout for API call
+                const timeout = setTimeout(() => checkPhoneExists(formatted), 500);
+                setPhoneTimeout(timeout);
+            }
+            return;
+        }
+        
+        // Handle email validation
+        if (name === 'email') {
+            setEditForm((prev) => ({ ...prev, [name]: value }));
+            
+            // Clear previous error and validate
+            setEmailError("");
+            const emailValidation = validateEmail(value);
+            if (emailValidation) {
+                setEmailError(emailValidation);
+            } else if (value.includes('@') && value.length >= 5) { // Start checking when we have @ and reasonable length
+                // Clear existing timeout
+                if (emailTimeout) {
+                    clearTimeout(emailTimeout);
+                    setEmailTimeout(null);
+                }
+                // Set new timeout for API call
+                const timeout = setTimeout(() => checkEmailExists(value), 500);
+                setEmailTimeout(timeout);
+            }
+            return;
+        }
+        
+        // Handle other fields normally
         setEditForm((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -255,7 +449,13 @@ export default function EditUserModal({
         Boolean(selectedGroup?.id) &&
         Boolean(selectedEmployment?.id) &&
         Boolean(selectedDevice?.id) &&
-        (editForm.device_limit === 0 || Boolean(editForm.device_limit));
+        (editForm.device_limit === 0 || Boolean(editForm.device_limit)) &&
+        !emailError &&
+        !phoneError &&
+        !macError &&
+        !isCheckingEmail &&
+        !isCheckingPhone &&
+        !isCheckingMac;
 
     const handleSave = async () => {
         if (!user) return;
@@ -278,6 +478,23 @@ export default function EditUserModal({
             alert("Failed to update user. Please check required fields and try again.");
         }
     };
+
+    useEffect(() => {
+        return () => {
+            if (emailTimeout) {
+                clearTimeout(emailTimeout);
+                setEmailTimeout(null);
+            }
+            if (phoneTimeout) {
+                clearTimeout(phoneTimeout);
+                setPhoneTimeout(null);
+            }
+            if (macTimeout) {
+                clearTimeout(macTimeout);
+                setMacTimeout(null);
+            }
+        };
+    }, [emailTimeout, phoneTimeout, macTimeout]);
 
     if (!isOpen) return null;
 
@@ -340,6 +557,16 @@ export default function EditUserModal({
                                         onChange={handleEditChange}
                                     />
                                     <InputWithIcon
+                                        label="MAC Address"
+                                        name="mac_address"
+                                        value={editForm.mac_address || ""}
+                                        placeholder="XX:XX:XX:XX:XX:XX"
+                                        icon={<HardDrive className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                        error={macError}
+                                        isLoading={isCheckingMac}
+                                    />
+                                    <InputWithIcon
                                         label="Email"
                                         name="email"
                                         type="email"
@@ -347,14 +574,18 @@ export default function EditUserModal({
                                         placeholder="Email"
                                         icon={<Mail className="w-4 h-4 text-gray-500" />}
                                         onChange={handleEditChange}
+                                        error={emailError}
+                                        isLoading={isCheckingEmail}
                                     />
                                     <InputWithIcon
                                         label="Phone"
                                         name="phone"
                                         value={editForm.phone || ""}
-                                        placeholder="Phone"
+                                        placeholder="+937xxxxxxxx"
                                         icon={<Phone className="w-4 h-4 text-gray-500" />}
                                         onChange={handleEditChange}
+                                        error={phoneError}
+                                        isLoading={isCheckingPhone}
                                     />
                                 </div>
                             </Tab.Panel>
@@ -403,7 +634,7 @@ export default function EditUserModal({
 
                             {/* Network & Violations */}
                             <Tab.Panel>
-                                <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                     <ComboBoxField
                                         label="Device Type"
                                         selected={selectedDevice}
@@ -422,7 +653,7 @@ export default function EditUserModal({
                                         icon={<HardDrive className="w-4 h-4 text-gray-500" />}
                                         onChange={handleEditChange}
                                     />
-                                    <div className="w-full grid grid-cols-1">
+                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
                                         <label className="block text-xs font-semibold text-gray-700 mb-1">Violation Type</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -432,7 +663,7 @@ export default function EditUserModal({
                                                 name="violation_type"
                                                 value={String(editForm.violation_type || "")}
                                                 onChange={handleEditChange}
-                                                className="pl-10 pr-3 py-2 border rounded-md text-sm"
+                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm"
                                             >
                                                 <option value="" disabled>Select Violation Type</option>
                                                 {violationTypes.map((v) => (
