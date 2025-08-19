@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import type { JSX } from "react";
 import axios from "axios";
-import { Combobox } from "@headlessui/react";
+import { Combobox, Tab } from "@headlessui/react";
 import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, MonitorSmartphone, Landmark, AlertTriangle, HardDrive, StickyNote } from "lucide-react";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
@@ -59,7 +59,6 @@ function ComboBoxField({
     selected,
     setSelected,
     filtered,
-    query,
     setQuery,
     icon,
 }: {
@@ -283,10 +282,12 @@ export default function EditUserModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-[1px] flex justify-center items-start md:items-center z-50 px-2 md:px-4 py-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full sm:w-[95vw] md:w-[90vw] lg:w-[80vw] max-w-[1000px] max-h-[88vh] overflow-auto transform scale-90 md:scale-95 p-0">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-[1px] flex justify-center 
+        items-start md:items-center z-50 px-2 md:px-4 py-4">
+            <div className="bg-white rounded-2xl shadow-2xl w-full sm:w-[95vw] md:w-[90vw] 
+            lg:w-[80vw] max-w-[1000px] max-h-[88vh] overflow-auto transform scale-90 md:scale-95 p-0">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+                <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-400 to-blue-200">
                     <h2 className="text-lg md:text-xl font-bold text-white">Edit Internet User</h2>
                     <button onClick={onClose} className="p-2 rounded-full hover:bg-white/10">
                         <X className="text-white" />
@@ -295,153 +296,179 @@ export default function EditUserModal({
 
                 {/* Body */}
                 <div className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                        <InputWithIcon
-                            label="Name"
-                            name="name"
-                            value={editForm.name || ""}
-                            placeholder="Name"
-                            icon={<User className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <InputWithIcon
-                            label="Last Name"
-                            name="lastname"
-                            value={editForm.lastname || ""}
-                            placeholder="Last Name"
-                            icon={<UserRound className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <InputWithIcon
-                            label="Username"
-                            name="username"
-                            value={editForm.username || ""}
-                            placeholder="Username"
-                            icon={<BadgeCheck className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <InputWithIcon
-                            label="Email"
-                            name="email"
-                            type="email"
-                            value={editForm.email || ""}
-                            placeholder="Email"
-                            icon={<Mail className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <InputWithIcon
-                            label="Phone"
-                            name="phone"
-                            value={editForm.phone || ""}
-                            placeholder="Phone"
-                            icon={<Phone className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-
-                        <ComboBoxField
-                            label="Directorate"
-                            selected={selectedDirectorate}
-                            setSelected={setSelectedDirectorate}
-                            filtered={filteredDirectorates}
-                            query={qDirectorate}
-                            setQuery={setQDirectorate}
-                            icon={<Building2 className="w-4 h-4 text-gray-500" />}
-                        />
-
-                        <ComboBoxField
-                            label="Group"
-                            selected={selectedGroup}
-                            setSelected={setSelectedGroup}
-                            filtered={filteredGroups}
-                            query={qGroup}
-                            setQuery={setQGroup}
-                            icon={<Users className="w-4 h-4 text-gray-500" />}
-                        />
-
-                        <ComboBoxField
-                            label="Employment Type"
-                            selected={selectedEmployment}
-                            setSelected={setSelectedEmployment}
-                            filtered={filteredEmployment}
-                            query={qEmployment}
-                            setQuery={setQEmployment}
-                            icon={<BriefcaseBusiness className="w-4 h-4 text-gray-500" />}
-                        />
-
-                        <ComboBoxField
-                            label="Device Type"
-                            selected={selectedDevice}
-                            setSelected={setSelectedDevice}
-                            filtered={filteredDevices}
-                            query={qDevice}
-                            setQuery={setQDevice}
-                            icon={<MonitorSmartphone className="w-4 h-4 text-gray-500" />}
-                        />
-
-                        <ComboBoxField
-                            label="Deputy Ministry"
-                            selected={selectedDeputy}
-                            setSelected={setSelectedDeputy}
-                            filtered={filteredDeputies}
-                            query={qDeputy}
-                            setQuery={setQDeputy}
-                            icon={<Landmark className="w-4 h-4 text-gray-500" />}
-                        />
-
-                        <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Violation Type</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    {<AlertTriangle className="w-4 h-4 text-gray-500" />}
-                                </div>
-                                <select
-                                    name="violation_type"
-                                    value={String(editForm.violation_type || "")}
-                                    onChange={handleEditChange}
-                                    className="w-full pl-10 pr-3 py-2 border rounded-md text-sm"
+                    <Tab.Group>
+                        <Tab.List className="flex gap-2 border-b pb-2 mb-4 overflow-x-auto">
+                            {["Personal", "Organization", "Network & Violations"].map((t) => (
+                                <Tab
+                                    key={t}
+                                    className={({ selected }) =>
+                                        `px-4 py-2 rounded-t-md text-sm whitespace-nowrap ${selected ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                        }`
+                                    }
                                 >
-                                    <option value="" disabled>Select Violation Type</option>
-                                    {violationTypes.map((v) => (
-                                        <option key={v.id} value={v.name}>{v.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
+                                    {t}
+                                </Tab>
+                            ))}
+                        </Tab.List>
 
-                        <InputWithIcon
-                            label="Violations Count"
-                            name="violations_count"
-                            type="number"
-                            value={editForm.violations_count ?? ""} // keep as string
-                            placeholder="0"
-                            icon={<AlertTriangle className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <InputWithIcon
-                            label="Device Limit"
-                            name="device_limit"
-                            type="number"
-                            value={editForm.device_limit ?? ""}
-                            placeholder="0"
-                            icon={<HardDrive className="w-4 h-4 text-gray-500" />}
-                            onChange={handleEditChange}
-                        />
-                        <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">Comment</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 pt-[6px] pointer-events-none">
-                                    {<StickyNote className="w-4 h-4 text-gray-500" />}
+                        <Tab.Panels>
+                            {/* Personal */}
+                            <Tab.Panel>
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    <InputWithIcon
+                                        label="Name"
+                                        name="name"
+                                        value={editForm.name || ""}
+                                        placeholder="Name"
+                                        icon={<User className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <InputWithIcon
+                                        label="Last Name"
+                                        name="lastname"
+                                        value={editForm.lastname || ""}
+                                        placeholder="Last Name"
+                                        icon={<UserRound className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <InputWithIcon
+                                        label="Username"
+                                        name="username"
+                                        value={editForm.username || ""}
+                                        placeholder="Username"
+                                        icon={<BadgeCheck className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <InputWithIcon
+                                        label="Email"
+                                        name="email"
+                                        type="email"
+                                        value={editForm.email || ""}
+                                        placeholder="Email"
+                                        icon={<Mail className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <InputWithIcon
+                                        label="Phone"
+                                        name="phone"
+                                        value={editForm.phone || ""}
+                                        placeholder="Phone"
+                                        icon={<Phone className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
                                 </div>
-                                <textarea
-                                    name="comment"
-                                    value={editForm.comment || ""}
-                                    onChange={handleEditChange}
-                                    placeholder="Comment"
-                                    className="w-full pl-10 pr-3 py-2 border rounded-md text-sm min-h-[80px]"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                            </Tab.Panel>
+
+                            {/* Organization */}
+                            <Tab.Panel>
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    <ComboBoxField
+                                        label="Directorate"
+                                        selected={selectedDirectorate}
+                                        setSelected={setSelectedDirectorate}
+                                        filtered={filteredDirectorates}
+                                        query={qDirectorate}
+                                        setQuery={setQDirectorate}
+                                        icon={<Building2 className="w-4 h-4 text-gray-500" />}
+                                    />
+                                    <ComboBoxField
+                                        label="Group"
+                                        selected={selectedGroup}
+                                        setSelected={setSelectedGroup}
+                                        filtered={filteredGroups}
+                                        query={qGroup}
+                                        setQuery={setQGroup}
+                                        icon={<Users className="w-4 h-4 text-gray-500" />}
+                                    />
+                                    <ComboBoxField
+                                        label="Employment Type"
+                                        selected={selectedEmployment}
+                                        setSelected={setSelectedEmployment}
+                                        filtered={filteredEmployment}
+                                        query={qEmployment}
+                                        setQuery={setQEmployment}
+                                        icon={<BriefcaseBusiness className="w-4 h-4 text-gray-500" />}
+                                    />
+                                    <ComboBoxField
+                                        label="Deputy Ministry"
+                                        selected={selectedDeputy}
+                                        setSelected={setSelectedDeputy}
+                                        filtered={filteredDeputies}
+                                        query={qDeputy}
+                                        setQuery={setQDeputy}
+                                        icon={<Landmark className="w-4 h-4 text-gray-500" />}
+                                    />
+                                </div>
+                            </Tab.Panel>
+
+                            {/* Network & Violations */}
+                            <Tab.Panel>
+                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    <ComboBoxField
+                                        label="Device Type"
+                                        selected={selectedDevice}
+                                        setSelected={setSelectedDevice}
+                                        filtered={filteredDevices}
+                                        query={qDevice}
+                                        setQuery={setQDevice}
+                                        icon={<MonitorSmartphone className="w-4 h-4 text-gray-500" />}
+                                    />
+                                    <InputWithIcon
+                                        label="Device Limit"
+                                        name="device_limit"
+                                        type="number"
+                                        value={editForm.device_limit ?? ""}
+                                        placeholder="0"
+                                        icon={<HardDrive className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
+                                        <label className="block text-xs font-semibold text-gray-700 mb-1">Violation Type</label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <AlertTriangle className="w-4 h-4 text-gray-500" />
+                                            </div>
+                                            <select
+                                                name="violation_type"
+                                                value={String(editForm.violation_type || "")}
+                                                onChange={handleEditChange}
+                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm"
+                                            >
+                                                <option value="" disabled>Select Violation Type</option>
+                                                {violationTypes.map((v) => (
+                                                    <option key={v.id} value={v.name}>{v.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <InputWithIcon
+                                        label="Violations Count"
+                                        name="violations_count"
+                                        type="number"
+                                        value={editForm.violations_count ?? ""}
+                                        placeholder="0"
+                                        icon={<AlertTriangle className="w-4 h-4 text-gray-500" />}
+                                        onChange={handleEditChange}
+                                    />
+                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
+                                        <label className="block text-xs font-semibold text-gray-700 mb-1">Comment</label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3 pt-[6px] pointer-events-none">
+                                                <StickyNote className="w-4 h-4 text-gray-500" />
+                                            </div>
+                                            <textarea
+                                                name="comment"
+                                                value={editForm.comment || ""}
+                                                onChange={handleEditChange}
+                                                placeholder="Comment"
+                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm min-h-[80px]"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Tab.Panel>
+                        </Tab.Panels>
+                    </Tab.Group>
                 </div>
 
                 {/* Footer */}
@@ -452,7 +479,7 @@ export default function EditUserModal({
                     <button
                         onClick={handleSave}
                         disabled={!canSave}
-                        className={`px-4 py-2 rounded-md text-white text-sm inline-flex items-center gap-2 ${canSave ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-300 cursor-not-allowed"}`}
+                        className={`px-4 py-2 rounded-md text-white text-sm inline-flex items-center gap-2 ${canSave ? "bg-blue-400 hover:bg-blue-300" : "bg-blue-300 cursor-not-allowed"}`}
                     >
                         <Save className="w-4 h-4" />
                         Save
