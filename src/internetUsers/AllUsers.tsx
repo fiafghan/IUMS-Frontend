@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import axios from "axios";
-import {
-  Search
-} from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
-import UserFilters from "../components/UserFilters";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
 import ScrollToTopButton from "../components/scrollToTop";
 import UserRow from "../components/userRow";
+import UserFiltersPanel from "../components/UserFilters";
 
 const headers = [
   "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
@@ -29,6 +26,7 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
+
   const deputyMinistryOptions: { id: number; name: string }[] = [];
   const directorateOptions: { id: number; name: string }[] = [];
   const employmentTypes: { id: number; name: string }[] = [];
@@ -51,7 +49,7 @@ export default function InternetUsersList(): JSX.Element {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(response.data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch users. Please try again later.");
       } finally {
         setLoading(false);
@@ -119,25 +117,36 @@ export default function InternetUsersList(): JSX.Element {
 
 
   const filteredUsers = useMemo(() => {
-     const search = searchTerm.toLowerCase();
-    return users.filter(user =>
-      (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
-      (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
-      (selectedStatus === "" ||
-        (selectedStatus === "active" && user.status === 1) ||
-        (selectedStatus === "deactive" && user.status === 0)) &&
-      (
-        user.name.toLowerCase().includes(search) ||
-        user.username.toLowerCase().includes(search) ||
-        user.phone.toLowerCase().includes(search) ||
-        user.lastname.toLowerCase().includes(search) ||
-        String(user.employee_type_id).toLowerCase().includes(search) ||
-        String(user.device_type_id).toLowerCase().includes(search) ||
-        (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(search) ||
-        String(user.violations_count).toLowerCase().includes(search))
-      )
-    );
+    const search = searchTerm.toLowerCase();
+    let result = [];
+    let count = 0;
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      if (
+        (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
+        (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
+        (selectedStatus === "" ||
+          (selectedStatus === "active" && user.status === 1) ||
+          (selectedStatus === "deactive" && user.status === 0)) &&
+        (user.name.toLowerCase().includes(search) ||
+          user.username.toLowerCase().includes(search) ||
+          user.lastname.toLowerCase().includes(search))
+      ) {
+        result.push(user);
+        count++;
+      }
+      if (count >= 30) break;
+    }
+    return result;
   }, [users, selectedDeputyMinistry, selectedDirectorate, selectedStatus, searchTerm]);
+
+  const usersPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const visibleUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
 
 
   return (
@@ -150,35 +159,18 @@ export default function InternetUsersList(): JSX.Element {
       <main className="flex-1 ml-64 p-8 overflow-auto">
 
         <div className="flex mb-4 mt-5 justify-center w-full">
-          <UserFilters
-            deputyMinistryOptions={deputyMinistryOptions
-              .filter(dm => dm.id >= 1 && dm.id <= 5)
-              .map(dm => ({ ...dm, id: String(dm.id) }))}
-            directorateOptions={directorateOptions.map(dir => ({ ...dir, id: String(dir.id) }))}
+          <UserFiltersPanel
+            deputyMinistryOptions={deputyMinistryOptions}
+            directorateOptions={directorateOptions}
             selectedDeputyMinistry={selectedDeputyMinistry}
             setSelectedDeputyMinistry={setSelectedDeputyMinistry}
             selectedDirectorate={selectedDirectorate}
             setSelectedDirectorate={setSelectedDirectorate}
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
           />
-          <div className="relative w-full max-w-md mx-auto">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 rounded-full bg-blue-400 p-1 text-amber-400 scale-120 shadow-md shadow-gray-500" />
-            </div>
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search..."
-              className="block w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300
-                   text-gray-900 placeholder-gray-400 focus:outline-none
-                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                   transition duration-150 ease-in-out sm:text-sm border-r-blue-300 rounded-r-full 
-                   border-l-blue-300 border-l-2 border-r-2 rounded-l-full"
-              autoComplete="off"
-            />
-          </div>
         </div>
 
         {loading ? (
@@ -201,7 +193,8 @@ export default function InternetUsersList(): JSX.Element {
                     {headers.map((header) => (
                       <th
                         key={header}
-                        className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[8px] font-semibold"
+                        className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 
+                        text-blue-400 text-[8px] font-semibold"
                       >
                         {header}
                       </th>
@@ -212,7 +205,7 @@ export default function InternetUsersList(): JSX.Element {
                 {/* Table Body */}
 
                 <tbody>
-                  {filteredUsers.map((user, idx) => (
+                  {visibleUsers.map((user, idx) => (
                     <UserRow
                       key={user.id}
                       user={user}
@@ -229,6 +222,21 @@ export default function InternetUsersList(): JSX.Element {
             </div>
           </div>
         )}
+        <div className="mt-4 flex gap-2 justify-center">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded-full border ${currentPage === i + 1
+                  ? "bg-blue-300 text-white border-blue-500"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+
       </main>
 
       {/* View Modal */}
