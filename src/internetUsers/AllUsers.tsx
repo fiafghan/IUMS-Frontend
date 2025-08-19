@@ -27,8 +27,8 @@ export default function InternetUsersList(): JSX.Element {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
 
-  const deputyMinistryOptions: { id: number; name: string }[] = [];
-  const directorateOptions: { id: number; name: string }[] = [];
+  const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
+  const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
   const employmentTypes: { id: number; name: string }[] = [];
   const deviceTypes: { id: number; name: string }[] = [];
   const groups: { id: number; name: string }[] = [];
@@ -57,6 +57,40 @@ export default function InternetUsersList(): JSX.Element {
     }
     fetchUsers();
   }, []);
+
+
+  useEffect(() => {
+    async function fetchDirectorates() {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`${route}/directorate`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setDirectorateOptions(response.data);
+      } catch {
+        setError("Failed to fetch directorates. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function fetchDeputyMinistries() {
+      try {
+        const response = await axios.get(`${route}/directorate`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setDeputyMinistryOptions(response.data);
+      } catch (err) {
+        console.error("Error in fetching Deputy Ministries:", err);
+      }
+    }
+
+    fetchDirectorates();
+    fetchDeputyMinistries();
+  }, []);
+
+
 
 
 
@@ -228,8 +262,8 @@ export default function InternetUsersList(): JSX.Element {
               key={i + 1}
               onClick={() => setCurrentPage(i + 1)}
               className={`px-3 py-1 rounded-full border ${currentPage === i + 1
-                  ? "bg-blue-300 text-white border-blue-500"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                ? "bg-blue-300 text-white border-blue-500"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
                 }`}
             >
               {i + 1}
