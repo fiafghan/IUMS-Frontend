@@ -61,6 +61,15 @@ export interface ViolationProps {
   
 }
 
+export type SelectedDevice = {
+  id: string;
+  deviceTypeId: number;
+  deviceTypeName: string;
+  groupId: number;
+  groupName: string;
+  macAddress: string;
+};
+
 export type FormState = {
   name: string;
   last_name: string;
@@ -72,10 +81,11 @@ export type FormState = {
   position: string;
   deputyMinistry: string;
   device_limit: string;
-  group_id:number;
+  group_id: number;
   device_type: string;
   mac_address: string;
-  status: string; // Add this line
+  status: string;
+  selectedDevices: SelectedDevice[]; // Add this
 };
 
 export type SelectOption = {

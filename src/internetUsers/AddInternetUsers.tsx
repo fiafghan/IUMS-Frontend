@@ -5,7 +5,7 @@ import AnimatedSubmitButton from "../components/AnimatedButton";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
 import GradientSidebar from "../components/Sidebar";
-import type { FormState } from "../types/types";
+import type { FormState, SelectedDevice } from "../types/types";
 import { Step1 } from "./steps/step1";
 import { Step2 } from "./steps/step2";
 import { Step3 } from "./steps/step3";
@@ -31,6 +31,7 @@ export default function InternetUserAddForm(): JSX.Element {
     device_type: "",
     mac_address: "",
     status: "1",
+    selectedDevices: [], // Add this
   });
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -71,10 +72,21 @@ export default function InternetUserAddForm(): JSX.Element {
 
   console.log("Form State:", form);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | { target: { name: string; value: string } }
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | 
+       { target: { name: string; value: string | SelectedDevice[] } }
   ) => {
+    // Handle selectedDevices specially
+    if (e.target.name === "selectedDevices") {
+      setForm((prev) => ({
+        ...prev,
+        selectedDevices: e.target.value as SelectedDevice[],
+      }));
+      return;
+    }
+
+    // Handle phone formatting
     if (e.target.name === "phone") {
-      let phone = e.target.value;
+      let phone = e.target.value as string;
 
       // حذف فاصله‌ها و کاراکترهای غیرمجاز
       phone = phone.replace(/\s+/g, "").replace(/[^0-9+]/g, "");
@@ -101,8 +113,9 @@ export default function InternetUserAddForm(): JSX.Element {
       return;
     }
 
+    // Handle MAC address formatting
     if (e.target.name === "mac_address") {
-      let mac = e.target.value
+      let mac = (e.target.value as string)
         .toUpperCase() // حروف کوچک رو بزرگ کنه
         .replace(/[^0-9A-F]/g, "") // فقط اعداد و حروف هگز بمانند
         .match(/.{1,2}/g)?.join(":") || ""; // هر دو کاراکتر یک ":"
@@ -119,10 +132,10 @@ export default function InternetUserAddForm(): JSX.Element {
       return;
     }
 
-
+    // Handle regular string inputs
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value as string,
     }));
   };
 
@@ -143,7 +156,12 @@ export default function InternetUserAddForm(): JSX.Element {
       case 2:
         return (
           form.device_limit.trim() !== "" &&
-          form.device_type !== ""
+          form.selectedDevices && 
+          form.selectedDevices.length > 0 && // Check if devices are selected
+          form.selectedDevices.every(device => // Check if all devices have required fields
+            device.deviceTypeId > 0 && 
+            device.groupId > 0
+          )
         );
 
       default:
@@ -174,42 +192,53 @@ export default function InternetUserAddForm(): JSX.Element {
         title: "Required Fields!!!",
         text: "Please fill all the required fields!",
         footer: 'Press Okay!'
-      }); setCurrentStep(2);
+      }); 
+      setCurrentStep(2);
       return;
     }
 
     setLoading(true);
+    
+    // Move submitData declaration here, outside try-catch
+    const submitData = {
+      name: form.name,
+      lastname: form.last_name,
+      username: form.username,
+      email: form.email,
+      phone: form.phone,
+      status: parseInt(form.status),
+      directorate_id: parseInt(form.directorate),
+      employee_type_id: parseInt(form.employment_type),
+      position: form.position,
+      device_limit: parseInt(form.device_limit),
+      group_id: form.group_id,
+      mac_address: form.mac_address || "",
+      devices: form.selectedDevices?.map(device => ({
+        device_type_id: device.deviceTypeId,
+        group_id: device.groupId, // Make sure this matches backend expectation
+        mac_address: device.macAddress || "",
+      })) || [],
+    };
+    
     try {
-      const submitData = {
-        name: form.name,
-        lastname: form.last_name,
-        username: form.username,
-        email: form.email,
-        phone: form.phone,
-        status: parseInt(form.status),
-        directorate_id: parseInt(form.directorate),
-        employee_type_id: parseInt(form.employment_type),
-        position: form.position,
-        device_limit: form.device_limit,
-        mac_address: form.mac_address || null,
-        device_type_id: parseInt(form.device_type),
-        group_id: form.group_id,
-      };
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       await axios.post(`${route}/internet`, submitData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      
       Swal.fire({
         icon: "success",
         title: "Internet User Created!",
         text: "Internet User Was Created Successfully!",
         footer: 'Press Okay!'
-      }); setCurrentStep(0);
+      }); 
+      setCurrentStep(0);
       navigate("/");
     } catch (error: any) {
       console.error("Error adding user:", error);
       console.error("Error response:", error.response?.data);
       console.error("Error status:", error.response?.status);
+      console.error("Submitted data:", submitData);
       alert("❌ Something went wrong while adding user.");
     } finally {
       setLoading(false);
