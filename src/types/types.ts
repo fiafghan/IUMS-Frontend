@@ -22,8 +22,9 @@ export type InternetUser = {
   comment?: string;
   violation_type_id?: number;
   violation_type?: string;
-  group_id:number;
-  groups  :number;
+  group_id: number;
+  groups: number;
+  devices?: SelectedDevice[]; // Add this line
 };
 
 
