@@ -1,16 +1,13 @@
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import axios from "axios";
 import {
-  User, Edit, Trash,
-  Search, Users, Briefcase, Eye,
-  LayoutDashboard,
+  Edit, Trash,
+  Search, Eye
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
-import DeputyMinistriesChart from "../components/deputyMinistrySummaryChart";
-import GroupTypePieChart from "../components/groupTypePieChart";
 import ScrollToTopButton from "../components/scrollToTop";
 
 const headers = [
@@ -26,40 +23,23 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedUser, setSelectedUser] = useState<InternetUser | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
-  const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<{ id: number; name: string }[]>([]);
-  const [directorateOptions, setDirectorateOptions] = useState<{ id: number; name: string }[]>([]);
+  const [deputyMinistryOptions,] = useState<{ id: number; name: string }[]>([]);
+  const [directorateOptions,] = useState<{ id: number; name: string }[]>([]);
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [employmentTypes, setEmploymentTypes] = useState<{ id: number; name: string }[]>([]);
+  const [employmentTypes,] = useState<{ id: number; name: string }[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
-  const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
-  const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
+  const [deviceTypes,] = useState<{ id: number; name: string }[]>([]);
+  const [violationTypes,] = useState<ViolationType[]>([]);
+  const [groups,] = useState<{ id: number; name: string }[]>([]);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
-
-
-
-  const totalUsers = users.length;
-  const activeUsers = users.filter((user) => user.status === 1).length;
-  const deactiveUsers = users.filter((user) => user.status === 0).length;
-
-  const employmentTypeCounts: Record<string, number> = users.reduce((acc, user) => {
-    const type = user.employment_type || "Unknown";
-    acc[type] = (acc[type] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
 
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
   const isViewer = currentUser?.user.role === 'viewer';
 
-  const deputyMinistryCounts: Record<string, number> = users.reduce((acc, user) => {
-    const ministry = user.deputy || "Unknown";
-    acc[ministry] = (acc[ministry] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -70,110 +50,17 @@ export default function InternetUsersList(): JSX.Element {
         const response = await axios.get<InternetUser[]>(`${route}/internet`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        console.log("API Response:", response.data);
         setUsers(response.data);
       } catch (err) {
         setError("Failed to fetch users. Please try again later.");
-        console.error(err);
       } finally {
         setLoading(false);
       }
     }
     fetchUsers();
-
-    async function fetchFilters() {
-      try {
-        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        const [depRes, dirRes, empTypeRes] = await Promise.all([
-          axios.get(`${route}/directorate`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            }
-          }),
-          axios.get(`${route}/directorate`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            }
-          }),
-          axios.get(`${route}/employment-type`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            }
-          }),
-        ]);
-
-
-        setDeputyMinistryOptions(depRes.data); 
-        setDirectorateOptions(dirRes.data);
-        setEmploymentTypes(empTypeRes.data);
-      } catch (err) {
-        console.log("error fetching data!", err);
-      }
-    }
-    fetchFilters();
-  }, []);
-
-  useEffect(() => {
-    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-    fetch(`${route}/violation`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then(res => res.json())
-      .then((res) => {
-        setViolationTypes(res.data || []); 
-      })
-      .catch(err => console.error("Error fetching violation types:", err));
   }, []);
 
 
-  useEffect(() => {
-    async function fetchDeviceTypes() {
-      try {
-        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        const res = await axios.get(`${route}/device-types`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          }
-        });
-        setDeviceTypes(res.data);
-      } catch (err) {
-        console.error("Failed to fetch device types", err);
-      }
-    }
-    fetchDeviceTypes();
-  }, []);
-
-  useEffect(() => {
-    async function fetchGroups() {
-      try {
-        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        const res = await axios.get(`${route}/groups`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        if (Array.isArray(res.data.data)) {
-          setGroups(res.data.data);
-        } else if (Array.isArray(res.data)) {
-          setGroups(res.data);
-        } else {
-          console.error("Groups data format unexpected:", res.data);
-        }
-      } catch (error) {
-        console.error("Error fetching groups:", error);
-      }
-    }
-
-    fetchGroups();
-  }, []);
 
   const handleView = (user: InternetUser) => {
     setViewUser(user);
@@ -185,7 +72,7 @@ export default function InternetUsersList(): JSX.Element {
     setSelectedUser(user);
     setEditForm({
       ...user,
-      directorate_id : Number(user.directorate_id)
+      directorate_id: Number(user.directorate_id)
     });
     setIsEditOpen(true);
   };
@@ -229,10 +116,29 @@ export default function InternetUsersList(): JSX.Element {
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (err) {
       alert("Failed to delete user.");
-      console.error(err);
     }
   };
 
+
+  const filteredUsers = useMemo(() => {
+    return users.filter(user =>
+      (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
+      (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
+      (selectedStatus === "" ||
+        (selectedStatus === "active" && user.status === 1) ||
+        (selectedStatus === "deactive" && user.status === 0)) &&
+      (
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(user.employee_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        String(user.device_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(searchTerm.toLowerCase())) ||
+        String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [users, selectedDeputyMinistry, selectedDirectorate, selectedStatus, searchTerm]);
 
 
   return (
@@ -243,78 +149,6 @@ export default function InternetUsersList(): JSX.Element {
         <GradientSidebar />
       </div>
       <main className="flex-1 ml-64 p-8 overflow-auto">
-        <div className="ml-5 bg-gradient-to-b from-blue-500 via-blue-400 to-blue-50 rounded-sm p-2 mr-5 text-white flex">
-          <LayoutDashboard className="text-amber-300" />
-          <h1 className="ml-3">Summary</h1>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white rounded-md">
-          {/* 🔵 Total Users */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 to-blue-200 
-        border border-blue-100 border-r-3 border-r-amber-300 group scale-80">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <User className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-                <span className="text-gray-100 text-[11px]">Total Users</span>
-              </div>
-              <div className="text-blue-500 text-xs uppercase tracking-wider bg-amber-400 rounded-full p-2 scale-70">Summary</div>
-            </div>
-            <div className="text-4xl font-bold text-gray-100 text-center mt-25">{totalUsers}</div>
-          </div>
-          {/* 🟦 Active / Deactive */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white border border-blue-100 border-r-3 border-r-amber-300 group scale-80 bg-gradient-to-b 
-          from-blue-500 via-blue-300 to-blue-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Users className="w-6 h-6 text-white bg-blue-400 rounded-md p-1" />
-                <span className="text-gray-100 text-[11px]">Active / Deactive</span>
-              </div>
-              <div className="text-blue-500 text-xs uppercase tracking-wide  bg-amber-400 rounded-full p-2 scale-70">Status</div>
-            </div>
-            <div className="space-y-1 text-blue-400 mt-25">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-100">Active</span>
-                <span className="font-bold text-green-400 bg-blue-400 rounded-md w-15 text-center p-1 scale-70">{activeUsers}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-100">Deactive</span>
-                <span className="font-bold text-red-600 bg-blue-400 rounded-md text-center w-15 p-1 scale-70">{deactiveUsers}</span>
-              </div>
-            </div>
-          </div>
-          {/* 👔 Employment Type */}
-          <div className="relative overflow-hidden rounded-md p-6 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 
-          to-blue-200 border border-blue-100 border-r-3 border-r-amber-300 group scale-80">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Briefcase className="w-6 h-6 text-white bg-blue-400 p-1 rounded-md" />
-                <span className="text-gray-100 text-[11px]">Employment Types</span>
-              </div>
-              <div className="text-blue-500 text-xs uppercase tracking-wider  bg-amber-400 rounded-full p-2 scale-70">Type</div>
-            </div>
-            <ul className="space-y-1 text-sm text-blue-400 max-h-32 overflow-auto pr-1 mt-25">
-              {Object.entries(employmentTypeCounts).map(([type, count]) => (
-                <li key={type} className="flex justify-between">
-                  <span className="text-gray-100">{type}</span>
-                  <span className="font-bold bg-blue-400 w-10 text-center rounded-md text-xs p-1 text-gray-100">{count}</span>
-                </li>
-              ))}
-            </ul>
-
-          </div>
-
-          {/* Group Pie Chart */}
-          <div className="relative overflow-hidden rounded-sm p-1 shadow-md shadow-white bg-gradient-to-b from-blue-500 via-blue-300 
-          to-blue-200 border border-blue-100 border-r-3 border-r-amber-300 group scale-80 pb-5">
-            <GroupTypePieChart />
-          </div>
-
-          {/* deputy Ministry Chart */}
-          <div className="relative overflow-hidden rounded-sm p-1 shadow-sm bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100 
-          group pb-5 col-span-4 text-center mx-7">
-            <DeputyMinistriesChart deputyMinistryCounts={deputyMinistryCounts} />
-          </div>
-        </div>
-
 
         <div className="flex mb-4 mt-5 justify-center w-full">
           <UserFilters
@@ -346,8 +180,6 @@ export default function InternetUsersList(): JSX.Element {
               autoComplete="off"
             />
           </div>
-
-
         </div>
 
         {loading ? (
@@ -381,20 +213,7 @@ export default function InternetUsersList(): JSX.Element {
                 {/* Table Body */}
 
                 <tbody>
-                  {users
-                    .filter((user) =>
-                      (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
-                      (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
-                      (selectedStatus === "" || (selectedStatus === "active" && user.status === 1) || (selectedStatus === "deactive" && user.status === 0)) &&
-                      (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        user.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      String(user.employee_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      String(user.device_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                      (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(searchTerm.toLowerCase())) ||
-                      String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((user, idx) => {
+                  {filteredUsers.map((user, idx) => {
                       const isRedCard = user.violations_count === 2;
                       const isYellowCard = user.violations_count === 1;
 
