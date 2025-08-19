@@ -302,7 +302,7 @@ export default function EditUserModal({
                                 <Tab
                                     key={t}
                                     className={({ selected }) =>
-                                        `px-4 py-2 rounded-t-md text-sm whitespace-nowrap ${selected ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                        `px-4 py-2 rounded-t-md text-sm whitespace-nowrap ${selected ? "bg-blue-600 text-white" : "bg-blue-400 text-white hover:bg-gray-200"
                                         }`
                                     }
                                 >
@@ -403,7 +403,7 @@ export default function EditUserModal({
 
                             {/* Network & Violations */}
                             <Tab.Panel>
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-3 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                     <ComboBoxField
                                         label="Device Type"
                                         selected={selectedDevice}
@@ -422,7 +422,7 @@ export default function EditUserModal({
                                         icon={<HardDrive className="w-4 h-4 text-gray-500" />}
                                         onChange={handleEditChange}
                                     />
-                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
+                                    <div className="w-full grid grid-cols-1">
                                         <label className="block text-xs font-semibold text-gray-700 mb-1">Violation Type</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -432,7 +432,7 @@ export default function EditUserModal({
                                                 name="violation_type"
                                                 value={String(editForm.violation_type || "")}
                                                 onChange={handleEditChange}
-                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm"
+                                                className="pl-10 pr-3 py-2 border rounded-md text-sm"
                                             >
                                                 <option value="" disabled>Select Violation Type</option>
                                                 {violationTypes.map((v) => (
