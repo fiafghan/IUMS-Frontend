@@ -23,21 +23,22 @@ export default function InternetUsersList(): JSX.Element {
   const [selectedUser, setSelectedUser] = useState<InternetUser | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
-  const [deputyMinistryOptions,] = useState<{ id: number; name: string }[]>([]);
-  const [directorateOptions,] = useState<{ id: number; name: string }[]>([]);
   const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState<string>("");
   const [selectedDirectorate, setSelectedDirectorate] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [employmentTypes,] = useState<{ id: number; name: string }[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [deviceTypes,] = useState<{ id: number; name: string }[]>([]);
-  const [violationTypes,] = useState<ViolationType[]>([]);
-  const [groups,] = useState<{ id: number; name: string }[]>([]);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [viewUser, setViewUser] = useState<InternetUser | null>(null);
+  const deputyMinistryOptions: { id: number; name: string }[] = [];
+  const directorateOptions: { id: number; name: string }[] = [];
+  const employmentTypes: { id: number; name: string }[] = [];
+  const deviceTypes: { id: number; name: string }[] = [];
+  const groups: { id: number; name: string }[] = [];
+  const violationTypes: ViolationType[] = [];
 
 
   const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+  const token = currentUser?.token;
   const isViewer = currentUser?.user.role === 'viewer';
 
 
@@ -46,7 +47,6 @@ export default function InternetUsersList(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
         const response = await axios.get<InternetUser[]>(`${route}/internet`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -90,7 +90,6 @@ export default function InternetUsersList(): JSX.Element {
     };
 
     try {
-      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       await axios.put(`${route}/internet/${selectedUser.id}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -107,7 +106,6 @@ export default function InternetUsersList(): JSX.Element {
 
 
   const handleDelete = async (id: string) => {
-    const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}").token;
     const confirm = window.confirm("Are you sure you want to delete this user?");
     if (!confirm) return;
 
