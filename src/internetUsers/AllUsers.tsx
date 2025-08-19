@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import axios from "axios";
 import {
-  Edit, Trash,
-  Search, Eye
+  Search
 } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import UserFilters from "../components/UserFilters";
 import type { InternetUser, ViolationType } from "../types/types";
 import { route } from "../config";
 import ScrollToTopButton from "../components/scrollToTop";
+import UserRow from "../components/userRow";
 
 const headers = [
   "Name", "Last Name", "Username", "Directorate", "Position", "Group Type",
@@ -213,92 +213,18 @@ export default function InternetUsersList(): JSX.Element {
                 {/* Table Body */}
 
                 <tbody>
-                  {filteredUsers.map((user, idx) => {
-                      const isRedCard = user.violations_count === 2;
-                      const isYellowCard = user.violations_count === 1;
-
-                      return (
-                        <tr
-                          key={user.id}
-                          className={`transition-colors duration-200 ${isRedCard
-                            ? "bg-red-50"
-                            : idx % 2 === 0
-                              ? "bg-gray-50"
-                              : "bg-white"
-                            } hover:bg-blue-100`}
-                        >
-                          {/* Name */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px] whitespace-nowrap 
-                      flex items-center gap-1 font-medium">
-                            {user.name}
-                            {isYellowCard && <span className="ml-1">🟨</span>}
-                            {isRedCard && <span className="ml-1">🟥</span>}
-                          </td>
-
-                          {/* Last Name */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.lastname}</td>
-
-                          {/* Username */}
-                          <td className="px-3 py-2 text-gray-700 text-[10px]">{user.username}</td>
-
-
-
-
-                          {/* Directorate */}
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.directorate}</td>
-
-
-
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.position}</td>
-
-
-
-                          <td className="px-3 py-2 text-gray-700 text-[8px]">{user.groups}</td>
-
-
-                          {/* Status */}
-                          <td className={`px-3 py-2 text-[10px] ${user.status === 1 ? "text-green-500" : user.status === 0 ? "text-red-500" : "text-gray-700"}`}
-                          >
-                            {user.status === 1 ? "active" : user.status === 0 ? "deactive" : "-"}
-                          </td>
-
-                          {/* Actions */}
-                          <td className="px-3 py-2 text-blue-400 text-center">
-                            <div className="flex justify-center gap-2">
-                              {/* NEW: View */}
-                              {isViewer && (
-                                <button
-                                  onClick={() => handleView(user)}
-                                  className="hover:text-blue-100"
-                                  title="View"
-                                >
-                                  <Eye className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-blue-400 p-1" />
-                                </button>
-                              )}
-                              {currentUser?.user.role !== "viewer" && (
-                                <div>
-                                  <button
-                                    onClick={() => handleEdit(user)}
-                                    className="hover:text-blue-100"
-                                    title="Edit"
-                                  >
-                                    <Edit className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-green-400 p-1" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleDelete(user.id)}
-                                    className="hover:text-blue-100"
-                                    title="Delete"
-                                  >
-                                    <Trash className="w-5 h-5 hover:text-blue-300 scale-90 text-white rounded-full bg-red-300 p-1" />
-                                  </button>
-                                </div>
-
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                  {filteredUsers.map((user, idx) => (
+                    <UserRow
+                      key={user.id}
+                      user={user}
+                      idx={idx}
+                      handleEdit={handleEdit}
+                      handleDelete={handleDelete}
+                      handleView={handleView}
+                      isViewer={isViewer}
+                      currentUserRole={currentUser?.user.role}
+                    />
+                  ))}
                 </tbody>
               </table>
             </div>
