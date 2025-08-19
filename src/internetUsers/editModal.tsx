@@ -284,6 +284,14 @@ export default function EditUserModal({
                     <input name="lastname" value={editForm.lastname || ""} onChange={handleEditChange} placeholder="Last Name" className="border px-2 py-1 rounded-md" />
                     <input name="username" value={editForm.username || ""} onChange={handleEditChange} placeholder="Username" className="border px-2 py-1 rounded-md" />
                     <input name="phone" value={editForm.phone || ""} onChange={handleEditChange} placeholder="Phone" className="border px-2 py-1 rounded-md" />
+                    <input
+                        name="email"
+                        type="email"
+                        value={editForm.email || ""}
+                        onChange={handleEditChange}
+                        placeholder="Email"
+                        className="border px-2 py-1 rounded-md"
+                    />
 
                     <ComboBoxField label="Directorate" selected={selectedDirectorate} setSelected={setSelectedDirectorate} filtered={allDirectoratesList} />
                     <ComboBoxField label="Group" selected={selectedGroup} setSelected={setSelectedGroup} filtered={allGroupsList} />
