@@ -119,6 +119,7 @@ export default function InternetUsersList(): JSX.Element {
 
 
   const filteredUsers = useMemo(() => {
+     const search = searchTerm.toLowerCase();
     return users.filter(user =>
       (selectedDeputyMinistry === "" || user.deputy === selectedDeputyMinistry) &&
       (selectedDirectorate === "" || String(user.directorate_id) === selectedDirectorate) &&
@@ -126,14 +127,14 @@ export default function InternetUsersList(): JSX.Element {
         (selectedStatus === "active" && user.status === 1) ||
         (selectedStatus === "deactive" && user.status === 0)) &&
       (
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(user.employee_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        String(user.device_type_id).toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(searchTerm.toLowerCase())) ||
-        String(user.violations_count).toLowerCase().includes(searchTerm.toLowerCase())
+        user.name.toLowerCase().includes(search) ||
+        user.username.toLowerCase().includes(search) ||
+        user.phone.toLowerCase().includes(search) ||
+        user.lastname.toLowerCase().includes(search) ||
+        String(user.employee_type_id).toLowerCase().includes(search) ||
+        String(user.device_type_id).toLowerCase().includes(search) ||
+        (user.violation_type_id && String(user.violation_type_id).toLowerCase().includes(search) ||
+        String(user.violations_count).toLowerCase().includes(search))
       )
     );
   }, [users, selectedDeputyMinistry, selectedDirectorate, selectedStatus, searchTerm]);
