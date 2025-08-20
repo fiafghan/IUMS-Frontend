@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import {
-  Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp
+  Settings, AlertOctagon, Users, LogOut, ChevronDown, ChevronUp,
+  LayoutDashboard
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, type JSX } from "react";
@@ -57,6 +58,17 @@ export default function GradientSidebar(): JSX.Element {
       </div>
 
       <nav className="flex flex-col mt-4 gap-1 px-4 text-sm font-medium">
+
+         {/* 🔹 Dashboard */}
+         <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400 scale-80"
+        >
+          <LayoutDashboard className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />
+          Dashboard
+        </motion.button>
         {/* 🔹 All Users section */}
         <motion.button
           whileHover={{ scale: 1.03 }}
@@ -74,7 +86,7 @@ export default function GradientSidebar(): JSX.Element {
         {userOpen && (
           <div className="ml-6 flex flex-col gap-1 text-blue-400 scale-80">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/all-users")}
               className="hover:text-white/80 transition py-1 text-left scale-80"
             >
               ➤ View All
@@ -112,6 +124,14 @@ export default function GradientSidebar(): JSX.Element {
               className="hover:text-white transition py-1 text-left scale-80"
             >
               ➤ Violation Form
+            </button>
+               )}
+               {currentUser?.user.role !== "viewer" && (
+            <button
+              onClick={() => navigate("/re-activate")}
+              className="hover:text-white transition py-1 text-left scale-80"
+            >
+              ➤ Re-Activation
             </button>
                )}
             {currentUser?.user.role !== "viewer" && (
