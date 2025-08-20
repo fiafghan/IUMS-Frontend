@@ -46,6 +46,7 @@ export interface User {
   role_name: string;
   password?: string;
   role_id: number;
+  internet_user_id: number;
 }
 
 export interface ViolationProps {
