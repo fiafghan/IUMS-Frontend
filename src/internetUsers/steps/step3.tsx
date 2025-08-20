@@ -26,6 +26,8 @@ export function Step3({ form, onChange }: {
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>(form.selectedDevices || []);
   const [remainingLimit, setRemainingLimit] = useState(Number(form.device_limit) || 0);
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+
 
   const checkMacAddress = (mac: string) => {
     if (!mac) {
@@ -97,16 +99,19 @@ export function Step3({ form, onChange }: {
 
   // Update the addDevice function
   const addDevice = () => {
-    if (selectedDevices.length >= form.device_limit) return;
+    if (selectedDevices.length >= form.device_limit || !selectedGroup) return;
+
+    const group = groups.find(g => g.id === selectedGroup);
 
     const newDevice: SelectedDevice = {
       id: Date.now().toString(),
       deviceTypeId: 0,
       deviceTypeName: "",
-      groupId: 0,
-      groupName: "",
+      groupId: selectedGroup!,
+      groupName: group?.name || "",
       macAddress: ""
     };
+
 
     const newDevices = [...selectedDevices, newDevice];
     setSelectedDevices(newDevices);
@@ -195,6 +200,24 @@ export function Step3({ form, onChange }: {
           Add Device ({remainingLimit} remaining)
         </button>
       </div>
+      {/* Group Type (only once for all devices) */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Group Type
+        </label>
+        <select
+          value={selectedGroup || ""}
+          onChange={(e) => setSelectedGroup(Number(e.target.value))}
+          className="block w-full border rounded-md p-2"
+        >
+          <option value="">Select Group</option>
+          {groups.map((group) => (
+            <option key={group.id} value={group.id}>
+              {group.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Selected Devices */}
       <div className="space-y-4">
@@ -209,6 +232,7 @@ export function Step3({ form, onChange }: {
                 <X className="w-4 h-4" />
               </button>
             </div>
+
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Device Type */}
@@ -229,28 +253,6 @@ export function Step3({ form, onChange }: {
                     {deviceTypes.map((type) => (
                       <option key={type.id} value={type.id}>
                         {type.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Group Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Group Type
-                </label>
-                <div className="relative">
-                  <Group className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <select
-                    value={device.groupId || ""}
-                    onChange={(e) => updateDevice(device.id, 'groupId', Number(e.target.value))}
-                    className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="">Select Group Type</option>
-                    {groups.map((group) => (
-                      <option key={group.id} value={group.id}>
-                        {group.name}
                       </option>
                     ))}
                   </select>

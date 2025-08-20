@@ -203,7 +203,7 @@ export default function InternetUserAddForm(): JSX.Element {
         footer: "Press Okay!",
       });
       setCurrentStep(0);
-      navigate("/");
+      navigate("/all-users");
     } catch (error: any) {
       console.error("Error adding user:", error);
       console.error("Error response:", error?.response?.data);
