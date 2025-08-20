@@ -16,9 +16,10 @@ export type SelectedDevice = {
 
 export function Step3({ form, onChange }: {
   form: FormState;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | 
-             { target: { name: string; value: string | SelectedDevice[] } }) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> |
+  { target: { name: string; value: string | SelectedDevice[] } }) => void;
 }): JSX.Element {
+
 
   const [macError, setMacError] = useState<string | null>(null);
   const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
@@ -96,7 +97,7 @@ export function Step3({ form, onChange }: {
 
   // Update the addDevice function
   const addDevice = () => {
-    if (remainingLimit <= 0) return;
+    if (selectedDevices.length >= form.device_limit) return;
 
     const newDevice: SelectedDevice = {
       id: Date.now().toString(),
@@ -107,8 +108,12 @@ export function Step3({ form, onChange }: {
       macAddress: ""
     };
 
-    updateSelectedDevices([...selectedDevices, newDevice]);
+    const newDevices = [...selectedDevices, newDevice];
+    setSelectedDevices(newDevices);
+    onChange({ target: { name: "selectedDevices", value: newDevices } });
   };
+
+
 
   // Update the removeDevice function
   const removeDevice = (deviceId: string) => {
@@ -131,8 +136,9 @@ export function Step3({ form, onChange }: {
       }
       return device;
     });
-    
+
     updateSelectedDevices(updatedDevices);
+    onChange({ target: { name: 'selectedDevices', value: updatedDevices } });
   };
 
   const getDeviceIcon = (deviceTypeName: string) => {
@@ -180,11 +186,10 @@ export function Step3({ form, onChange }: {
         <button
           onClick={addDevice}
           disabled={remainingLimit <= 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
-            remainingLimit > 0 
-              ? 'bg-blue-600 hover:bg-blue-700' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
+            ? 'bg-blue-600 hover:bg-blue-700'
+            : 'bg-gray-400 cursor-not-allowed'
+            }`}
         >
           <Plus className="w-4 h-4" />
           Add Device ({remainingLimit} remaining)

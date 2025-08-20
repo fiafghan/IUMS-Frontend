@@ -32,6 +32,8 @@ export interface ViolationTypeForm {
   name: string;
 }
 
+
+
 export interface ViolationType {
   id: number;
   name: string;
