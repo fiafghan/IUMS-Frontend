@@ -63,7 +63,7 @@ export default function GradientSidebar(): JSX.Element {
          <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/")}
           className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400 scale-80"
         >
           <LayoutDashboard className="w-5 h-5 bg-blue-400 text-amber-400 rounded-md p-1" />

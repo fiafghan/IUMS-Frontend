@@ -16,8 +16,8 @@ export type SelectedDevice = {
 
 export function Step3({ form, onChange }: {
   form: FormState;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | 
-             { target: { name: string; value: string | SelectedDevice[] } }) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> |
+  { target: { name: string; value: string | SelectedDevice[] } }) => void;
 }): JSX.Element {
 
   const [macError, setMacError] = useState<string | null>(null);
@@ -25,12 +25,6 @@ export function Step3({ form, onChange }: {
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>(form.selectedDevices || []);
   const [remainingLimit, setRemainingLimit] = useState(Number(form.device_limit) || 0);
-
-  // Add "All in One" option to device types
-  const allDeviceTypes = [
-    ...deviceTypes,
-    { id: 999, name: "All in One" }
-  ];
 
   const checkMacAddress = (mac: string) => {
     if (!mac) {
@@ -126,7 +120,7 @@ export function Step3({ form, onChange }: {
     const updatedDevices = selectedDevices.map(device => {
       if (device.id === deviceId) {
         if (field === 'deviceTypeId') {
-          const deviceType = allDeviceTypes.find(dt => dt.id === value);
+          const deviceType = deviceTypes.find(dt => dt.id === value);
           return { ...device, deviceTypeId: value, deviceTypeName: deviceType?.name || "" };
         }
         if (field === 'groupId') {
@@ -137,7 +131,7 @@ export function Step3({ form, onChange }: {
       }
       return device;
     });
-    
+
     updateSelectedDevices(updatedDevices);
   };
 
@@ -186,11 +180,10 @@ export function Step3({ form, onChange }: {
         <button
           onClick={addDevice}
           disabled={remainingLimit <= 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
-            remainingLimit > 0 
-              ? 'bg-blue-600 hover:bg-blue-700' 
-              : 'bg-gray-400 cursor-not-allowed'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
+            ? 'bg-blue-600 hover:bg-blue-700'
+            : 'bg-gray-400 cursor-not-allowed'
+            }`}
         >
           <Plus className="w-4 h-4" />
           Add Device ({remainingLimit} remaining)
@@ -227,11 +220,12 @@ export function Step3({ form, onChange }: {
                     className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
                   >
                     <option value="">Select Device Type</option>
-                    {allDeviceTypes.map((type) => (
+                    {deviceTypes.map((type) => (
                       <option key={type.id} value={type.id}>
                         {type.name}
                       </option>
                     ))}
+
                   </select>
                 </div>
               </div>
@@ -292,7 +286,7 @@ export function Step3({ form, onChange }: {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="font-medium text-blue-900 mb-2">Device Summary</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            {allDeviceTypes.map(type => {
+            {deviceTypes.map(type => {
               const count = selectedDevices.filter(d => d.deviceTypeId === type.id).length;
               if (count === 0) return null;
               return (
@@ -302,6 +296,7 @@ export function Step3({ form, onChange }: {
                 </div>
               );
             })}
+
           </div>
         </div>
       )}
