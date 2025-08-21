@@ -195,7 +195,7 @@ export default function EditUserModal({
               mac_address: u.mac_address ?? prev.mac_address,
               employment_type: u.employment_type ?? prev.employment_type,
               violation_type: u.violation_type ?? prev.violation_type,
-              violation_count: u.violation_count ?? prev.violation_count,
+              violation_count: u.violation_count ?? prev.violations_count,
               comment: u.comment ?? prev.comment,
             }));
       
