@@ -6,6 +6,7 @@ import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, 
 import type { InternetUser, ViolationType, SelectedDevice } from "../types/types";
 import { route } from "../config";
 
+
 type Option = { id: number; name: string };
 
 type Props = {
@@ -34,7 +35,7 @@ function InputWithIcon({
     value: string | number;
     placeholder: string;
     icon: JSX.Element;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     error?: string;
     isLoading?: boolean;
 }) {
@@ -195,7 +196,6 @@ export default function EditUserModal({
                     device_limit: u.device_limit ?? prev.device_limit,
                     mac_address: u.mac_address ?? prev.mac_address,
                     employment_type: u.employment_type ?? prev.employment_type,
-                    device_types: u.device_types ?? prev.device_types,
                     violation_type: u.violation_type ?? prev.violation_type,
                     violation_count: u.violation_count ?? prev.violation_count,
                     comment: u.comment ?? prev.comment,
