@@ -195,13 +195,26 @@ export default function EditUserModal({
                     device_limit: u.device_limit ?? prev.device_limit,
                     mac_address: u.mac_address ?? prev.mac_address,
                     employment_type: u.employment_type ?? prev.employment_type,
-                    device_types: u.device_type ?? prev.device_types,
+                    device_types: u.device_types ?? prev.device_types,
                     violation_type: u.violation_type ?? prev.violation_type,
                     violation_count: u.violation_count ?? prev.violation_count,
                     comment: u.comment ?? prev.comment,
                 }));
 
-                // preselect dropdowns بدون overwrite فرم
+                // Build device rows from names returned by backend (e.g., ["Laptop ", "Tablet"]) 
+                const names = Array.isArray(u.device_types) ? u.device_types : [];
+                setSelectedDevices(
+                    names.map((name: string, idx: number) => ({
+                        id: String(idx + 1),
+                        deviceTypeId: 0,
+                        deviceTypeName: String(name).trim(),
+                        groupId: 0,
+                        groupName: "",
+                        macAddress: ""
+                    }))
+                );
+
+                // Preselect dropdowns if lists already loaded
                 if (allDirectoratesList.length) {
                     const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
                     setSelectedDirectorate(d);
@@ -218,20 +231,6 @@ export default function EditUserModal({
                     const dep = deputyMinistryOptions.find(x => x.name?.toLowerCase() === String(u.deputy ?? "").toLowerCase()) || null;
                     setSelectedDeputy(dep);
                 }
-
-                // به جای setSelectedDevices([])
-                setSelectedDevices(
-                    Array.isArray(u.devices)
-                        ? u.devices.map((d: any) => ({
-                            id: d.id?.toString() || Date.now().toString(),
-                            deviceTypeId: d.device_type_id || 0,
-                            deviceTypeName: d.device_type?.name || "",
-                            groupId: d.group_id || 0,
-                            groupName: d.group?.name || "",
-                            macAddress: d.mac_address || "",
-                        }))
-                        : []
-                );
 
                 setEmailError("");
                 setPhoneError("");
@@ -337,25 +336,10 @@ export default function EditUserModal({
         }
     };
 
-    // Load base user into form and devices (only when modal opens or selected user changes)
+    // Load base user into form (do not touch device rows here)
     useEffect(() => {
         if (!isOpen) return;
         setEditForm({ ...user });
-
-        // Load devices if they exist
-        if (user.device_type_id && Array.isArray(user.devices)) {
-            const devices: SelectedDevice[] = user.devices.map((device: any) => ({
-                id: device.id?.toString() || Date.now().toString(),
-                deviceTypeId: device.device_type_id || 0,
-                deviceTypeName: device.device_type?.name || "",
-                groupId: device.group_id || 0,
-                groupName: device.group?.name || "",
-                macAddress: device.mac_address || "",
-            }));
-            setSelectedDevices(devices);
-        } else {
-            setSelectedDevices([]);
-        }
 
         setEmailError("");
         setPhoneError("");
@@ -382,7 +366,8 @@ export default function EditUserModal({
                 const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
                 const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
                 const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
-                const devs: Option[] = (devRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
+                const devSource: any[] = Array.isArray(devRes.data) ? devRes.data : (devRes.data?.data || []);
+                const devs: Option[] = devSource.map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
 
                 setAllGroupsList(groups);
                 setAllDirectoratesList(dirs);
@@ -394,6 +379,26 @@ export default function EditUserModal({
         };
         run();
     }, [token]);
+
+    // After device types load, map existing names to IDs automatically
+    useEffect(() => {
+        if (allDeviceList.length === 0) return;
+        setSelectedDevices(prev => prev.map(d => {
+            if (d.deviceTypeId) return d;
+            const match = allDeviceList.find(t => t.name.trim().toLowerCase() === d.deviceTypeName.trim().toLowerCase());
+            return match ? { ...d, deviceTypeId: match.id } : d;
+        }));
+    }, [allDeviceList]);
+
+    // When a group is selected, apply it to all device rows for easier saving
+    useEffect(() => {
+        if (!selectedGroup?.id) return;
+        setSelectedDevices(prev => prev.map(d => ({
+            ...d,
+            groupId: selectedGroup.id,
+            groupName: selectedGroup.name
+        })));
+    }, [selectedGroup?.id, selectedGroup?.name]);
 
     // Preselects (use IDs when present; fallback to names)
     useEffect(() => {
@@ -433,8 +438,8 @@ export default function EditUserModal({
             id: Date.now().toString(),
             deviceTypeId: 0,
             deviceTypeName: "",
-            groupId: 0,
-            groupName: "",
+            groupId: selectedGroup?.id || 0,
+            groupName: selectedGroup?.name || "",
             macAddress: ""
         };
 
@@ -603,11 +608,8 @@ export default function EditUserModal({
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
             deputy: selectedDeputy?.name,
-            devices: selectedDevices.map(device => ({
-                device_type_id: device.deviceTypeId,
-                group_id: device.groupId,
-                mac_address: device.macAddress || null,
-            })),
+            device_type_ids: selectedDevices.map(device => device.deviceTypeId),
+            mac_address: editForm.mac_address ?? null,
         };
 
         try {
