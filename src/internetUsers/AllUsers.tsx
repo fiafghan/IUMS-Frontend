@@ -22,7 +22,6 @@ export default function InternetUsersList(): JSX.Element {
     const [directorateOptions, setDirectorateOptions] = useState<Option[]>([]);
     const [deputyMinistryOptions, setDeputyMinistryOptions] = useState<Option[]>([]);
 
-    const [selectedDeputyMinistry, setSelectedDeputyMinistry] = useState("");
     const [selectedDirectorate, setSelectedDirectorate] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -98,14 +97,14 @@ export default function InternetUsersList(): JSX.Element {
     };
 
     const filteredUsers = useMemo(() => {
-        const search = searchTerm.toLowerCase();
-        return users.filter(u =>
-            (selectedDeputyMinistry === "" || u.deputy === selectedDeputyMinistry) &&
-            (selectedDirectorate === "" || String(u.directorate_id) === selectedDirectorate) &&
-            (selectedStatus === "" || (selectedStatus === "active" && u.status === 1) || (selectedStatus === "deactive" && u.status === 0)) &&
-            (u.name.toLowerCase().includes(search) || u.lastname.toLowerCase().includes(search) || u.username.toLowerCase().includes(search))
-        );
-    }, [users, selectedDeputyMinistry, selectedDirectorate, selectedStatus, searchTerm]);
+		const search = searchTerm.toLowerCase();
+		return users.filter(u => {
+			const directorateMatch = selectedDirectorate === "" || String(u.directorate) === selectedDirectorate;
+			const statusMatch = selectedStatus === "" || (selectedStatus === "active" && u.status === 1) || (selectedStatus === "deactive" && u.status === 0);
+			const searchMatch = u.name.toLowerCase().includes(search) || u.lastname.toLowerCase().includes(search) || u.username.toLowerCase().includes(search);
+			return directorateMatch && statusMatch && searchMatch;
+		});
+	}, [users, selectedDirectorate, selectedStatus, searchTerm]);
 
     const usersPerPage = 10;
     const [currentPage, setCurrentPage] = useState(1);
@@ -121,10 +120,7 @@ export default function InternetUsersList(): JSX.Element {
             <main className="flex-1 ml-64 p-8 overflow-auto">
                 <div className="flex mb-4 mt-5 justify-center w-full">
                     <UserFiltersPanel
-                        deputyMinistryOptions={deputyMinistryOptions}
                         directorateOptions={directorateOptions}
-                        selectedDeputyMinistry={selectedDeputyMinistry}
-                        setSelectedDeputyMinistry={setSelectedDeputyMinistry}
                         selectedDirectorate={selectedDirectorate}
                         setSelectedDirectorate={setSelectedDirectorate}
                         selectedStatus={selectedStatus}
