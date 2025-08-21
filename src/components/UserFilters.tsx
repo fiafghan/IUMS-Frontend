@@ -6,6 +6,9 @@ type Props = {
   setSelectedStatus: (value: string) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
+  groupOptions: { id: number; name: string }[];
+  selectedGroup: string;
+  setSelectedGroup: (value: string) => void;
 };
 
 export default function UserFiltersPanel({
@@ -15,7 +18,10 @@ export default function UserFiltersPanel({
   selectedStatus,
   setSelectedStatus,
   searchTerm,
-  setSearchTerm
+  setSearchTerm,
+  groupOptions,
+  selectedGroup,
+  setSelectedGroup,
 }: Props) {
 
   return (
@@ -32,8 +38,12 @@ export default function UserFiltersPanel({
           type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search users..."
-          className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 hover:border-gray-300 placeholder-gray-400 text-gray-700 font-medium"
+          placeholder="🔍 Search..."
+          className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl 
+          bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none 
+          focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 
+          transition-all duration-300 hover:border-gray-300 
+          placeholder-gray-400 text-gray-700 font-medium"
         />
         <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
       </div>
@@ -55,12 +65,39 @@ export default function UserFiltersPanel({
         >
           <option value="">All Directorates</option>
           {directorateOptions
-            .filter(dir => dir.id >= 6) 
+            .filter(dir => dir.id >= 6)
             .map(dir => (
               <option key={dir.id} value={dir.name}>
                 {dir.name}
               </option>
             ))}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+          <svg className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+      </div>
+
+      {/* Group */}
+      <div className="relative group">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+          </svg>
+        </div>
+        <select
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
+          className="w-full pl-12 pr-10 py-3 border-2 border-gray-200 rounded-xl bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 hover:border-gray-300 appearance-none cursor-pointer font-medium text-gray-700"
+        >
+          <option value="">All Groups</option>
+          {groupOptions.map(group => (
+            <option key={group.id} value={group.name}>
+              {group.name}
+            </option>
+          ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
           <svg className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">

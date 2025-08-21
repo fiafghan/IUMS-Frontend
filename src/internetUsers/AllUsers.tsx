@@ -25,6 +25,8 @@ export default function InternetUsersList(): JSX.Element {
     const [selectedDirectorate, setSelectedDirectorate] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
+    const [groupOptions, setGroupOptions] = useState<Option[]>([]);
+    const [selectedGroup, setSelectedGroup] = useState("");
 
     const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
 
@@ -49,14 +51,19 @@ export default function InternetUsersList(): JSX.Element {
         fetchUsers();
     }, [token]);
 
-    // Fetch directorates and deputy ministries
+    // Fetch directorates and groups
     useEffect(() => {
         const fetchOptions = async () => {
             try {
-                const res = await axios.get(`${route}/directorate`, { headers: { Authorization: `Bearer ${token}` } });
-                const data: any[] = res.data;
-                setDirectorateOptions(data.map(d => ({ id: d.id, name: d.name })));
-                setDeputyMinistryOptions(data.map(d => ({ id: d.id, name: d.name })));
+                const [dirRes, groupRes] = await Promise.all([
+                    axios.get(`${route}/directorate`, { headers: { Authorization: `Bearer ${token}` } }),
+                    axios.get(`${route}/groups`, { headers: { Authorization: `Bearer ${token}` } })
+                ]);
+                const dirData: any[] = dirRes.data;
+                const groupData: any[] = groupRes.data;
+                setDirectorateOptions(dirData.map(d => ({ id: d.id, name: d.name })));
+                setDeputyMinistryOptions(dirData.map(d => ({ id: d.id, name: d.name }))); // restore
+                setGroupOptions(groupData.map(g => ({ id: g.id, name: g.name })));
             } catch (err) {
                 console.error(err);
             }
@@ -97,14 +104,15 @@ export default function InternetUsersList(): JSX.Element {
     };
 
     const filteredUsers = useMemo(() => {
-		const search = searchTerm.toLowerCase();
-		return users.filter(u => {
-			const directorateMatch = selectedDirectorate === "" || String(u.directorate) === selectedDirectorate;
-			const statusMatch = selectedStatus === "" || (selectedStatus === "active" && u.status === 1) || (selectedStatus === "deactive" && u.status === 0);
-			const searchMatch = u.name.toLowerCase().includes(search) || u.lastname.toLowerCase().includes(search) || u.username.toLowerCase().includes(search);
-			return directorateMatch && statusMatch && searchMatch;
-		});
-	}, [users, selectedDirectorate, selectedStatus, searchTerm]);
+        const search = searchTerm.toLowerCase();
+        return users.filter(u => {
+            const directorateMatch = selectedDirectorate === "" || String(u.directorate) === selectedDirectorate;
+            const groupMatch = selectedGroup === "" || String(u.groups) === selectedGroup;
+            const statusMatch = selectedStatus === "" || (selectedStatus === "active" && u.status === 1) || (selectedStatus === "deactive" && u.status === 0);
+            const searchMatch = u.name.toLowerCase().includes(search) || u.lastname.toLowerCase().includes(search) || u.username.toLowerCase().includes(search);
+            return directorateMatch && groupMatch && statusMatch && searchMatch;
+        });
+    }, [users, selectedDirectorate, selectedGroup, selectedStatus, searchTerm]);
 
     const usersPerPage = 10;
     const [currentPage, setCurrentPage] = useState(1);
@@ -121,8 +129,11 @@ export default function InternetUsersList(): JSX.Element {
                 <div className="flex mb-4 mt-5 justify-center w-full">
                     <UserFiltersPanel
                         directorateOptions={directorateOptions}
+                        groupOptions={groupOptions}
                         selectedDirectorate={selectedDirectorate}
                         setSelectedDirectorate={setSelectedDirectorate}
+                        selectedGroup={selectedGroup}
+                        setSelectedGroup={setSelectedGroup}
                         selectedStatus={selectedStatus}
                         setSelectedStatus={setSelectedStatus}
                         searchTerm={searchTerm}
