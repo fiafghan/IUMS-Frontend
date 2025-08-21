@@ -51,9 +51,8 @@ function InputWithIcon({
                     value={value as any}
                     onChange={onChange}
                     placeholder={placeholder}
-                    className={`w-full pl-10 pr-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 ${
-                        error ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full pl-10 pr-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 ${error ? 'border-red-500' : 'border-gray-300'
+                        }`}
                 />
                 {isLoading && (
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -147,7 +146,7 @@ export default function EditUserModal({
     const [selectedGroup, setSelectedGroup] = useState<Option | null>(null);
     const [selectedEmployment, setSelectedEmployment] = useState<Option | null>(null);
     const [selectedDeputy, setSelectedDeputy] = useState<Option | null>(null);
-    
+
     // New multiple device states
     const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>([]);
     const [remainingLimit, setRemainingLimit] = useState(Number(user?.device_limit) || 0);
@@ -170,6 +169,68 @@ export default function EditUserModal({
     const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (!isOpen || !user?.id) return;
+      
+        const fetchUser = async () => {
+          try {
+            const res = await axios.get(`${route}/internet-user-edit/${user.id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+      
+            const u = res.data?.data ?? res.data;
+      
+            setEditForm(prev => ({
+              ...prev,
+              id: u.id,
+              name: u.name ?? prev.name,
+              lastname: u.lastname ?? prev.lastname,
+              username: u.username ?? prev.username,
+              email: u.email ?? prev.email,
+              phone: u.phone ?? prev.phone,
+              position: u.position ?? prev.position,
+              status: u.status ?? prev.status,
+              device_limit: u.device_limit ?? prev.device_limit,
+              mac_address: u.mac_address ?? prev.mac_address,
+              employment_type: u.employment_type ?? prev.employment_type,
+              violation_type: u.violation_type ?? prev.violation_type,
+              violation_count: u.violation_count ?? prev.violation_count,
+              comment: u.comment ?? prev.comment,
+            }));
+      
+            // preselect dropdowns بدون overwrite فرم
+            if (allDirectoratesList.length) {
+              const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
+              setSelectedDirectorate(d);
+            }
+            if (allGroupsList.length) {
+              const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
+              setSelectedGroup(g);
+            }
+            if (allEmploymentList.length) {
+              const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
+              setSelectedEmployment(eByName);
+            }
+            if (deputyMinistryOptions.length) {
+              const dep = deputyMinistryOptions.find(x => x.name?.toLowerCase() === String(u.deputy ?? "").toLowerCase()) || null;
+              setSelectedDeputy(dep);
+            }
+      
+            // Devices و خطاها
+            setSelectedDevices([]);
+            setEmailError("");
+            setPhoneError("");
+            setMacError("");
+          } catch (e) {
+            console.error("Failed to load user for edit:", e);
+          }
+        };
+      
+        fetchUser();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isOpen, user?.id, token]);
+      
 
     // Validation functions
     const validateEmail = (email: string) => {
@@ -212,8 +273,8 @@ export default function EditUserModal({
         if (!email) return;
         setIsCheckingEmail(true);
         try {
-            const response = await axios.post(`${route}/check-email-of-internet-users`, 
-                { email }, 
+            const response = await axios.post(`${route}/check-email-of-internet-users`,
+                { email },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.exists) {
@@ -230,8 +291,8 @@ export default function EditUserModal({
         if (!phone) return;
         setIsCheckingPhone(true);
         try {
-            const response = await axios.post(`${route}/check-phone-of-internet-user`, 
-                { phone }, 
+            const response = await axios.post(`${route}/check-phone-of-internet-user`,
+                { phone },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.exists) {
@@ -248,8 +309,8 @@ export default function EditUserModal({
         if (!mac) return;
         setIsCheckingMac(true);
         try {
-            const response = await axios.post(`${route}/check-mac-address`, 
-                { mac_address: mac }, 
+            const response = await axios.post(`${route}/check-mac-address`,
+                { mac_address: mac },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.exists) {
@@ -266,7 +327,7 @@ export default function EditUserModal({
     useEffect(() => {
         if (!isOpen) return;
         setEditForm({ ...user });
-        
+
         // Load devices if they exist
         if (user.devices && Array.isArray(user.devices)) {
             const devices: SelectedDevice[] = user.devices.map((device: any) => ({
@@ -281,7 +342,7 @@ export default function EditUserModal({
         } else {
             setSelectedDevices([]);
         }
-        
+
         setEmailError("");
         setPhoneError("");
         setMacError("");
@@ -407,12 +468,12 @@ export default function EditUserModal({
 
     const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        
+
         // Handle MAC address formatting
         if (name === 'mac_address') {
             const formatted = formatMacAddress(value);
             setEditForm((prev) => ({ ...prev, [name]: formatted }));
-            
+
             // Clear previous error and validate
             setMacError("");
             const macValidation = validateMacAddress(formatted);
@@ -430,7 +491,7 @@ export default function EditUserModal({
             }
             return;
         }
-        
+
         // Handle phone formatting
         if (name === 'phone') {
             let formatted = value;
@@ -438,7 +499,7 @@ export default function EditUserModal({
                 formatted = '+93' + value.replace(/^\+93/, '');
             }
             setEditForm((prev) => ({ ...prev, [name]: formatted }));
-            
+
             // Clear previous error and validate
             setPhoneError("");
             const phoneValidation = validatePhone(formatted);
@@ -456,11 +517,11 @@ export default function EditUserModal({
             }
             return;
         }
-        
+
         // Handle email validation
         if (name === 'email') {
             setEditForm((prev) => ({ ...prev, [name]: value }));
-            
+
             // Clear previous error and validate
             setEmailError("");
             const emailValidation = validateEmail(value);
@@ -478,7 +539,7 @@ export default function EditUserModal({
             }
             return;
         }
-        
+
         // Handle other fields normally
         setEditForm((prev) => ({ ...prev, [name]: value }));
     };
@@ -716,11 +777,10 @@ export default function EditUserModal({
                                         <button
                                             onClick={addDevice}
                                             disabled={remainingLimit <= 0}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${
-                                                remainingLimit > 0 
-                                                    ? 'bg-blue-600 hover:bg-blue-700' 
-                                                    : 'bg-gray-400 cursor-not-allowed'
-                                            }`}
+                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
+                                                ? 'bg-blue-600 hover:bg-blue-700'
+                                                : 'bg-gray-400 cursor-not-allowed'
+                                                }`}
                                         >
                                             <Plus className="w-4 h-4" />
                                             Add Device ({remainingLimit} remaining)

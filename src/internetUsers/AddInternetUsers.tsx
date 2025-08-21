@@ -38,7 +38,6 @@ export default function InternetUserAddForm(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // تایپ‌ها را عمومی گذاشتم چون پاسخ API آبجکت کامل برمی‌گرداند
   const [directorateOptions, setDirectorateOptions] = useState<any[]>([]);
   const [, setDeputyMinistryOptions] = useState<any[]>([]);
   const [employmentTypeOptions, setEmploymentTypeOptions] = useState<
@@ -100,7 +99,6 @@ export default function InternetUserAddForm(): JSX.Element {
       return;
     }
 
-    // mac_address (در استپ ۳ هم به ازای هر دستگاه داریم، این یکی فیلد کلی است)
     if (e.target.name === "mac_address") {
       let mac =
         ((e.target.value as string).toUpperCase().replace(/[^0-9A-F]/g, "").match(/.{1,2}/g)?.join(":") as
