@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import AnimatedSubmitButton from "../components/AnimatedButton";
 import Swal from "sweetalert2";
 import { route } from "../config";
+import GradientSidebar from "../components/Sidebar";
 
 
 export default function SettingsPage() {
@@ -136,15 +137,19 @@ export default function SettingsPage() {
             animate={{ opacity: 0.8 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
           >
             <Spinner size={40} colorClass="border-white" />
           </motion.div>
         )}
       </AnimatePresence>
+      <div className="flex min-h-screen bg-white shadow-md shadow-indigo-700">
+        <GradientSidebar />
+
+      <main className="flex-1 ml-64 p-8 overflow-auto mr-50">
 
       <motion.div
-        className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-50 
+        className="min-h-screen bg-white 
         flex items-center justify-center px-4 py-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -216,6 +221,8 @@ export default function SettingsPage() {
           </AnimatedSubmitButton>
         </motion.form>
       </motion.div>
+      </main>
+      </div>
     </>
   );
 }
