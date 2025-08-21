@@ -195,7 +195,7 @@ export default function EditUserModal({
               mac_address: u.mac_address ?? prev.mac_address,
               employment_type: u.employment_type ?? prev.employment_type,
               violation_type: u.violation_type ?? prev.violation_type,
-              violation_count: u.violation_count ?? prev.violations_count,
+              violation_count: u.violation_count ?? prev.violation_count,
               comment: u.comment ?? prev.comment,
             }));
       
@@ -922,9 +922,9 @@ export default function EditUserModal({
                                     </div>
                                     <InputWithIcon
                                         label="Violations Count"
-                                        name="violations_count"
+                                        name="violation_count"
                                         type="number"
-                                        value={editForm.violations_count ?? ""}
+                                        value={editForm.violation_count ?? ""}
                                         placeholder="0"
                                         icon={<AlertTriangle className="w-4 h-4 text-gray-500" />}
                                         onChange={handleEditChange}
