@@ -66,7 +66,7 @@ export interface ViolationProps {
 }
 
 export type SelectedDevice = {
-  id: string;
+  id: string; 
   deviceTypeId: number;
   deviceTypeName: string;
   groupId: number;

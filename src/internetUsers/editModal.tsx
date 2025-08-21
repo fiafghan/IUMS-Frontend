@@ -147,6 +147,7 @@ export default function EditUserModal({
     const [selectedEmployment, setSelectedEmployment] = useState<Option | null>(null);
     const [selectedDeputy, setSelectedDeputy] = useState<Option | null>(null);
 
+
     // New multiple device states
     const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>([]);
     const [remainingLimit, setRemainingLimit] = useState(Number(user?.device_limit) || 0);
@@ -172,65 +173,78 @@ export default function EditUserModal({
 
     useEffect(() => {
         if (!isOpen || !user?.id) return;
-      
+
         const fetchUser = async () => {
-          try {
-            const res = await axios.get(`${route}/internet-user-edit/${user.id}`, {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-      
-            const u = res.data?.data ?? res.data;
-      
-            setEditForm(prev => ({
-              ...prev,
-              id: u.id,
-              name: u.name ?? prev.name,
-              lastname: u.lastname ?? prev.lastname,
-              username: u.username ?? prev.username,
-              email: u.email ?? prev.email,
-              phone: u.phone ?? prev.phone,
-              position: u.position ?? prev.position,
-              status: u.status ?? prev.status,
-              device_limit: u.device_limit ?? prev.device_limit,
-              mac_address: u.mac_address ?? prev.mac_address,
-              employment_type: u.employment_type ?? prev.employment_type,
-              violation_type: u.violation_type ?? prev.violation_type,
-              violation_count: u.violation_count ?? prev.violation_count,
-              comment: u.comment ?? prev.comment,
-            }));
-      
-            // preselect dropdowns بدون overwrite فرم
-            if (allDirectoratesList.length) {
-              const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
-              setSelectedDirectorate(d);
+            try {
+                const res = await axios.get(`${route}/internet-user-edit/${user.id}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                const u = res.data?.data ?? res.data;
+
+                setEditForm(prev => ({
+                    ...prev,
+                    id: u.id,
+                    name: u.name ?? prev.name,
+                    lastname: u.lastname ?? prev.lastname,
+                    username: u.username ?? prev.username,
+                    email: u.email ?? prev.email,
+                    phone: u.phone ?? prev.phone,
+                    position: u.position ?? prev.position,
+                    status: u.status ?? prev.status,
+                    device_limit: u.device_limit ?? prev.device_limit,
+                    mac_address: u.mac_address ?? prev.mac_address,
+                    employment_type: u.employment_type ?? prev.employment_type,
+                    device_types: u.device_type ?? prev.device_types,
+                    violation_type: u.violation_type ?? prev.violation_type,
+                    violation_count: u.violation_count ?? prev.violation_count,
+                    comment: u.comment ?? prev.comment,
+                }));
+
+                // preselect dropdowns بدون overwrite فرم
+                if (allDirectoratesList.length) {
+                    const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
+                    setSelectedDirectorate(d);
+                }
+                if (allGroupsList.length) {
+                    const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
+                    setSelectedGroup(g);
+                }
+                if (allEmploymentList.length) {
+                    const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
+                    setSelectedEmployment(eByName);
+                }
+                if (deputyMinistryOptions.length) {
+                    const dep = deputyMinistryOptions.find(x => x.name?.toLowerCase() === String(u.deputy ?? "").toLowerCase()) || null;
+                    setSelectedDeputy(dep);
+                }
+
+                // به جای setSelectedDevices([])
+                setSelectedDevices(
+                    Array.isArray(u.devices)
+                        ? u.devices.map((d: any) => ({
+                            id: d.id?.toString() || Date.now().toString(),
+                            deviceTypeId: d.device_type_id || 0,
+                            deviceTypeName: d.device_type?.name || "",
+                            groupId: d.group_id || 0,
+                            groupName: d.group?.name || "",
+                            macAddress: d.mac_address || "",
+                        }))
+                        : []
+                );
+
+                setEmailError("");
+                setPhoneError("");
+                setMacError("");
+            } catch (e) {
+                console.error("Failed to load user for edit:", e);
             }
-            if (allGroupsList.length) {
-              const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
-              setSelectedGroup(g);
-            }
-            if (allEmploymentList.length) {
-              const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
-              setSelectedEmployment(eByName);
-            }
-            if (deputyMinistryOptions.length) {
-              const dep = deputyMinistryOptions.find(x => x.name?.toLowerCase() === String(u.deputy ?? "").toLowerCase()) || null;
-              setSelectedDeputy(dep);
-            }
-      
-            // Devices و خطاها
-            setSelectedDevices([]);
-            setEmailError("");
-            setPhoneError("");
-            setMacError("");
-          } catch (e) {
-            console.error("Failed to load user for edit:", e);
-          }
         };
-      
+
         fetchUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [isOpen, user?.id, token]);
-      
+    }, [isOpen, user?.id, token]);
+
 
     // Validation functions
     const validateEmail = (email: string) => {
@@ -329,7 +343,7 @@ export default function EditUserModal({
         setEditForm({ ...user });
 
         // Load devices if they exist
-        if (user.devices && Array.isArray(user.devices)) {
+        if (user.device_type_id && Array.isArray(user.devices)) {
             const devices: SelectedDevice[] = user.devices.map((device: any) => ({
                 id: device.id?.toString() || Date.now().toString(),
                 deviceTypeId: device.device_type_id || 0,
@@ -820,28 +834,6 @@ export default function EditUserModal({
                                                                 {allDeviceList.map((type) => (
                                                                     <option key={type.id} value={type.id}>
                                                                         {type.name}
-                                                                    </option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Group Type */}
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                            Group Type
-                                                        </label>
-                                                        <div className="relative">
-                                                            <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                                            <select
-                                                                value={device.groupId || ""}
-                                                                onChange={(e) => updateDevice(device.id, 'groupId', Number(e.target.value))}
-                                                                className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                                                            >
-                                                                <option value="">Select Group Type</option>
-                                                                {allGroupsList.map((group) => (
-                                                                    <option key={group.id} value={group.id}>
-                                                                        {group.name}
                                                                     </option>
                                                                 ))}
                                                             </select>
