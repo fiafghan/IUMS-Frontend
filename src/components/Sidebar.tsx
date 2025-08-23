@@ -137,6 +137,14 @@ export default function GradientSidebar(): JSX.Element {
               ➤ Re-Activation
             </button>
                )}
+               {currentUser?.user.role !== "viewer" && (
+            <button
+              onClick={() => navigate("/all-re-activations")}
+              className="hover:text-white transition py-1 text-left scale-80"
+            >
+              ➤ All Re-Activations
+            </button>
+               )}
             {currentUser?.user.role !== "viewer" && (
             <button
               onClick={() => navigate("/add-violation-type")}
