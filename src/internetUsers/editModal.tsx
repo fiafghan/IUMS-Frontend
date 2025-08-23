@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import type { JSX } from "react";
 import axios from "axios";
 import { Combobox, Tab } from "@headlessui/react";
-import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, Landmark, AlertTriangle, HardDrive, StickyNote, Plus, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
-import type { InternetUser, ViolationType, SelectedDevice } from "../types/types";
+import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, Landmark, AlertTriangle, HardDrive, StickyNote, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
+import type { InternetUser, ViolationType} from "../types/types";
 import { route } from "../config";
 
 
@@ -148,9 +148,8 @@ export default function EditUserModal({
     const [selectedEmployment, setSelectedEmployment] = useState<Option | null>(null);
     const [selectedDeputy, setSelectedDeputy] = useState<Option | null>(null);
 
-
-    // New multiple device states
-    const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>([]);
+    // Simple device type management - just IDs as backend expects
+    const [selectedDeviceTypes, setSelectedDeviceTypes] = useState<number[]>([]);
     const [remainingLimit, setRemainingLimit] = useState(Number(user?.device_limit) || 0);
 
     // Queries for filtering in combobox
@@ -201,18 +200,18 @@ export default function EditUserModal({
                     comment: u.comment ?? prev.comment,
                 }));
 
-                // Build device rows from names returned by backend (e.g., ["Laptop ", "Tablet"]) 
-                const names = Array.isArray(u.device_types) ? u.device_types : [];
-                setSelectedDevices(
-                    names.map((name: string, idx: number) => ({
-                        id: String(idx + 1),
-                        deviceTypeId: 0,
-                        deviceTypeName: String(name).trim(),
-                        groupId: 0,
-                        groupName: "",
-                        macAddress: ""
-                    }))
-                );
+                // Map device type names to IDs after device list is loaded
+                if (Array.isArray(u.device_type) && allDeviceList.length > 0) {
+                    const deviceTypeIds = u.device_type
+                        .map((name: string) => {
+                            const deviceType = allDeviceList.find(dt => 
+                                dt.name.toLowerCase() === name.toLowerCase()
+                            );
+                            return deviceType?.id;
+                        })
+                        .filter((id: number | undefined) => id !== undefined) as number[];
+                    setSelectedDeviceTypes(deviceTypeIds);
+                }
 
                 // Preselect dropdowns if lists already loaded
                 if (allDirectoratesList.length) {
@@ -242,7 +241,7 @@ export default function EditUserModal({
 
         fetchUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen, user?.id, token]);
+    }, [isOpen, user?.id, token, allDeviceList]);
 
 
     // Validation functions
@@ -346,13 +345,13 @@ export default function EditUserModal({
         setMacError("");
     }, [isOpen, user?.id]);
 
-    // Update remaining limit when device limit changes
+    // Update remaining limit calculation
     useEffect(() => {
         const limit = Number(editForm.device_limit) || 0;
-        setRemainingLimit(limit - selectedDevices.length);
-    }, [editForm.device_limit, selectedDevices.length]);
+        setRemainingLimit(limit - selectedDeviceTypes.length);
+    }, [editForm.device_limit, selectedDeviceTypes.length]);
 
-    // Fetch lists
+    // Fetch lists - Fix device types fetching
     useEffect(() => {
         const run = async () => {
             try {
@@ -366,8 +365,9 @@ export default function EditUserModal({
                 const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
                 const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
                 const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
-                const devSource: any[] = Array.isArray(devRes.data) ? devRes.data : (devRes.data?.data || []);
-                const devs: Option[] = devSource.map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
+                
+                // Fix: Device types are returned directly as array
+                const devs: Option[] = (devRes.data as any[]).map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
 
                 setAllGroupsList(groups);
                 setAllDirectoratesList(dirs);
@@ -383,21 +383,13 @@ export default function EditUserModal({
     // After device types load, map existing names to IDs automatically
     useEffect(() => {
         if (allDeviceList.length === 0) return;
-        setSelectedDevices(prev => prev.map(d => {
-            if (d.deviceTypeId) return d;
-            const match = allDeviceList.find(t => t.name.trim().toLowerCase() === d.deviceTypeName.trim().toLowerCase());
-            return match ? { ...d, deviceTypeId: match.id } : d;
-        }));
+        // This useEffect is no longer needed as device types are managed directly
     }, [allDeviceList]);
 
     // When a group is selected, apply it to all device rows for easier saving
     useEffect(() => {
         if (!selectedGroup?.id) return;
-        setSelectedDevices(prev => prev.map(d => ({
-            ...d,
-            groupId: selectedGroup.id,
-            groupName: selectedGroup.name
-        })));
+        // This useEffect is no longer needed as device types are managed directly
     }, [selectedGroup?.id, selectedGroup?.name]);
 
     // Preselects (use IDs when present; fallback to names)
@@ -430,41 +422,14 @@ export default function EditUserModal({
         }
     }, [user, deputyMinistryOptions]);
 
-    // Device management functions
-    const addDevice = () => {
-        if (remainingLimit <= 0) return;
-
-        const newDevice: SelectedDevice = {
-            id: Date.now().toString(),
-            deviceTypeId: 0,
-            deviceTypeName: "",
-            groupId: selectedGroup?.id || 0,
-            groupName: selectedGroup?.name || "",
-            macAddress: ""
-        };
-
-        setSelectedDevices(prev => [...prev, newDevice]);
+    // Simple device type management functions
+    const addDeviceType = (deviceTypeId: number) => {
+        if (remainingLimit <= 0 || selectedDeviceTypes.includes(deviceTypeId)) return;
+        setSelectedDeviceTypes(prev => [...prev, deviceTypeId]);
     };
 
-    const removeDevice = (deviceId: string) => {
-        setSelectedDevices(prev => prev.filter(device => device.id !== deviceId));
-    };
-
-    const updateDevice = (deviceId: string, field: keyof SelectedDevice, value: any) => {
-        setSelectedDevices(prev => prev.map(device => {
-            if (device.id === deviceId) {
-                if (field === 'deviceTypeId') {
-                    const deviceType = allDeviceList.find(dt => dt.id === value);
-                    return { ...device, deviceTypeId: value, deviceTypeName: deviceType?.name || "" };
-                }
-                if (field === 'groupId') {
-                    const group = allGroupsList.find(g => g.id === value);
-                    return { ...device, groupId: value, groupName: group?.name || "" };
-                }
-                return { ...device, [field]: value };
-            }
-            return device;
-        }));
+    const removeDeviceType = (deviceTypeId: number) => {
+        setSelectedDeviceTypes(prev => prev.filter(id => id !== deviceTypeId));
     };
 
     const getDeviceIcon = (deviceTypeName: string) => {
@@ -590,8 +555,7 @@ export default function EditUserModal({
         Boolean(selectedGroup?.id) &&
         Boolean(selectedEmployment?.id) &&
         (editForm.device_limit === 0 || Boolean(editForm.device_limit)) &&
-        selectedDevices.length > 0 && // Check if devices are selected
-        selectedDevices.every(device => device.deviceTypeId > 0 && device.groupId > 0) && // Check if all devices have required fields
+        selectedDeviceTypes.length > 0 && // Check if device types are selected
         !emailError &&
         !phoneError &&
         !macError &&
@@ -608,7 +572,7 @@ export default function EditUserModal({
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
             deputy: selectedDeputy?.name,
-            device_type_ids: selectedDevices.map(device => device.deviceTypeId),
+            device_type_ids: selectedDeviceTypes, // Just send the array of device type IDs
             mac_address: editForm.mac_address ?? null,
         };
 
@@ -768,7 +732,7 @@ export default function EditUserModal({
                             {/* Devices */}
                             <Tab.Panel>
                                 <div className="space-y-6">
-                                    {/* Device Limit and Summary */}
+                                    {/* Device Limit */}
                                     <div className="grid grid-cols-2 gap-5">
                                         <InputWithIcon
                                             label="Device Limit"
@@ -783,109 +747,77 @@ export default function EditUserModal({
                                         <div className="flex items-center justify-center bg-gray-50 rounded-lg p-4">
                                             <div className="text-center">
                                                 <div className="text-2xl font-bold text-blue-600">{remainingLimit}</div>
-                                                <div className="text-sm text-gray-600">Devices Remaining</div>
+                                                <div className="text-sm text-gray-600">Device Types Remaining</div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Add Device Button */}
-                                    <div className="flex justify-center">
-                                        <button
-                                            onClick={addDevice}
-                                            disabled={remainingLimit <= 0}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
-                                                ? 'bg-blue-600 hover:bg-blue-700'
-                                                : 'bg-gray-400 cursor-not-allowed'
-                                                }`}
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                            Add Device ({remainingLimit} remaining)
-                                        </button>
-                                    </div>
-
-                                    {/* Selected Devices */}
-                                    <div className="space-y-4">
-                                        {selectedDevices.map((device, index) => (
-                                            <div key={device.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                                <div className="flex items-center justify-between mb-4">
-                                                    <h3 className="font-medium text-gray-900">Device {index + 1}</h3>
+                                    {/* Device Type Selection */}
+                                    <div>
+                                        <h3 className="font-medium text-gray-900 mb-3">Select Device Types</h3>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                            {allDeviceList.map((deviceType) => {
+                                                const isSelected = selectedDeviceTypes.includes(deviceType.id);
+                                                const canSelect = remainingLimit > 0 || isSelected;
+                                                
+                                                return (
                                                     <button
-                                                        onClick={() => removeDevice(device.id)}
-                                                        className="text-red-600 hover:text-red-800"
+                                                        key={deviceType.id}
+                                                        onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
+                                                        disabled={!canSelect}
+                                                        className={`p-3 rounded-lg border-2 transition-all ${
+                                                            isSelected
+                                                                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                                                                : canSelect
+                                                                ? 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                                                                : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'
+                                                        }`}
                                                     >
-                                                        <X className="w-4 h-4" />
+                                                        <div className="flex items-center gap-2">
+                                                            {getDeviceIcon(deviceType.name)}
+                                                            <span className="text-sm font-medium">{deviceType.name}</span>
+                                                        </div>
                                                     </button>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                    {/* Device Type */}
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                            Device Type
-                                                        </label>
-                                                        <div className="relative">
-                                                            <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                                                                {getDeviceIcon(device.deviceTypeName)}
-                                                            </div>
-                                                            <select
-                                                                value={device.deviceTypeId || ""}
-                                                                onChange={(e) => updateDevice(device.id, 'deviceTypeId', Number(e.target.value))}
-                                                                className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                                                            >
-                                                                <option value="">Select Device Type</option>
-                                                                {allDeviceList.map((type) => (
-                                                                    <option key={type.id} value={type.id}>
-                                                                        {type.name}
-                                                                    </option>
-                                                                ))}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* MAC Address */}
-                                                    <div>
-                                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                            MAC Address
-                                                        </label>
-                                                        <div className="relative">
-                                                            <HardDrive className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                                            <input
-                                                                type="text"
-                                                                value={device.macAddress}
-                                                                onChange={(e) => {
-                                                                    let mac = e.target.value
-                                                                        .toUpperCase()
-                                                                        .replace(/[^0-9A-F]/g, "")
-                                                                        .match(/.{1,2}/g)?.join(":") || "";
-
-                                                                    if (mac.length > 17) mac = mac.slice(0, 17);
-                                                                    updateDevice(device.id, 'macAddress', mac);
-                                                                }}
-                                                                placeholder="00:00:00:00:00:00"
-                                                                className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                                );
+                                            })}
+                                        </div>
                                     </div>
 
-                                    {/* Summary */}
-                                    {selectedDevices.length > 0 && (
+                                    {/* Selected Device Types Summary */}
+                                    {selectedDeviceTypes.length > 0 && (
                                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                            <h3 className="font-medium text-blue-900 mb-2">Device Summary</h3>
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                                {allDeviceList.map(type => {
-                                                    const count = selectedDevices.filter(d => d.deviceTypeId === type.id).length;
-                                                    if (count === 0) return null;
+                                            <h3 className="font-medium text-blue-900 mb-3">Selected Device Types</h3>
+                                            <div className="space-y-2">
+                                                {selectedDeviceTypes.map((deviceTypeId) => {
+                                                    const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
+                                                    if (!deviceType) return null;
+                                                    
                                                     return (
-                                                        <div key={type.id} className="flex items-center gap-2">
-                                                            {getDeviceIcon(type.name)}
-                                                            <span className="text-blue-700">{type.name}: {count}</span>
+                                                        <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-lg p-3 border border-blue-100">
+                                                            <div className="flex items-center gap-2">
+                                                                {getDeviceIcon(deviceType.name)}
+                                                                <span className="font-medium text-gray-900">{deviceType.name}</span>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => removeDeviceType(deviceTypeId)}
+                                                                className="text-red-600 hover:text-red-800"
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </button>
                                                         </div>
                                                     );
                                                 })}
+                                            </div>
+                                            
+                                            <div className="mt-4 pt-3 border-t border-blue-200">
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-gray-600">Total Device Types:</span>
+                                                    <span className="font-medium text-blue-700">{selectedDeviceTypes.length}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-gray-600">Remaining Limit:</span>
+                                                    <span className="font-medium text-blue-700">{remainingLimit}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     )}

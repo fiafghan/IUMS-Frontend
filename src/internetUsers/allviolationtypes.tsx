@@ -3,10 +3,10 @@ import { Edit, Trash2, Plus, AlertTriangle, Search } from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Spinner from "./components/Spinner";
-import { route } from "./config";
-import type { ViolationType } from "./types/types";
-import GradientSidebar from "./components/Sidebar";
+import Spinner from "../components/Spinner";
+import { route } from "../config";
+import type { ViolationType } from "../types/types";
+import GradientSidebar from "../components/Sidebar";
 import Swal from "sweetalert2";
 
 
