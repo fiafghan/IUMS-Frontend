@@ -83,7 +83,7 @@ const UserRow = memo(({ user, idx, handleEdit, handleDelete, handleView, isViewe
         <div className="flex items-center space-x-1" title={String(user.directorate) || 'N/A'}>
           <Building className="w-3 h-3 text-gray-400 flex-shrink-0" />
           <span className="text-xs text-gray-600 truncate">
-            {truncateText(String(user.directorate), 12)}
+            {truncateText(String(user.directorate), 40)}
           </span>
         </div>
       </td>
@@ -93,7 +93,7 @@ const UserRow = memo(({ user, idx, handleEdit, handleDelete, handleView, isViewe
         <div className="flex items-center space-x-1" title={String(user.position) || 'N/A'}>
           <Briefcase className="w-3 h-3 text-gray-400 flex-shrink-0" />
           <span className="text-xs text-gray-600 truncate">
-            {truncateText(String(user.position), 10)}
+            {truncateText(String(user.position), 20)}
           </span>
         </div>
       </td>
