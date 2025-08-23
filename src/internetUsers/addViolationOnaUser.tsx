@@ -4,6 +4,8 @@ import Select from "react-select";
 import { route } from "../config";
 import GradientSidebar from "../components/Sidebar";
 import Swal from "sweetalert2";
+import { motion, AnimatePresence } from "framer-motion";
+import { AlertTriangle, User, Shield, FileText, AlertCircle, CheckCircle } from "lucide-react";
 
 interface ViolationType {
     id: number;
@@ -115,67 +117,236 @@ export default function AddViolationForm() {
     };
 
     return (
-        <div className="flex min-h-screen">
-            <GradientSidebar />
-            <div className="max-w-md mx-auto mt-5 p-5 bg-white rounded w-200">
-                <h2 className="text-2xl font-bold mb-10 text-center bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent">
-                    Add Violation On A User
-                </h2>
-
-                <form onSubmit={handleSubmit} className="space-y-2">
-                    <div>
-                        <label className="block mb-1 font-semibold">Internet User</label>
-                        <Select
-                            options={usersOptions}
-                            onChange={handleUserChange}
-                            value={usersOptions.find(opt => opt.value === form.internet_user_id) || null}
-                            placeholder="Search and select user..."
-                            isClearable
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 font-semibold">Violation Type</label>
-                        <select
-                            name="violation_type_id"
-                            value={form.violation_type_id}
-                            onChange={handleViolationChange}
-                            required
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                        >
-                            <option value="">Select violation type</option>
-                            {violationTypes.map(v => (
-                                <option key={v.id} value={v.id}>
-                                    {v.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block mb-1 font-semibold">Comment (optional)</label>
-                        <textarea
-                            name="comment"
-                            value={form.comment}
-                            onChange={handleCommentChange}
-                            rows={3}
-                            placeholder="Enter comment"
-                            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-gradient-to-r from-blue-400 to-blue-300 text-white py-2 rounded font-semibold hover:opacity-90 transition"
-                    >
-                        Submit Violation
-                    </button>
-
-                    {message && (
-                        <p className="text-center mt-3 font-medium text-red-600">{message}</p>
-                    )}
-                </form>
+        <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-red-50 to-orange-50">
+            <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-slate-200 bg-white shadow-lg z-20">
+                <GradientSidebar />
             </div>
+
+            <main className="flex-1 ml-64 p-8 overflow-auto">
+                {/* Header Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-8"
+                >
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-4 bg-gradient-to-br from-red-600 to-orange-600 rounded-2xl shadow-lg">
+                            <AlertTriangle className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-red-900 to-orange-900 bg-clip-text text-transparent">
+                                Add Violation
+                            </h1>
+                            <p className="text-slate-600 mt-1 font-medium">
+                                Record violations for internet users
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Main Form Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    className="max-w-2xl mx-auto"
+                >
+                    <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
+                        {/* Card Header */}
+                        <div className="px-8 py-6 bg-gradient-to-r from-red-600 to-orange-600">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-white/10 rounded-xl">
+                                    <Shield className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white">Add Violation on User</h2>
+                                    <p className="text-red-100 text-sm">Select user and violation details</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Card Body */}
+                        <div className="p-8">
+                            <form onSubmit={handleSubmit} className="space-y-8">
+                                {/* User Selection */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.5, duration: 0.5 }}
+                                    className="space-y-3"
+                                >
+                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <User className="w-4 h-4 text-red-600" />
+                                        Select Internet User
+                                    </label>
+                                    <div className="relative">
+                                        <Select
+                                            options={usersOptions}
+                                            onChange={handleUserChange}
+                                            value={usersOptions.find(opt => opt.value === form.internet_user_id) || null}
+                                            placeholder="Search and select user..."
+                                            isClearable
+                                            className="react-select-container"
+                                            classNamePrefix="react-select"
+                                            styles={{
+                                                control: (provided, state) => ({
+                                                    ...provided,
+                                                    backgroundColor: '#f8fafc',
+                                                    borderColor: state.isFocused ? '#ef4444' : '#e2e8f0',
+                                                    borderRadius: '12px',
+                                                    padding: '8px 4px',
+                                                    borderWidth: '1px',
+                                                    boxShadow: state.isFocused ? '0 0 0 2px rgba(239, 68, 68, 0.2)' : 'none',
+                                                    '&:hover': {
+                                                        borderColor: '#cbd5e1'
+                                                    }
+                                                }),
+                                                option: (provided, state) => ({
+                                                    ...provided,
+                                                    backgroundColor: state.isSelected ? '#ef4444' : state.isFocused ? '#fef2f2' : 'white',
+                                                    color: state.isSelected ? 'white' : '#374151',
+                                                    padding: '12px 16px',
+                                                    cursor: 'pointer'
+                                                }),
+                                                menu: (provided) => ({
+                                                    ...provided,
+                                                    borderRadius: '12px',
+                                                    border: '1px solid #e2e8f0',
+                                                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
+                                                })
+                                            }}
+                                        />
+                                    </div>
+                                </motion.div>
+
+                                {/* Violation Type Selection */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: 30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.7, duration: 0.5 }}
+                                    className="space-y-3"
+                                >
+                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <AlertCircle className="w-4 h-4 text-red-600" />
+                                        Violation Type
+                                    </label>
+                                    <div className="relative">
+                                        <select
+                                            name="violation_type_id"
+                                            value={form.violation_type_id}
+                                            onChange={handleViolationChange}
+                                            required
+                                            className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 hover:bg-white hover:border-slate-300"
+                                        >
+                                            <option value="">Select violation type</option>
+                                            {violationTypes.map(v => (
+                                                <option key={v.id} value={v.id}>
+                                                    {v.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </motion.div>
+
+                                {/* Comment Field */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.9, duration: 0.5 }}
+                                    className="space-y-3"
+                                >
+                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                        <FileText className="w-4 h-4 text-red-600" />
+                                        Comment (Optional)
+                                    </label>
+                                    <textarea
+                                        name="comment"
+                                        value={form.comment}
+                                        onChange={handleCommentChange}
+                                        rows={4}
+                                        placeholder="Enter additional details about the violation..."
+                                        className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 hover:bg-white hover:border-slate-300 resize-none"
+                                    />
+                                </motion.div>
+
+                                {/* Message Display */}
+                                <AnimatePresence>
+                                    {message && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className={`p-4 rounded-xl border ${
+                                                message.includes("successfully") 
+                                                    ? "bg-green-50 border-green-200 text-green-700"
+                                                    : "bg-red-50 border-red-200 text-red-700"
+                                            }`}
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                {message.includes("successfully") ? (
+                                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                                ) : (
+                                                    <AlertCircle className="w-5 h-5 text-red-600" />
+                                                )}
+                                                <span className="text-sm font-medium">{message}</span>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Submit Button */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 1.1, duration: 0.5 }}
+                                    className="pt-4"
+                                >
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        type="submit"
+                                        disabled={!form.internet_user_id || !form.violation_type_id}
+                                        className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${
+                                            !form.internet_user_id || !form.violation_type_id
+                                                ? "bg-slate-300 cursor-not-allowed text-slate-500"
+                                                : "bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl"
+                                        }`}
+                                    >
+                                        <div className="flex items-center justify-center gap-2">
+                                            <AlertTriangle className="w-5 h-5" />
+                                            Submit Violation
+                                        </div>
+                                    </motion.button>
+                                </motion.div>
+                            </form>
+                        </div>
+                    </div>
+
+                    {/* Information Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.3, duration: 0.6 }}
+                        className="mt-8 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+                    >
+                        <div className="px-6 py-4 bg-gradient-to-r from-slate-100 to-slate-200">
+                            <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                                <Shield className="w-5 h-5 text-slate-600" />
+                                Violation Process
+                            </h3>
+                        </div>
+                        <div className="p-6">
+                            <div className="space-y-3 text-sm text-slate-600">
+                                <p>• Select the user who committed the violation</p>
+                                <p>• Choose the appropriate violation type</p>
+                                <p>• Add optional comments for context</p>
+                                <p>• Submit to record the violation</p>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            </main>
         </div>
     );
 }
