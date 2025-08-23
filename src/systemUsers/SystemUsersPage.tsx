@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Pencil, Trash2, Users, Search, UserPlus, Shield, UserCheck, Mail, Crown, Eye } from "lucide-react";
+import { Pencil, Trash2, Users, Search, UserPlus, UserCheck, Mail, Crown, Eye } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import type { User } from "../types/types";
 import { route } from "../config";
