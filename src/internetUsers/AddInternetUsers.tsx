@@ -168,7 +168,6 @@ export default function InternetUserAddForm(): JSX.Element {
 
     setLoading(true);
 
-    // آماده‌سازی داده‌ها مطابق بک‌اند
     const payload = {
       username: form.username.trim(),
       status: parseInt(form.status, 10),

@@ -3,23 +3,16 @@ import axios from "axios";
 import GradientSidebar from "../components/Sidebar";
 import { route } from "../config";
 import ScrollToTopButton from "../components/scrollToTop";
-import { CheckCircle, Clock, User, FileText, Calendar, Edit, Trash2 } from "lucide-react";
+import { User, FileText, Calendar, Edit, Trash2, CheckCircle } from "lucide-react";
 
 interface Reactivation {
   id: number;
-  internet_user_id: number;
+  username: string;
   reason: string;
-  created_at: string;
-  updated_at: string;
-  status: string;
-  user?: {
-    username: string;
-    name: string;
-    lastname: string;
-  };
+  activation_date: string;
 }
 
-const headers = ["User", "Username", "Reason", "Request Date", "Status", "Actions"];
+const headers = ["Username", "Reason", "Activation Date", "Actions"];
 
 export default function AllReactivations(): JSX.Element {
   const [reactivations, setReactivations] = useState<Reactivation[]>([]);
@@ -27,30 +20,39 @@ export default function AllReactivations(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [editingReactivation, setEditingReactivation] = useState<Reactivation | null>(null);
   const [editReason, setEditReason] = useState("");
-  const [editStatus, setEditStatus] = useState("");
 
-  const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-  const token = currentUser?.token;
-
-  // Fetch reactivations
+  // Mock data for demonstration - replace with actual API call
   useEffect(() => {
-    const fetchReactivations = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get<Reactivation[]>(`${route}/account-activations`, { 
-          headers: { Authorization: `Bearer ${token}` } 
-        });
-        setReactivations(res.data);
-      } catch (err) {
-        setError("Failed to fetch reactivations.");
-        console.error("Error fetching reactivations:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReactivations();
-  }, [token]);
+    // Simulate loading
+    setLoading(true);
+    
+    // Mock data - replace this with your actual data source
+    setTimeout(() => {
+      const mockData: Reactivation[] = [
+        {
+          id: 1,
+          username: "john.doe",
+          reason: "Account was deactivated due to policy violation",
+          activation_date: "2025-01-15T10:30:00Z"
+        },
+        {
+          id: 2,
+          username: "jane.smith",
+          reason: "Temporary deactivation for maintenance",
+          activation_date: "2025-01-14T14:20:00Z"
+        },
+        {
+          id: 3,
+          username: "mike.wilson",
+          reason: "Account reactivation after review",
+          activation_date: "2025-01-13T09:15:00Z"
+        }
+      ];
+      
+      setReactivations(mockData);
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -62,58 +64,31 @@ export default function AllReactivations(): JSX.Element {
     });
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'pending':
-        return <Clock className="w-5 h-5 text-yellow-500" />;
-      default:
-        return <Clock className="w-5 h-5 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return 'text-green-600 bg-green-50 border-green-200';
-      case 'pending':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
-
   const handleEdit = (reactivation: Reactivation) => {
     setEditingReactivation(reactivation);
     setEditReason(reactivation.reason);
-    setEditStatus(reactivation.status);
   };
 
   const handleSave = async () => {
     if (!editingReactivation) return;
 
     try {
-      await axios.put(
-        `${route}/account-activations/${editingReactivation.id}`,
-        {
-          reason: editReason,
-          status: editStatus
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Replace this with your actual API call
+      // await axios.put(`${route}/reactivations/${editingReactivation.id}`, {
+      //   reason: editReason
+      // });
 
+      // Update local state for now
       setReactivations(prev => 
         prev.map(r => 
           r.id === editingReactivation.id 
-            ? { ...r, reason: editReason, status: editStatus, updated_at: new Date().toISOString() }
+            ? { ...r, reason: editReason }
             : r
         )
       );
 
       setEditingReactivation(null);
       setEditReason("");
-      setEditStatus("");
     } catch (err) {
       console.error("Error updating reactivation:", err);
       setError("Failed to update reactivation.");
@@ -123,19 +98,18 @@ export default function AllReactivations(): JSX.Element {
   const handleCancel = () => {
     setEditingReactivation(null);
     setEditReason("");
-    setEditStatus("");
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this reactivation request?")) {
+    if (!confirm("Are you sure you want to delete this reactivation record?")) {
       return;
     }
 
     try {
-      await axios.delete(`${route}/account-activations/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Replace this with your actual API call
+      // await axios.delete(`${route}/reactivations/${id}`);
 
+      // Update local state for now
       setReactivations(prev => prev.filter(r => r.id !== id));
     } catch (err) {
       console.error("Error deleting reactivation:", err);
@@ -158,7 +132,7 @@ export default function AllReactivations(): JSX.Element {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Account Reactivations</h1>
-              <p className="text-gray-600">View and manage all account reactivation requests</p>
+              <p className="text-gray-600">View and manage all account reactivation records</p>
             </div>
           </div>
         </div>
@@ -182,7 +156,7 @@ export default function AllReactivations(): JSX.Element {
             <div className="p-8 bg-gray-50 rounded-xl">
               <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Reactivations Found</h3>
-              <p className="text-gray-600">There are no account reactivation requests to display.</p>
+              <p className="text-gray-600">There are no account reactivation records to display.</p>
             </div>
           </div>
         ) : (
@@ -208,19 +182,10 @@ export default function AllReactivations(): JSX.Element {
                         <div className="p-2 bg-blue-100 rounded-full">
                           <User className="w-4 h-4 text-blue-600" />
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {reactivation.user?.name} {reactivation.user?.lastname}
-                          </p>
-                          <p className="text-sm text-gray-500">ID: {reactivation.internet_user_id}</p>
-                        </div>
+                        <span className="font-medium text-gray-900">
+                          {reactivation.username}
+                        </span>
                       </div>
-                    </td>
-                    
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-gray-900">
-                        {reactivation.user?.username || 'N/A'}
-                      </span>
                     </td>
                     
                     <td className="px-6 py-4">
@@ -244,29 +209,9 @@ export default function AllReactivations(): JSX.Element {
                       <div className="flex items-center space-x-2">
                         <Calendar className="w-4 h-4 text-gray-400" />
                         <span className="text-gray-900">
-                          {formatDate(reactivation.created_at)}
+                          {formatDate(reactivation.activation_date)}
                         </span>
                       </div>
-                    </td>
-                    
-                    <td className="px-6 py-4">
-                      {editingReactivation?.id === reactivation.id ? (
-                        <select
-                          value={editStatus}
-                          onChange={(e) => setEditStatus(e.target.value)}
-                          className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="approved">Approved</option>
-                        </select>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          {getStatusIcon(reactivation.status || 'pending')}
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(reactivation.status || 'pending')}`}>
-                            {reactivation.status || 'pending'}
-                          </span>
-                        </div>
-                      )}
                     </td>
 
                     <td className="px-6 py-4">
@@ -284,7 +229,7 @@ export default function AllReactivations(): JSX.Element {
                             className="p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
                             title="Cancel"
                           >
-                            <Clock className="w-4 h-4" />
+                            <FileText className="w-4 h-4" />
                           </button>
                         </div>
                       ) : (
