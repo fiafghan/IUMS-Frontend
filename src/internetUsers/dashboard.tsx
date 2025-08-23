@@ -2,6 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 import axios from "axios";
 import { LayoutDashboard, User, Briefcase, TrendingUp, Activity, BarChart3, ArrowUpRight, ArrowDownRight, Eye, Clock, CheckCircle, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 import GradientSidebar from "../components/Sidebar";
 import GroupTypePieChart from "../components/groupTypePieChart";
@@ -14,6 +15,8 @@ export default function Dashboard(): JSX.Element {
   const [users, setUsers] = useState<InternetUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchUsers() {
@@ -293,7 +296,7 @@ export default function Dashboard(): JSX.Element {
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-blue-900">Add New User</div>
+                  <button onClick={() => navigate("/adduser")}><div className="font-medium text-blue-900">Add New User</div></button>
                     <div className="text-sm text-blue-600">Create new internet user account</div>
                   </div>
                 </button>
@@ -303,7 +306,7 @@ export default function Dashboard(): JSX.Element {
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
-                    <div className="font-medium text-green-900">View All Users</div>
+                   <button onClick={() => navigate("/all-users")}><div className="font-medium text-green-900">View All Users</div></button>
                     <div className="text-sm text-green-600">Browse complete user list</div>
                   </div>
                 </button>
