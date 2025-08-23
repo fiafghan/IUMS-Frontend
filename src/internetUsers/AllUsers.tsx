@@ -185,7 +185,7 @@ export default function InternetUsersList(): JSX.Element {
 
                 <div className="mt-4 flex gap-2 justify-center">
                     {Array.from({ length: totalPages }, (_, i) => (
-                        <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 rounded-full border ${currentPage === i + 1 ? "bg-blue-300 text-white border-blue-500" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}>
+                        <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 rounded-full border ${currentPage === i + 1 ? "bg-blue-100 text-green-500 border-gray-100" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}>
                             {i + 1}
                         </button>
                     ))}
