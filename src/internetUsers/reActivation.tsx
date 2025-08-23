@@ -3,6 +3,7 @@ import axios from "axios";
 import { route } from "../config";
 import { Search, XCircle } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
+import Swal from "sweetalert2";
 
 interface User {
   id: number; // Change from internet_user_id to id
@@ -68,7 +69,7 @@ export default function ReactivateUserForm() {
 
     try {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-      
+
       const payload = {
         internet_user_id: Number(selectedUser.id), // Use id instead of internet_user_id
         reason,
@@ -86,8 +87,11 @@ export default function ReactivateUserForm() {
           },
         }
       );
-
-      alert("Account activated successfully!");
+      Swal.fire({
+        title: "The Internet User Was Successfully Activated!",
+        icon: "success",
+        draggable: true
+      });
       setSelectedUser(null);
       setSearch("");
       setReason("");
