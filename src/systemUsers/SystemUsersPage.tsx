@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Users, Search, UserPlus, Shield, UserCheck, Mail, Crown, Eye } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 import type { User } from "../types/types";
 import { route } from "../config";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SystemUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,7 +13,6 @@ export default function SystemUsersPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
-
 
   const navigate = useNavigate()
 
@@ -70,7 +69,6 @@ export default function SystemUsersPage() {
       });
   };
 
-
   const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -92,159 +90,296 @@ export default function SystemUsersPage() {
     });
   }, []);
 
+  const getRoleIcon = (roleName: string) => {
+    switch (roleName?.toLowerCase()) {
+      case 'admin':
+        return <Crown className="w-4 h-4 text-amber-500" />;
+      case 'user':
+        return <UserCheck className="w-4 h-4 text-blue-500" />;
+      case 'viewer':
+        return <Eye className="w-4 h-4 text-green-500" />;
+      default:
+        return <UserCheck className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  const getRoleBadge = (roleName: string) => {
+    switch (roleName?.toLowerCase()) {
+      case 'admin':
+        return "bg-gradient-to-r from-amber-500 to-orange-500 text-white";
+      case 'user':
+        return "bg-gradient-to-r from-blue-500 to-indigo-500 text-white";
+      case 'viewer':
+        return "bg-gradient-to-r from-green-500 to-emerald-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  };
+
   return (
-    <div className="flex">
-      {/* Sidebar */}
-      <div className="w-64">
+    <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-slate-200 bg-white shadow-lg z-20">
         <GradientSidebar />
       </div>
-      <div className="p-6 w-full">
-        <h1 className="text-xl font-bold mb-6 text-center bg-blue-300 rounded-md text-white py-2 border-l-3 border-l-amber-300">All System Users</h1>
-        <div className="mb-4 flex items-center justify-between">
-          <div className="relative w-1/3 ml-2">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="w-5 h-5 text-white bg-blue-300 rounded-full p-1 border-1 border-l-amber-400" />
-            </span>
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 rounded-lg border shadow-sm focus:outline-none
-               focus:ring-blue-400 focus:border-blue-200 placeholder-gray-400 border-l-2 border-l-amber-300 border-blue-200"
-            />
+      
+      <main className="flex-1 ml-64 p-8 overflow-auto">
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-gradient-to-br from-slate-600 to-slate-700 rounded-2xl shadow-lg">
+              <Users className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                System Users
+              </h1>
+              <p className="text-slate-600 mt-1 font-medium">
+                Manage system user accounts and permissions
+              </p>
+            </div>
           </div>
-          <button
-            className="px-4 py-2 bg-blue-300 text-white rounded-lg hover:bg-blue-500 transition duration-200 mr-3"
-            onClick={() => navigate("/register")}
-          >
-            <span className="text-xl mr-2 text-amber-400">+</span>Add User 
-          </button>
-        </div>
-        <div className="overflow-x-auto rounded-sm shadow overflow-y-auto max-h-[400px] ">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-blue-100">
-              <tr>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">ID</th>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Name</th>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Email</th>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Role</th>
-                <th className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white text-sm">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users
-                .filter(user =>
-                  user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  user.role_name.toLowerCase().includes(searchTerm.toLowerCase())
-                ).map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 border-b border-r border-blue-300">{user.id}</td>
-                    <td className="px-4 py-2 border-b border-r border-blue-300">{user.name}</td>
-                    <td className="px-4 py-2 border-b border-blue-300">{user.email}</td>
-                    <td className="px-4 py-2 border-b border-blue-300 bg-blue-300 text-white w-30">
-                      {user.role_name === "Admin" ? "Admin" : user.role_name === "User" ? "User" : "Viewer"}
-                    </td>
-                    <td className="px-4 py-2 border-b space-x-2 border-blue-300 bg-blue-300">
-                      <button onClick={() => handleEditClick(user)} className="">
-                        <Pencil className="w-4 h-4 inline text-white hover:text-gray-200" />
-                      </button>
-                      <button onClick={() => handleDelete(user.id)} className="text-white">
-                        <Trash2 className="w-4 h-4 inline hover:text-gray-200" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        </motion.div>
+
+        {/* Search and Actions Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mb-8"
+        >
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6">
+            <div className="flex items-center justify-between">
+              {/* Search Bar */}
+              <div className="relative flex-1 max-w-md">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="w-5 h-5 text-slate-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search users by name, email, or role..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:bg-white hover:border-slate-300"
+                />
+              </div>
+
+              {/* Add User Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/register")}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <UserPlus className="w-5 h-5" />
+                Add New User
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Users Table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">ID</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">User</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">Email</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">Role</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users
+                  .filter(user =>
+                    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    user.role_name.toLowerCase().includes(searchTerm.toLowerCase())
+                  ).map((user, index) => (
+                    <motion.tr
+                      key={user.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 + index * 0.1, duration: 0.5 }}
+                      className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
+                    >
+                      <td className="px-6 py-4 text-sm font-mono text-slate-600">#{user.id}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900">{user.name}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-700">{user.email}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          {getRoleIcon(user.role_name)}
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRoleBadge(user.role_name)}`}>
+                            {user.role_name === "Admin" ? "Admin" : user.role_name === "User" ? "User" : "Viewer"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleEditClick(user)}
+                            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                            title="Edit User"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDelete(user.id)}
+                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+                            title="Delete User"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </motion.button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+        {/* Edit Modal */}
+        <AnimatePresence>
           {showEditModal && editUser && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-lg space-y-4">
-                <h2 className="text-xl font-bold">Edit User</h2>
-                <div className="space-y-2">
-                  <label className="block">
-                    Name:
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+              >
+                {/* Modal Header */}
+                <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <UserCheck className="w-5 h-5" />
+                    Edit User
+                  </h2>
+                </div>
+
+                {/* Modal Body */}
+                <div className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Name</label>
                     <input
                       type="text"
                       value={editUser.name}
                       onChange={(e) =>
                         setEditUser({ ...editUser, name: e.target.value })
                       }
-                      className="w-full border px-3 py-1.5 rounded"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
-                  </label>
-                  <label className="block">
-                    Email:
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
                     <input
                       type="email"
                       value={editUser.email}
                       onChange={(e) =>
                         setEditUser({ ...editUser, email: e.target.value })
                       }
-                      className="w-full border px-3 py-1.5 rounded"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     />
-                    <label className="block">
-                      Password:
-                      <input
-                        type="text"
-                        value={editUser.password || ""}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setEditUser({ ...editUser, password: val });
+                  </div>
 
-                          if (val.length > 0 && val.length < 6) {
-                            setPasswordError("Password Must Be At Least 6 Characters!");
-                          } else {
-                            setPasswordError("");
-                          }
-                        }}
-                        className="w-full border px-3 py-1.5 rounded"
-                      />
-                      <span className="text-sm text-gray-500">Leave empty to keep current password</span>
-                      {passwordError && (
-                        <p className="text-red-600 text-sm mt-1">{passwordError}</p>
-                      )}
-                    </label>
-                  </label>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                    <input
+                      type="text"
+                      value={editUser.password || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setEditUser({ ...editUser, password: val });
 
-                  <label className="block">
-                    Role:
+                        if (val.length > 0 && val.length < 6) {
+                          setPasswordError("Password Must Be At Least 6 Characters!");
+                        } else {
+                          setPasswordError("");
+                        }
+                      }}
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                      placeholder="Leave empty to keep current password"
+                    />
+                    {passwordError && (
+                      <p className="text-red-600 text-sm mt-2">{passwordError}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">Role</label>
                     <select
                       value={editUser.role_id}
                       onChange={(e) =>
                         setEditUser({ ...editUser, role_id: parseInt(e.target.value) })
                       }
-                      className="w-full border px-3 py-1.5 rounded"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                     >
                       <option value={1}>Admin</option>
                       <option value={2}>User</option>
                       <option value={3}>Viewer</option>
                     </select>
-                  </label>
-
-
+                  </div>
                 </div>
-                <div className="flex justify-end space-x-3 pt-4">
-                  <button
+
+                {/* Modal Footer */}
+                <div className="px-6 py-4 bg-slate-50 flex justify-end gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setShowEditModal(false)}
-                    className="px-4 py-2 border rounded"
+                    className="px-6 py-2 border border-slate-300 rounded-xl text-slate-700 hover:bg-white transition-colors duration-200"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleSaveEdit}
-                    className="px-4 py-2 bg-blue-600 text-white rounded"
+                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200"
                   >
-                    Save
-                  </button>
+                    Save Changes
+                  </motion.button>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           )}
-
-        </div>
-      </div>
+        </AnimatePresence>
+      </main>
     </div>
   );
 }
