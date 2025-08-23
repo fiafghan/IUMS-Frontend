@@ -7,6 +7,8 @@ import ScrollToTopButton from "../components/scrollToTop";
 import UserRow from "../components/userRow";
 import UserFiltersPanel from "../components/UserFilters";
 import EditUserModal from "./editModal";
+import { motion } from "framer-motion";
+import { Users, Filter, AlertCircle } from "lucide-react";
 
 type Option = { id: number; name: string };
 
@@ -128,68 +130,176 @@ export default function InternetUsersList(): JSX.Element {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
     return (
-        <div className="min-h-screen flex bg-white shadow-md shadow-indigo-700">
+        <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
             <ScrollToTopButton />
-            <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-gray-200 bg-white shadow-sm z-20">
+            <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-slate-200 bg-white shadow-lg z-20">
                 <GradientSidebar />
             </div>
             <main className="flex-1 ml-64 p-8 overflow-auto">
-                <div className="flex mb-4 mt-5 justify-center w-full">
-                    <UserFiltersPanel
-                        directorateOptions={directorateOptions}
-                        groupOptions={groupOptions}
-                        selectedDirectorate={selectedDirectorate}
-                        setSelectedDirectorate={setSelectedDirectorate}
-                        selectedGroup={selectedGroup}
-                        setSelectedGroup={setSelectedGroup}
-                        selectedStatus={selectedStatus}
-                        setSelectedStatus={setSelectedStatus}
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                    />
-                </div>
-
-                {loading ? (
-                    <p className="text-center text-gray-600">Loading users...</p>
-                ) : error ? (
-                    <p className="text-center text-red-600">{error}</p>
-                ) : users.length === 0 ? (
-                    <p className="text-center py-6 text-gray-500 font-medium">No users found.</p>
-                ) : (
-                    <div className="overflow-x-auto rounded-sm shadow-lg bg-white border border-gray-200 max-w-full">
-                        <table className="table-auto w-full text-left text-sm">
-                            <thead>
-                                <tr className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs uppercase tracking-wider select-none rounded-t-xl">
-                                    {headers.map(h => (
-                                        <th key={h} className="px-3 py-2 border-r border-white last:border-r-0 bg-gray-100 text-blue-400 text-[8px] font-semibold">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {visibleUsers.map((user, idx) => (
-                                    <UserRow
-                                        key={user.id}
-                                        user={user}
-                                        idx={idx}
-                                        handleEdit={handleEditClick}
-                                        handleDelete={handleDelete}
-                                        isViewer={isViewer}
-                                        currentUserRole={currentUser?.user.role}
-                                        handleView={() => { }} // Optional: Add view logic
-                                    />
-                                ))}
-                            </tbody>
-                        </table>
+                {/* Header Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-8"
+                >
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-lg">
+                            <Users className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                                Internet Users
+                            </h1>
+                            <p className="text-slate-600 mt-1 font-medium">
+                                Manage and monitor all internet user accounts
+                            </p>
+                        </div>
                     </div>
+
+                    {/* Filters Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.6 }}
+                        className="mb-8"
+                    >
+                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg">
+                                    <Filter className="w-5 h-5 text-white" />
+                                </div>
+                                <h3 className="text-lg font-semibold text-slate-900">Search & Filters</h3>
+                            </div>
+                            <UserFiltersPanel
+                                directorateOptions={directorateOptions}
+                                groupOptions={groupOptions}
+                                selectedDirectorate={selectedDirectorate}
+                                setSelectedDirectorate={setSelectedDirectorate}
+                                selectedGroup={selectedGroup}
+                                setSelectedGroup={setSelectedGroup}
+                                selectedStatus={selectedStatus}
+                                setSelectedStatus={setSelectedStatus}
+                                searchTerm={searchTerm}
+                                setSearchTerm={setSearchTerm}
+                            />
+                        </div>
+                    </motion.div>
+                </motion.div>
+
+                {/* Content Section */}
+                {loading ? (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="flex justify-center items-center py-20"
+                    >
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+                            <p className="text-slate-600 text-lg font-medium">Loading users...</p>
+                        </div>
+                    </motion.div>
+                ) : error ? (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center py-20"
+                    >
+                        <div className="p-6 bg-red-50 rounded-2xl border border-red-200 max-w-md mx-auto">
+                            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+                            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Data</h3>
+                            <p className="text-red-600">{error}</p>
+                        </div>
+                    </motion.div>
+                ) : users.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="text-center py-20"
+                    >
+                        <div className="p-8 bg-slate-50 rounded-2xl border border-slate-200 max-w-md mx-auto">
+                            <Users className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-slate-900 mb-2">No Users Found</h3>
+                            <p className="text-slate-600">There are no internet users to display at the moment.</p>
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, duration: 0.6 }}
+                        className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
+                    >
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+                                        {headers.map((h, index) => (
+                                            <motion.th
+                                                key={h}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                                                className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700"
+                                            >
+                                                {h}
+                                            </motion.th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {visibleUsers.map((user, index) => (
+                                        <motion.tr
+                                            key={user.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                                            className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
+                                        >
+                                            <UserRow
+                                                user={user}
+                                                idx={index}
+                                                handleEdit={handleEditClick}
+                                                handleDelete={handleDelete}
+                                                handleView={() => { }}
+                                                isViewer={isViewer}
+                                                currentUserRole={currentUser?.user.role}
+                                            />
+                                        </motion.tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </motion.div>
                 )}
 
-                <div className="mt-4 flex gap-2 justify-center">
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <button key={i + 1} onClick={() => setCurrentPage(i + 1)} className={`px-3 py-1 rounded-full border ${currentPage === i + 1 ? "bg-blue-100 text-green-500 border-gray-100" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}>
-                            {i + 1}
-                        </button>
-                    ))}
-                </div>
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9, duration: 0.6 }}
+                        className="mt-8 flex justify-center"
+                    >
+                        <div className="flex gap-2">
+                            {Array.from({ length: totalPages }, (_, i) => (
+                                <motion.button
+                                    key={i + 1}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setCurrentPage(i + 1)}
+                                    className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
+                                        currentPage === i + 1
+                                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                                            : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                                    }`}
+                                >
+                                    {i + 1}
+                                </motion.button>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
             </main>
 
             {isModalOpen && selectedUser && (
@@ -205,3 +315,4 @@ export default function InternetUsersList(): JSX.Element {
         </div>
     );
 }
+
