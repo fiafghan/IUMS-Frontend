@@ -1,4 +1,4 @@
-import { Cpu, Group, Hash, Laptop, Plus, X, Monitor, Smartphone, Tablet } from "lucide-react";
+import { Cpu, Hash, Laptop, Plus, X, Monitor, Smartphone, Tablet } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
 import { useEffect, useState, type JSX } from "react";
@@ -99,7 +99,7 @@ export function Step3({ form, onChange }: {
 
   // Update the addDevice function
   const addDevice = () => {
-    if (selectedDevices.length >= form.device_limit || !selectedGroup) return;
+    if (selectedDevices.length >= Number(form.device_limit) || !selectedGroup) return;
 
     const group = groups.find(g => g.id === selectedGroup);
 
