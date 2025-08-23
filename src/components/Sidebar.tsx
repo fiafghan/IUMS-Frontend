@@ -67,7 +67,10 @@ export default function GradientSidebar(): JSX.Element {
           className="flex items-center gap-3 py-3 rounded-sm hover:bg-white hover:text-blue-400 text-blue-400 scale-80"
         >
           <LayoutDashboard className="w-5 h-5 bg-blue-400 text-white rounded-md p-1" />
+          <div className="flex items-center gap-2 text-blue-400">
           Dashboard
+        </div>
+
         </motion.button>
         {/* 🔹 All Users section */}
         <motion.button
