@@ -607,289 +607,367 @@ export default function EditUserModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-[1px] flex justify-center 
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center 
         items-start md:items-center z-50 px-2 md:px-4 py-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full sm:w-[95vw] md:w-[90vw] 
-            lg:w-[80vw] max-w-[1000px] max-h-[88vh] overflow-auto transform scale-90 md:scale-95 p-0">
-                {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-blue-400 to-blue-200">
-                    <h2 className="text-lg md:text-xl font-bold text-white">Edit Internet User</h2>
-                    <button onClick={onClose} className="p-2 rounded-full hover:bg-white/10">
-                        <X className="text-white" />
-                    </button>
+            <div className="bg-white rounded-3xl shadow-2xl w-full sm:w-[95vw] md:w-[90vw] 
+            lg:w-[80vw] max-w-[1200px] max-h-[90vh] overflow-hidden transform scale-95 md:scale-100 flex flex-col">
+                
+                {/* Enhanced Header */}
+                <div className="relative px-8 py-6 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 overflow-hidden flex-shrink-0">
+                    <div className="absolute inset-0 bg-black/20"></div>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/20 rounded-full translate-y-12 -translate-x-12"></div>
+                    
+                    <div className="relative flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
+                                <User className="w-8 h-8 text-white" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl md:text-3xl font-bold text-white">Edit Internet User</h2>
+                                <p className="text-blue-100 mt-1 font-medium">Update user information and settings</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={onClose} 
+                            className="p-3 rounded-2xl hover:bg-white/10 transition-all duration-200 hover:scale-105"
+                        >
+                            <X className="w-6 h-6 text-white" />
+                        </button>
+                    </div>
                 </div>
 
-                {/* Body */}
-                <div className="p-6">
-                    <Tab.Group>
-                        <Tab.List className="flex gap-2 border-b pb-2 mb-4 overflow-x-auto">
-                            {["Personal", "Organization", "Devices", "Violations"].map((t) => (
-                                <Tab
-                                    key={t}
-                                    className={({ selected }) =>
-                                        `px-4 py-2 rounded-t-md text-sm whitespace-nowrap ${selected ? "bg-blue-600 text-white" : "bg-blue-400 text-white hover:bg-gray-200"
-                                        }`
-                                    }
-                                >
-                                    {t}
-                                </Tab>
-                            ))}
-                        </Tab.List>
+                {/* Enhanced Body - Now Scrollable */}
+                <div className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 to-blue-50">
+                    <div className="p-8">
+                        <Tab.Group>
+                            <Tab.List className="flex gap-1 border-b border-slate-200 pb-2 mb-8 overflow-x-auto bg-white rounded-2xl p-2 shadow-sm sticky top-0 z-10">
+                                {["Personal", "Organization", "Devices", "Violations"].map((tab) => (
+                                    <Tab
+                                        key={tab}
+                                        className={({ selected }) =>
+                                            `px-6 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                                                selected 
+                                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105" 
+                                                    : "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                                            }`
+                                        }
+                                    >
+                                        {tab}
+                                    </Tab>
+                                ))}
+                            </Tab.List>
 
-                        <Tab.Panels>
-                            {/* Personal */}
-                            <Tab.Panel>
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                    <InputWithIcon
-                                        label="Name"
-                                        name="name"
-                                        value={editForm.name || ""}
-                                        placeholder="Name"
-                                        icon={<User className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                    />
-                                    <InputWithIcon
-                                        label="Last Name"
-                                        name="lastname"
-                                        value={editForm.lastname || ""}
-                                        placeholder="Last Name"
-                                        icon={<UserRound className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                    />
-                                    <InputWithIcon
-                                        label="Username"
-                                        name="username"
-                                        value={editForm.username || ""}
-                                        placeholder="Username"
-                                        icon={<BadgeCheck className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                    />
-                                    <InputWithIcon
-                                        label="Email"
-                                        name="email"
-                                        type="email"
-                                        value={editForm.email || ""}
-                                        placeholder="Email"
-                                        icon={<Mail className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                        error={emailError}
-                                        isLoading={isCheckingEmail}
-                                    />
-                                    <InputWithIcon
-                                        label="Phone"
-                                        name="phone"
-                                        value={editForm.phone || ""}
-                                        placeholder="+937xxxxxxxx"
-                                        icon={<Phone className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                        error={phoneError}
-                                        isLoading={isCheckingPhone}
-                                    />
-                                </div>
-                            </Tab.Panel>
-
-                            {/* Organization */}
-                            <Tab.Panel>
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                    <ComboBoxField
-                                        label="Directorate"
-                                        selected={selectedDirectorate}
-                                        setSelected={setSelectedDirectorate}
-                                        filtered={filteredDirectorates}
-                                        query={qDirectorate}
-                                        setQuery={setQDirectorate}
-                                        icon={<Building2 className="w-4 h-4 text-gray-500" />}
-                                    />
-                                    <ComboBoxField
-                                        label="Group"
-                                        selected={selectedGroup}
-                                        setSelected={setSelectedGroup}
-                                        filtered={filteredGroups}
-                                        query={qGroup}
-                                        setQuery={setQGroup}
-                                        icon={<Users className="w-4 h-4 text-gray-500" />}
-                                    />
-                                    <ComboBoxField
-                                        label="Employment Type"
-                                        selected={selectedEmployment}
-                                        setSelected={setSelectedEmployment}
-                                        filtered={filteredEmployment}
-                                        query={qEmployment}
-                                        setQuery={setQEmployment}
-                                        icon={<BriefcaseBusiness className="w-4 h-4 text-gray-500" />}
-                                    />
-                                    <ComboBoxField
-                                        label="Deputy Ministry"
-                                        selected={selectedDeputy}
-                                        setSelected={setSelectedDeputy}
-                                        filtered={filteredDeputies}
-                                        query={qDeputy}
-                                        setQuery={setQDeputy}
-                                        icon={<Landmark className="w-4 h-4 text-gray-500" />}
-                                    />
-                                </div>
-                            </Tab.Panel>
-
-                            {/* Devices */}
-                            <Tab.Panel>
-                                <div className="space-y-6">
-                                    {/* Device Limit */}
-                                    <div className="grid grid-cols-2 gap-5">
-                                        <InputWithIcon
-                                            label="Device Limit"
-                                            name="device_limit"
-                                            type="number"
-                                            value={editForm.device_limit ?? ""}
-                                            placeholder="Number of devices allowed"
-                                            icon={<HardDrive className="w-4 h-4 text-gray-500" />}
-                                            onChange={handleEditChange}
-                                        />
-
-                                        <div className="flex items-center justify-center bg-gray-50 rounded-lg p-4">
-                                            <div className="text-center">
-                                                <div className="text-2xl font-bold text-blue-600">{remainingLimit}</div>
-                                                <div className="text-sm text-gray-600">Device Types Remaining</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Device Type Selection */}
-                                    <div>
-                                        <h3 className="font-medium text-gray-900 mb-3">Select Device Types</h3>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                            {allDeviceList.map((deviceType) => {
-                                                const isSelected = selectedDeviceTypes.includes(deviceType.id);
-                                                const canSelect = remainingLimit > 0 || isSelected;
-                                                
-                                                return (
-                                                    <button
-                                                        key={deviceType.id}
-                                                        onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
-                                                        disabled={!canSelect}
-                                                        className={`p-3 rounded-lg border-2 transition-all ${
-                                                            isSelected
-                                                                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                                                                : canSelect
-                                                                ? 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                                                                : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'
-                                                        }`}
-                                                    >
-                                                        <div className="flex items-center gap-2">
-                                                            {getDeviceIcon(deviceType.name)}
-                                                            <span className="text-sm font-medium">{deviceType.name}</span>
-                                                        </div>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    {/* Selected Device Types Summary */}
-                                    {selectedDeviceTypes.length > 0 && (
-                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                            <h3 className="font-medium text-blue-900 mb-3">Selected Device Types</h3>
-                                            <div className="space-y-2">
-                                                {selectedDeviceTypes.map((deviceTypeId) => {
-                                                    const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
-                                                    if (!deviceType) return null;
-                                                    
-                                                    return (
-                                                        <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-lg p-3 border border-blue-100">
-                                                            <div className="flex items-center gap-2">
-                                                                {getDeviceIcon(deviceType.name)}
-                                                                <span className="font-medium text-gray-900">{deviceType.name}</span>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => removeDeviceType(deviceTypeId)}
-                                                                className="text-red-600 hover:text-red-800"
-                                                            >
-                                                                <X className="w-4 h-4" />
-                                                            </button>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                            
-                                            <div className="mt-4 pt-3 border-t border-blue-200">
-                                                <div className="flex items-center justify-between text-sm">
-                                                    <span className="text-gray-600">Total Device Types:</span>
-                                                    <span className="font-medium text-blue-700">{selectedDeviceTypes.length}</span>
-                                                </div>
-                                                <div className="flex items-center justify-between text-sm">
-                                                    <span className="text-gray-600">Remaining Limit:</span>
-                                                    <span className="font-medium text-blue-700">{remainingLimit}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </Tab.Panel>
-
-                            {/* Violations */}
-                            <Tab.Panel>
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                                        <label className="block text-xs font-semibold text-gray-700 mb-1">Violation Type</label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <AlertTriangle className="w-4 h-4 text-gray-500" />
-                                            </div>
-                                            <select
-                                                name="violation_type"
-                                                value={String(editForm.violation_type || "")}
+                            <Tab.Panels>
+                                {/* Enhanced Personal Tab */}
+                                <Tab.Panel>
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                            <InputWithIcon
+                                                label="Name"
+                                                name="name"
+                                                value={editForm.name || ""}
+                                                placeholder="Enter full name"
+                                                icon={<User className="w-5 h-5 text-blue-600" />}
                                                 onChange={handleEditChange}
-                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm"
-                                            >
-                                                <option value="" disabled>Select Violation Type</option>
-                                                {violationTypes.map((v) => (
-                                                    <option key={v.id} value={v.name}>{v.name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <InputWithIcon
-                                        label="Violations Count"
-                                        name="violation_count"
-                                        type="number"
-                                        value={editForm.violation_count ?? ""}
-                                        placeholder="0"
-                                        icon={<AlertTriangle className="w-4 h-4 text-gray-500" />}
-                                        onChange={handleEditChange}
-                                    />
-                                    <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                                        <label className="block text-xs font-semibold text-gray-700 mb-1">Comment</label>
-                                        <div className="relative">
-                                            <div className="absolute inset-y-0 left-0 pl-3 pt-[6px] pointer-events-none">
-                                                <StickyNote className="w-4 h-4 text-gray-500" />
-                                            </div>
-                                            <textarea
-                                                name="comment"
-                                                value={editForm.comment || ""}
+                                            />
+                                            <InputWithIcon
+                                                label="Last Name"
+                                                name="lastname"
+                                                value={editForm.lastname || ""}
+                                                placeholder="Enter last name"
+                                                icon={<UserRound className="w-5 h-5 text-blue-600" />}
                                                 onChange={handleEditChange}
-                                                placeholder="Comment"
-                                                className="w-full pl-10 pr-3 py-2 border rounded-md text-sm min-h-[80px]"
+                                            />
+                                            <InputWithIcon
+                                                label="Username"
+                                                name="username"
+                                                value={editForm.username || ""}
+                                                placeholder="Enter username"
+                                                icon={<BadgeCheck className="w-5 h-5 text-blue-600" />}
+                                                onChange={handleEditChange}
+                                            />
+                                            <InputWithIcon
+                                                label="Email"
+                                                name="email"
+                                                type="email"
+                                                value={editForm.email || ""}
+                                                placeholder="Enter email address"
+                                                icon={<Mail className="w-5 h-5 text-blue-600" />}
+                                                onChange={handleEditChange}
+                                                error={emailError}
+                                                isLoading={isCheckingEmail}
+                                            />
+                                            <InputWithIcon
+                                                label="Phone"
+                                                name="phone"
+                                                value={editForm.phone || ""}
+                                                placeholder="+937xxxxxxxx"
+                                                icon={<Phone className="w-5 h-5 text-blue-600" />}
+                                                onChange={handleEditChange}
+                                                error={phoneError}
+                                                isLoading={isCheckingPhone}
+                                            />
+                                            <InputWithIcon
+                                                label="Position"
+                                                name="position"
+                                                value={editForm.position || ""}
+                                                placeholder="Enter job position"
+                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-600" />}
+                                                onChange={handleEditChange}
                                             />
                                         </div>
                                     </div>
-                                </div>
-                            </Tab.Panel>
-                        </Tab.Panels>
-                    </Tab.Group>
+                                </Tab.Panel>
+
+                                {/* Enhanced Organization Tab */}
+                                <Tab.Panel>
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                            <ComboBoxField
+                                                label="Directorate"
+                                                selected={selectedDirectorate}
+                                                setSelected={setSelectedDirectorate}
+                                                filtered={filteredDirectorates}
+                                                query={qDirectorate}
+                                                setQuery={setQDirectorate}
+                                                icon={<Building2 className="w-5 h-5 text-blue-600" />}
+                                            />
+                                            <ComboBoxField
+                                                label="Group"
+                                                selected={selectedGroup}
+                                                setSelected={setSelectedGroup}
+                                                filtered={filteredGroups}
+                                                query={qGroup}
+                                                setQuery={setQGroup}
+                                                icon={<Users className="w-5 h-5 text-blue-600" />}
+                                            />
+                                            <ComboBoxField
+                                                label="Employment Type"
+                                                selected={selectedEmployment}
+                                                setSelected={setSelectedEmployment}
+                                                filtered={filteredEmployment}
+                                                query={qEmployment}
+                                                setQuery={setQEmployment}
+                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-600" />}
+                                            />
+                                            <ComboBoxField
+                                                label="Deputy Ministry"
+                                                selected={selectedDeputy}
+                                                setSelected={setSelectedDeputy}
+                                                filtered={filteredDeputies}
+                                                query={qDeputy}
+                                                setQuery={setQDeputy}
+                                                icon={<Landmark className="w-5 h-5 text-blue-600" />}
+                                            />
+                                        </div>
+                                    </div>
+                                </Tab.Panel>
+
+                                {/* Enhanced Devices Tab */}
+                                <Tab.Panel>
+                                    <div className="space-y-8">
+                                        {/* Device Limit Section */}
+                                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                                                <HardDrive className="w-5 h-5 text-blue-600" />
+                                                Device Management
+                                            </h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <InputWithIcon
+                                                    label="Device Limit"
+                                                    name="device_limit"
+                                                    type="number"
+                                                    value={editForm.device_limit ?? ""}
+                                                    placeholder="Number of devices allowed"
+                                                    icon={<HardDrive className="w-5 h-5 text-blue-600" />}
+                                                    onChange={handleEditChange}
+                                                />
+
+                                                <div className="flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
+                                                    <div className="text-center">
+                                                        <div className="text-4xl font-bold text-blue-600 mb-2">{remainingLimit}</div>
+                                                        <div className="text-sm text-blue-700 font-medium">Devices Remaining</div>
+                                                        <div className="text-xs text-blue-600 mt-1">Available for selection</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Device Type Selection */}
+                                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                                            <h3 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                                                <Laptop className="w-5 h-5 text-blue-600" />
+                                                Select Device Types
+                                            </h3>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                                {allDeviceList.map((deviceType) => {
+                                                    const isSelected = selectedDeviceTypes.includes(deviceType.id);
+                                                    const canSelect = remainingLimit > 0 || isSelected;
+                                                    
+                                                    return (
+                                                        <button
+                                                            key={deviceType.id}
+                                                            onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
+                                                            disabled={!canSelect}
+                                                            className={`p-4 rounded-xl border-2 transition-all duration-200 ${
+                                                                isSelected
+                                                                    ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
+                                                                    : canSelect
+                                                                    ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
+                                                                    : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
+                                                            }`}
+                                                        >
+                                                            <div className="flex flex-col items-center gap-3 text-center">
+                                                                <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
+                                                                    {getDeviceIcon(deviceType.name)}
+                                                                </div>
+                                                                <span className="text-sm font-medium">{deviceType.name}</span>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* Selected Devices Summary */}
+                                        {selectedDeviceTypes.length > 0 && (
+                                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
+                                                <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                                                    <Check className="w-5 h-5 text-blue-600" />
+                                                    Selected Device Types
+                                                </h3>
+                                                <div className="space-y-3">
+                                                    {selectedDeviceTypes.map((deviceTypeId) => {
+                                                        const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
+                                                        if (!deviceType) return null;
+                                                        
+                                                        return (
+                                                            <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="p-2 bg-blue-100 rounded-lg">
+                                                                        {getDeviceIcon(deviceType.name)}
+                                                                    </div>
+                                                                    <span className="font-medium text-slate-900">{deviceType.name}</span>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => removeDeviceType(deviceTypeId)}
+                                                                    className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                                                                >
+                                                                    <X className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                                
+                                                <div className="mt-6 pt-4 border-t border-blue-200">
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="text-center p-3 bg-white rounded-xl border border-blue-100">
+                                                            <div className="text-2xl font-bold text-blue-600">{selectedDeviceTypes.length}</div>
+                                                            <div className="text-sm text-blue-700">Total Selected</div>
+                                                        </div>
+                                                        <div className="text-center p-3 bg-white rounded-xl border border-blue-100">
+                                                            <div className="text-2xl font-bold text-blue-600">{remainingLimit}</div>
+                                                            <div className="text-sm text-blue-700">Remaining</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </Tab.Panel>
+
+                                {/* Enhanced Violations Tab */}
+                                <Tab.Panel>
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                            <div className="xl:col-span-3 md:col-span-2 col-span-1">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">Violation Type</label>
+                                                <div className="relative">
+                                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                        <AlertTriangle className="w-5 h-5 text-red-500" />
+                                                    </div>
+                                                    <select
+                                                        name="violation_type"
+                                                        value={String(editForm.violation_type || "")}
+                                                        onChange={handleEditChange}
+                                                        className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                                                    >
+                                                        <option value="" disabled>Select Violation Type</option>
+                                                        {violationTypes.map((v) => (
+                                                            <option key={v.id} value={v.name}>{v.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <InputWithIcon
+                                                label="Violations Count"
+                                                name="violation_count"
+                                                type="number"
+                                                value={editForm.violation_count ?? ""}
+                                                placeholder="0"
+                                                icon={<AlertTriangle className="w-5 h-5 text-red-500" />}
+                                                onChange={handleEditChange}
+                                            />
+                                            <div className="xl:col-span-3 md:col-span-2 col-span-1">
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">Comment</label>
+                                                <div className="relative">
+                                                    <div className="absolute top-4 left-4 pointer-events-none">
+                                                        <StickyNote className="w-5 h-5 text-slate-500" />
+                                                    </div>
+                                                    <textarea
+                                                        name="comment"
+                                                        value={editForm.comment || ""}
+                                                        onChange={handleEditChange}
+                                                        placeholder="Enter violation comment..."
+                                                        className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl text-sm min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Tab.Panel>
+                            </Tab.Panels>
+                        </Tab.Group>
+                    </div>
                 </div>
 
-                {/* Footer */}
-                <div className="px-6 py-4 bg-gray-50 flex items-center justify-end gap-3">
-                    <button onClick={onClose} className="px-4 py-2 rounded-md border hover:bg-white text-gray-700 text-sm">
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        disabled={!canSave}
-                        className={`px-4 py-2 rounded-md text-white text-sm inline-flex items-center gap-2 ${canSave ? "bg-blue-400 hover:bg-blue-300" : "bg-blue-300 cursor-not-allowed"}`}
-                    >
-                        <Save className="w-4 h-4" />
-                        Save
-                    </button>
+                {/* Enhanced Footer - Always Visible */}
+                <div className="px-8 py-6 bg-gradient-to-r from-slate-50 to-slate-100 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+                    <div className="text-sm text-slate-600">
+                        {canSave ? (
+                            <span className="flex items-center gap-2 text-green-600">
+                                <Check className="w-4 h-4" />
+                                All required fields are filled
+                            </span>
+                        ) : (
+                            <span className="flex items-center gap-2 text-amber-600">
+                                <AlertTriangle className="w-4 h-4" />
+                                Please fill all required fields
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button 
+                            onClick={onClose} 
+                            className="px-6 py-3 rounded-xl border border-slate-300 hover:bg-white text-slate-700 text-sm font-medium transition-all duration-200 hover:shadow-md"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={!canSave}
+                            className={`px-8 py-3 rounded-xl text-white text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${
+                                canSave 
+                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105" 
+                                    : "bg-slate-400 cursor-not-allowed"
+                            }`}
+                        >
+                            <Save className="w-4 h-4" />
+                            Save Changes
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
