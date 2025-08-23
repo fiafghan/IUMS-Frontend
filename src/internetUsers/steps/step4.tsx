@@ -37,10 +37,9 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
     },
   ];
 
-  // وضعیت باز/بسته بودن هر بخش
   const [openSections, setOpenSections] = useState(() =>
     fieldGroups.reduce((acc, _, i) => {
-      acc[i] = true; // همه باز به صورت پیش‌فرض
+      acc[i] = true; 
       return acc;
     }, {} as Record<number, boolean>)
   );

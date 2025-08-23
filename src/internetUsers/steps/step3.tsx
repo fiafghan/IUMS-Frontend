@@ -202,13 +202,13 @@ export function Step3({ form, onChange }: {
       </div>
       {/* Group Type (only once for all devices) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-1 ">
           Group Type
         </label>
         <select
           value={selectedGroup || ""}
           onChange={(e) => setSelectedGroup(Number(e.target.value))}
-          className="block w-full border rounded-md p-2"
+          className="block w-full border rounded-full p-2 border-blue-400"
         >
           <option value="">Select Group</option>
           {groups.map((group) => (
