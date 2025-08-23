@@ -5,7 +5,7 @@ import { Search, XCircle } from "lucide-react";
 import GradientSidebar from "../components/Sidebar";
 
 interface User {
-  internet_user_id: number; 
+  id: number; // Change from internet_user_id to id
   username: string;
 }
 
@@ -29,7 +29,7 @@ export default function ReactivateUserForm() {
     const delayDebounce = setTimeout(() => {
       setLoading(true);
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-      console.log("Submitting user id:", selectedUser?.internet_user_id);
+      console.log("Submitting user id:", selectedUser?.id);
       console.log("Reason:", reason);
 
       axios
@@ -57,15 +57,28 @@ export default function ReactivateUserForm() {
     if (!reason) return alert("Please write a reason");
 
     console.log("Submitting user:", selectedUser);
+    console.log("User ID:", selectedUser.id); // Change from internet_user_id to id
+    console.log("User ID type:", typeof selectedUser.id);
+
+    // Check if id exists and is valid
+    if (!selectedUser.id) {
+      alert("Invalid user ID. Please select a user again.");
+      return;
+    }
 
     try {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      
+      const payload = {
+        internet_user_id: Number(selectedUser.id), // Use id instead of internet_user_id
+        reason,
+      };
+
+      console.log("Sending payload:", payload);
+
       await axios.post(
         `${route}/account/activate`,
-        {
-          internet_user_id: selectedUser.internet_user_id,
-          reason,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -79,8 +92,9 @@ export default function ReactivateUserForm() {
       setSearch("");
       setReason("");
     } catch (err: any) {
-      console.error(err.response?.data || err);
-      alert("Error submitting request: " + err.response?.data?.message || err.message);
+      console.error("Error response:", err.response?.data);
+      console.error("Full error:", err);
+      alert("Error submitting request: " + (err.response?.data?.message || err.message));
     }
   };
 
@@ -127,7 +141,7 @@ export default function ReactivateUserForm() {
               <ul className="absolute left-0 right-0 mt-1 max-h-44 overflow-auto bg-white border border-gray-300 rounded-lg shadow-lg z-10">
                 {results.map((user, index) => (
                   <li
-                    key={`${user.internet_user_id}-${index}`}
+                    key={`${user.id}-${index}`} // Change from internet_user_id to id
                     onClick={() => {
                       setSelectedUser(user);
                       setSearch(user.username);
