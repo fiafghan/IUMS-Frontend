@@ -31,7 +31,7 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
       fields: [
         { key: "device_limit", label: "Device Limit", icon: <Hash className="w-4 h-4 text-white bg-blue-400 rounded-md p-1" /> },
         { key: "group_id", label: "Group Type", icon: <Hash className="w-4 h-4 text-white bg-blue-400 rounded-md p-1" /> },
-        { key: "device_type", label: "Device Type", icon: <Laptop className="w-4 h-4 text-white bg-blue-400 rounded-md p-1" /> },
+        { key: "selectedDevices", label: "Device Types", icon: <Laptop className="w-4 h-4 text-white bg-blue-400 rounded-md p-1" /> },
         { key: "mac_address", label: "MAC Address", icon: <Hash className="w-4 h-4 text-white bg-blue-400 rounded-md p-1" /> },
       ],
     },
@@ -93,6 +93,26 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
           >
             {group.fields.map((field) => {
               const value = form[field.key as keyof FormState];
+              
+              // Special handling for selectedDevices
+              if (field.key === "selectedDevices" && Array.isArray(value)) {
+                const deviceNames = (value as any[]).map((device: any) => device.deviceTypeName).filter(Boolean);
+                return (
+                  <div
+                    key={field.key}
+                    className="flex items-start justify-between py-2 border-b border-gray-100 last:border-b-0"
+                  >
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <span className="text-gray-400 ">{field.icon}</span>
+                      {field.label}
+                    </div>
+                    <div className="text-sm text-gray-900 font-medium max-w-[200px] text-right break-words">
+                      {deviceNames.length > 0 ? deviceNames.join(", ") : <span className="text-gray-400 italic">Not provided</span>}
+                    </div>
+                  </div>
+                );
+              }
+              
               return (
                 <div
                   key={field.key}
@@ -103,7 +123,7 @@ export function Step4({ form }: { form: FormState }): JSX.Element {
                     {field.label}
                   </div>
                   <div className="text-sm text-gray-900 font-medium max-w-[200px] text-right break-words">
-                    {value || <span className="text-gray-400 italic">Not provided</span>}
+                    {String(value) || <span className="text-gray-400 italic">Not provided</span>}
                   </div>
                 </div>
               );
