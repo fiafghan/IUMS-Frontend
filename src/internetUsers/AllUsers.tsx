@@ -84,8 +84,16 @@ export default function InternetUsersList(): JSX.Element {
     }, [token]);
 
     // Save updated user from Modal
-    const handleUserSave = (updatedUser: Partial<InternetUser>) => {
-        setUsers(prev => prev.map(u => (u.id === updatedUser.id ? { ...u, ...updatedUser } : u)));
+    const handleUserSave = async () => {
+        try {
+            // Refetch the users data to get the latest information
+            const res = await axios.get<InternetUser[]>(`${route}/internet`, { 
+                headers: { Authorization: `Bearer ${token}` } 
+            });
+            setUsers(res.data);
+        } catch (err) {
+            console.error("Failed to refresh user data after update:", err);
+        }
     };
 
     const handleEditClick = (user: InternetUser) => {
