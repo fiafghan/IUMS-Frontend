@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import type { JSX } from "react";
 import axios from "axios";
 import { Combobox, Tab } from "@headlessui/react";
-import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, Landmark, AlertTriangle, HardDrive, StickyNote, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
+import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, 
+    Landmark, AlertTriangle, HardDrive, StickyNote, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
 import type { InternetUser, ViolationType} from "../types/types";
 import { route } from "../config";
 
