@@ -97,71 +97,76 @@ export default function LoginForm(): JSX.Element {
         )}
       </AnimatePresence>
 
+      {/* Background Pattern */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <div className="absolute inset-0 opacity-40 bg-slate-200/20"></div>
+      </div>
+
       {/* Main form content */}
       <div className="scale-70">
-      <motion.div
-        className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-      >
-        <motion.form
-          onSubmit={handleSubmit}
-          className="w-full max-w-md bg-white shadow-2xl border border-gray-200 rounded-3xl px-10 py-12 relative z-10"
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
+        <motion.div
+          className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative z-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
         >
-          <motion.h2
-            className="text-4xl font-extrabold text-center text-gray-800 mb-10 tracking-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+          <motion.form
+            onSubmit={handleSubmit}
+            className="w-full max-w-md bg-white/90 backdrop-blur-xl shadow-2xl border border-white/20 rounded-3xl px-10 py-12 relative z-10"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <span className="bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text">
-              Login to Your Account
-            </span>
-          </motion.h2>
+            <motion.h2
+              className="text-4xl font-extrabold text-center text-slate-800 mb-10 tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
+                Login to Your Account
+              </span>
+            </motion.h2>
 
-          {/* Email */}
-          <InputField
-            label="Email"
-            icon={<Mail className="w-5 h-5 text-blue-400" />}
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={form.email}
-            onChange={handleChange}
-            animation={{ x: -40, opacity: 0 }}
-            delay={0.4}
-          />
+            {/* Email */}
+            <InputField
+              label="Email"
+              icon={<Mail className="w-5 h-5 text-blue-600" />}
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={form.email}
+              onChange={handleChange}
+              animation={{ x: -40, opacity: 0 }}
+              delay={0.4}
+            />
 
-          {/* Password */}
-          <InputField
-            label="Password"
-            icon={<Lock className="w-5 h-5 text-blue-400" />}
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            value={form.password}
-            onChange={handleChange}
-            animation={{ x: 40, opacity: 0 }}
-            delay={0.5}
-          />
+            {/* Password */}
+            <InputField
+              label="Password"
+              icon={<Lock className="w-5 h-5 text-blue-600" />}
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={handleChange}
+              animation={{ x: 40, opacity: 0 }}
+              delay={0.5}
+            />
 
-          {/* Submit Button */}
-          <AnimatedSubmitButton disabled={loading}>
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <Spinner />
-                <span>Logging in...</span>
-              </div>
-            ) : (
-              "Login"
-            )}
-          </AnimatedSubmitButton>
-        </motion.form>
-      </motion.div>
+            {/* Submit Button */}
+            <AnimatedSubmitButton disabled={loading}>
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Spinner />
+                  <span>Logging in...</span>
+                </div>
+              ) : (
+                "Login"
+              )}
+            </AnimatedSubmitButton>
+          </motion.form>
+        </motion.div>
       </div>
     </>
   );
@@ -199,12 +204,14 @@ function InputField({
     >
       <label
         htmlFor={name}
-        className="block mb-1 text-sm font-medium text-gray-700"
+        className="block mb-2 text-sm font-semibold text-slate-700"
       >
         {label}
       </label>
-      <div className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2 focus-within:ring-2 focus-within:ring-blue-400 focus-within:ring-offset-1 transition">
-        {icon}
+      <div className="relative">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+          {icon}
+        </div>
         <input
           id={name}
           name={name}
@@ -213,7 +220,7 @@ function InputField({
           onChange={onChange}
           placeholder={placeholder}
           required
-          className="w-full bg-transparent text-gray-800 text-sm placeholder-gray-400 focus:outline-none"
+          className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:bg-slate-100"
         />
       </div>
     </motion.div>
