@@ -152,7 +152,7 @@ export default function InternetUsersList(): JSX.Element {
                                 Internet Users
                             </h1>
                             <p className="text-slate-600 mt-1 font-medium">
-                                Manage and monitor all internet user accounts
+                                Manage and monitor all internet users
                             </p>
                         </div>
                     </div>
