@@ -176,7 +176,7 @@ export default function AddViolationForm() {
                                     transition={{ delay: 0.5, duration: 0.5 }}
                                     className="space-y-3"
                                 >
-                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                    <label className="block text-sm font-semibold text-slate-700 items-center gap-2">
                                         <User className="w-4 h-4 text-red-600" />
                                         Select Internet User
                                     </label>
@@ -227,7 +227,7 @@ export default function AddViolationForm() {
                                     transition={{ delay: 0.7, duration: 0.5 }}
                                     className="space-y-3"
                                 >
-                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                    <label className="block text-sm font-semibold text-slate-700 items-center gap-2">
                                         <AlertCircle className="w-4 h-4 text-red-600" />
                                         Violation Type
                                     </label>
@@ -256,7 +256,7 @@ export default function AddViolationForm() {
                                     transition={{ delay: 0.9, duration: 0.5 }}
                                     className="space-y-3"
                                 >
-                                    <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                                    <label className="block text-sm font-semibold text-slate-700 items-center gap-2">
                                         <FileText className="w-4 h-4 text-red-600" />
                                         Comment (Optional)
                                     </label>

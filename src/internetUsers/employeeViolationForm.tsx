@@ -6,6 +6,7 @@ import type { ViolationProps } from "../types/types";
 import { route } from "../config";
 
 export default function EmployeeViolationForm() {
+  // const [users, setUsers] = useState<ViolationProps[]>([]);
   const [users, setUsers] = useState<ViolationProps[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<ViolationProps[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,20 +16,32 @@ export default function EmployeeViolationForm() {
 
   useEffect(() => {
     async function fetchUsers() {
-
       try {
         const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
         const token = currentUser?.token;
-        const res = await axios.get<ViolationProps[]>(`${route}/internet`, 
-          { headers: { Authorization: `Bearer ${token}` } });
-        setUsers(res.data);
-        setFilteredUsers(res.data);
+
+        const res = await axios.get(`${route}/violation-form`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const payload =
+          Array.isArray(res.data) ? res.data
+            : Array.isArray(res.data?.data) ? res.data.data
+              : Array.isArray(res.data?.users) ? res.data.users
+                : [];
+
+        setUsers(payload);
+        setFilteredUsers(payload);
       } catch (err) {
         console.error("Failed to fetch users", err);
+        setUsers([]);         
+        setFilteredUsers([]);
       }
     }
+
     fetchUsers();
   }, []);
+
 
   useEffect(() => {
     const filtered = users.filter(user =>
@@ -136,9 +149,9 @@ export default function EmployeeViolationForm() {
                       <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]">{selectedUser.deputy}</td>
                       <td className="px-3 py-2 border border-gray-300 text-center break-all 
-                    max-w-[10ch]">{selectedUser.violations_count}</td>
+                    max-w-[10ch]">{selectedUser.violation_count}</td>
                       <td className="px-3 py-2 border border-gray-300 text-center break-all 
-                    max-w-[10ch]">{selectedUser.violations_count}</td>
+                    max-w-[10ch]">{selectedUser.comment}</td>
                       <td className="px-3 py-2 border border-gray-300 text-center break-all 
                     max-w-[10ch]"></td>
                       <td className="px-3 py-2 border border-gray-300 text-center break-all 

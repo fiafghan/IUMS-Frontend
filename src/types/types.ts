@@ -60,7 +60,7 @@ export interface ViolationProps {
   directorate: string;
   user_signature: string;
   directorate_signature: string;
-  violations_count: string;
+  violation_count: string;
   comment: string;
   
 }
