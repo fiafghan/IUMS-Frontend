@@ -293,7 +293,7 @@ export default function EditUserModal({
             if (response.data.exists) {
                 setEmailError("This email is already registered");
             }
-        } catch (err) {
+            } catch (err) {
             console.error("Error checking email:", err);
         } finally {
             setIsCheckingEmail(false);
@@ -623,7 +623,7 @@ export default function EditUserModal({
                             <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
                                 <User className="w-8 h-8 text-white" />
                             </div>
-                            <div>
+        <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white">Edit Internet User</h2>
                                 <p className="text-blue-100 mt-1 font-medium">Update user information and settings</p>
                             </div>
@@ -821,9 +821,9 @@ export default function EditUserModal({
                                                             <div className="flex flex-col items-center gap-3 text-center">
                                                                 <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
                                                                     {getDeviceIcon(deviceType.name)}
-                                                                </div>
+                </div>
                                                                 <span className="text-sm font-medium">{deviceType.name}</span>
-                                                            </div>
+        </div>
                                                         </button>
                                                     );
                                                 })}
@@ -841,8 +841,8 @@ export default function EditUserModal({
                                                     {selectedDeviceTypes.map((deviceTypeId) => {
                                                         const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
                                                         if (!deviceType) return null;
-                                                        
-                                                        return (
+
+    return (
                                                             <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="p-2 bg-blue-100 rounded-lg">
@@ -862,7 +862,7 @@ export default function EditUserModal({
                                                 </div>
                                                 
                                                 <div className="mt-6 pt-4 border-t border-blue-200">
-                                                    <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                                                         <div className="text-center p-3 bg-white rounded-xl border border-blue-100">
                                                             <div className="text-2xl font-bold text-blue-600">{selectedDeviceTypes.length}</div>
                                                             <div className="text-sm text-blue-700">Total Selected</div>
@@ -898,7 +898,7 @@ export default function EditUserModal({
                                                         {violationTypes.map((v) => (
                                                             <option key={v.id} value={v.name}>{v.name}</option>
                                                         ))}
-                                                    </select>
+                    </select>
                                                 </div>
                                             </div>
                                             <InputWithIcon
