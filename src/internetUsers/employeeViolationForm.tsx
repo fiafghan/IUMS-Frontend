@@ -6,7 +6,6 @@ import type { ViolationProps } from "../types/types";
 import { route } from "../config";
 
 export default function EmployeeViolationForm() {
-  // const [users, setUsers] = useState<ViolationProps[]>([]);
   const [users, setUsers] = useState<ViolationProps[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<ViolationProps[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,7 +52,7 @@ export default function EmployeeViolationForm() {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: 'Internet User Report',
+    documentTitle: `${selectedUser?.username}`,
   });
 
   return (
