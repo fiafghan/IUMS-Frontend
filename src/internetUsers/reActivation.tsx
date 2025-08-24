@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface User {
-  id: number; // Change from internet_user_id to id
+  id: number; // Change from internet_user_id to id //
   username: string;
 }
 
@@ -161,7 +161,7 @@ export default function ReactivateUserForm() {
                   transition={{ delay: 0.5, duration: 0.5 }}
                   className="space-y-3"
                 >
-                  <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700 items-center gap-2">
                     <Search className="w-4 h-4 text-emerald-600" />
                     Search Deactivated Users
                   </label>
@@ -268,7 +268,7 @@ export default function ReactivateUserForm() {
                   transition={{ delay: 0.7, duration: 0.5 }}
                   className="space-y-3"
                 >
-                  <label className="block text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700 items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-emerald-600" />
                     Reason for Reactivation
                   </label>
