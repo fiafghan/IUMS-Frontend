@@ -3,8 +3,8 @@ import type { JSX } from "react";
 import axios from "axios";
 import { Combobox, Tab } from "@headlessui/react";
 import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, 
-    Landmark, AlertTriangle, HardDrive, StickyNote, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
-import type { InternetUser, ViolationType} from "../types/types";
+    Landmark, AlertTriangle, HardDrive, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
+import type { InternetUser} from "../types/types";
 import { route } from "../config";
 
 
@@ -15,7 +15,6 @@ type Props = {
     isOpen: boolean;
     onClose: () => void;
     onSave: (updatedUser: Partial<InternetUser>) => void;
-    violationTypes: ViolationType[];
     deputyMinistryOptions: Option[];
 };
 
@@ -134,7 +133,6 @@ export default function EditUserModal({
     isOpen,
     onClose,
     onSave,
-    violationTypes,
     deputyMinistryOptions,
 }: Props) {
     const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}")?.token;
@@ -196,9 +194,7 @@ export default function EditUserModal({
                     device_limit: u.device_limit ?? prev.device_limit,
                     mac_address: u.mac_address ?? prev.mac_address,
                     employment_type: u.employment_type ?? prev.employment_type,
-                    violation_type: u.violation_type ?? prev.violation_type,
-                    violation_count: u.violation_count ?? prev.violation_count,
-                    comment: u.comment ?? prev.comment,
+                  
                 }));
 
                 // Map device type names to IDs after device list is loaded
@@ -642,7 +638,7 @@ export default function EditUserModal({
                     <div className="p-8">
                         <Tab.Group>
                             <Tab.List className="flex gap-1 border-b border-slate-200 pb-2 mb-8 overflow-x-auto bg-white rounded-2xl p-2 shadow-sm sticky top-0 z-10">
-                                {["Personal", "Organization", "Devices", "Violations"].map((tab) => (
+                                {["Personal", "Organization", "Devices"].map((tab) => (
                                     <Tab
                                         key={tab}
                                         className={({ selected }) =>
@@ -875,57 +871,6 @@ export default function EditUserModal({
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
-                                </Tab.Panel>
-
-                                {/* Enhanced Violations Tab */}
-                                <Tab.Panel>
-                                    <div className="space-y-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                            <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                                                <label className="block text-sm font-semibold text-slate-700 mb-2">Violation Type</label>
-                                                <div className="relative">
-                                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                                        <AlertTriangle className="w-5 h-5 text-red-500" />
-                                                    </div>
-                                                    <select
-                                                        name="violation_type"
-                                                        value={String(editForm.violation_type || "")}
-                                                        onChange={handleEditChange}
-                                                        className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                                                    >
-                                                        <option value="" disabled>Select Violation Type</option>
-                                                        {violationTypes.map((v) => (
-                                                            <option key={v.id} value={v.name}>{v.name}</option>
-                                                        ))}
-                    </select>
-                                                </div>
-                                            </div>
-                                            <InputWithIcon
-                                                label="Violations Count"
-                                                name="violation_count"
-                                                type="number"
-                                                value={editForm.violation_count ?? ""}
-                                                placeholder="0"
-                                                icon={<AlertTriangle className="w-5 h-5 text-red-500" />}
-                                                onChange={handleEditChange}
-                                            />
-                                            <div className="xl:col-span-3 md:col-span-2 col-span-1">
-                                                <label className="block text-sm font-semibold text-slate-700 mb-2">Comment</label>
-                                                <div className="relative">
-                                                    <div className="absolute top-4 left-4 pointer-events-none">
-                                                        <StickyNote className="w-5 h-5 text-slate-500" />
-                                                    </div>
-                                                    <textarea
-                                                        name="comment"
-                                                        value={editForm.comment || ""}
-                                                        onChange={handleEditChange}
-                                                        placeholder="Enter violation comment..."
-                                                        className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl text-sm min-h-[100px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </Tab.Panel>
                             </Tab.Panels>
