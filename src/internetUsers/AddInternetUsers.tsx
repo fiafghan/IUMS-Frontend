@@ -206,16 +206,17 @@ export default function InternetUserAddForm(): JSX.Element {
         icon: "success",
         title: "Internet User Created",
         text: "The internet user was created successfully.",
-        confirmButtonText: "Okay",
-        confirmButtonColor: "#22c55e", // Tailwind green-500
-        background: "#1e293b", // slate-800
-        color: "#f1f5f9",      // slate-100
+        showConfirmButton: false,    // ✅ no confirm button
+        timer: 1500,                 // ✅ disappears after 1.5 seconds
+        timerProgressBar: true,      // optional: shows a small progress bar
+        background: "#1e293b",       // slate-800
+        color: "#f1f5f9",            // slate-100
         customClass: {
           popup: "rounded-2xl shadow-lg backdrop-blur-sm",
           title: "text-lg font-semibold",
-          confirmButton: "px-4 py-2 rounded-lg",
         },
       });
+
 
       setCurrentStep(0);
       navigate("/all-users");
