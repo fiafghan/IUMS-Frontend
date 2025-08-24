@@ -89,8 +89,8 @@ export default function InternetUsersList(): JSX.Element {
     const handleUserSave = async () => {
         try {
             // Refetch the users data to get the latest information
-            const res = await axios.get<InternetUser[]>(`${route}/internet`, { 
-                headers: { Authorization: `Bearer ${token}` } 
+            const res = await axios.get<InternetUser[]>(`${route}/internet`, {
+                headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(res.data);
         } catch (err) {
@@ -288,11 +288,10 @@ export default function InternetUsersList(): JSX.Element {
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setCurrentPage(i + 1)}
-                                    className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${
-                                        currentPage === i + 1
+                                    className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${currentPage === i + 1
                                             ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
                                             : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
-                                    }`}
+                                        }`}
                                 >
                                     {i + 1}
                                 </motion.button>
