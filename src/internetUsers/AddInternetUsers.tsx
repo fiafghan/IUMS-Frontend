@@ -143,10 +143,19 @@ export default function InternetUserAddForm(): JSX.Element {
     if (!validateStep(currentStep)) {
       Swal.fire({
         icon: "error",
-        title: "Required Fields!!!",
-        text: "Please fill all the required fields!",
-        footer: "Press Okay!",
+        title: "Required Fields",
+        text: "Please fill out all required fields.",
+        confirmButtonText: "Okay",
+        confirmButtonColor: "#ef4444", // Tailwind red-500
+        background: "#1e293b", // slate-800
+        color: "#f1f5f9",      // slate-100
+        customClass: {
+          popup: "rounded-2xl shadow-lg backdrop-blur-sm",
+          title: "text-lg font-semibold",
+          confirmButton: "px-4 py-2 rounded-lg",
+        },
       });
+
       return;
     }
     setCurrentStep((prev) => Math.min(prev + 1, stepTitles.length - 1));
@@ -195,10 +204,19 @@ export default function InternetUserAddForm(): JSX.Element {
 
       Swal.fire({
         icon: "success",
-        title: "Internet User Created!",
-        text: "Internet User Was Created Successfully!",
-        footer: "Press Okay!",
+        title: "Internet User Created",
+        text: "The internet user was created successfully.",
+        confirmButtonText: "Okay",
+        confirmButtonColor: "#22c55e", // Tailwind green-500
+        background: "#1e293b", // slate-800
+        color: "#f1f5f9",      // slate-100
+        customClass: {
+          popup: "rounded-2xl shadow-lg backdrop-blur-sm",
+          title: "text-lg font-semibold",
+          confirmButton: "px-4 py-2 rounded-lg",
+        },
       });
+
       setCurrentStep(0);
       navigate("/all-users");
     } catch (error: any) {
