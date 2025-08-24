@@ -29,8 +29,6 @@ export default function ReactivateUserForm() {
     const delayDebounce = setTimeout(() => {
       setLoading(true);
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-      console.log("Submitting user id:", selectedUser?.id);
-      console.log("Reason:", reason);
 
       axios
         .get(`${route}/internet-users-deactivated?query=${search}`, {
@@ -56,9 +54,6 @@ export default function ReactivateUserForm() {
     if (!selectedUser) return alert("Please select a user");
     if (!reason) return alert("Please write a reason");
 
-    console.log("Submitting user:", selectedUser);
-    console.log("User ID:", selectedUser.id); // Change from internet_user_id to id
-    console.log("User ID type:", typeof selectedUser.id);
 
     // Check if id exists and is valid
     if (!selectedUser.id) {
