@@ -38,12 +38,21 @@ export default function LoginForm(): JSX.Element {
       if (user) {
         localStorage.setItem("loggedInUser", JSON.stringify(response.data));
         Swal.fire({
-          position: "top",
+          toast: true,
+          position: "bottom-end",
           icon: "success",
-          title: "Login Was Successfull!",
+          title: "Login Successful!",
           showConfirmButton: false,
-          timer: 1500
+          timer: 2000,
+          timerProgressBar: true,
+          background: "#1e293b", // slate-800
+          color: "#f1f5f9",       // slate-100
+          customClass: {
+            popup: "rounded-2xl shadow-lg backdrop-blur-sm",
+            title: "text-lg font-semibold",
+          },
         });
+
         setForm({ email: "", password: "" });
         localStorage.setItem("loggedInUser", JSON.stringify({
           token: response.data.token,
@@ -62,10 +71,19 @@ export default function LoginForm(): JSX.Element {
       console.error("Login error:", error);
       Swal.fire({
         icon: "error",
-        title: "Invalid Credentials!",
-        text: "Please Try Again!",
-        footer: 'Press Okay!'
+        title: "Invalid Credentials",
+        text: "Please check your email and password.",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#ef4444", // Tailwind red-500
+        background: "#1e293b", // slate-800
+        color: "#f1f5f9",      // slate-100
+        customClass: {
+          popup: "rounded-2xl shadow-lg backdrop-blur-sm",
+          title: "text-lg font-semibold",
+          confirmButton: "px-4 py-2 rounded-lg",
+        },
       });
+
     } finally {
       setLoading(false);
     }

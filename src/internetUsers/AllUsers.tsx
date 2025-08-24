@@ -205,7 +205,7 @@ export default function InternetUsersList(): JSX.Element {
                         animate={{ opacity: 1, scale: 1 }}
                         className="text-center py-20"
                     >
-                        <div className="p-6 bg-red-50 rounded-2xl border border-red-200 max-w-md mx-auto">
+                        <div className="p-6 bg-red-50 rounded-2xl border border-red-200 max-w-full mx-auto">
                             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
                             <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Data</h3>
                             <p className="text-red-600">{error}</p>
