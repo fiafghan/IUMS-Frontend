@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ScrollToTopButton() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
+      setVisible(window.scrollY > 250);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -21,16 +18,28 @@ export default function ScrollToTopButton() {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {visible && (
-        <button
+        <motion.button
+          key="scrollToTop"
+          initial={{ opacity: 0, y: 40, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 40, scale: 0.8 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-gradient-to-r from-blue-400 to-gray-200 text-white shadow-lg hover:bg-blue-600 transition scale-50"
           title="Back to top"
+          className="fixed bottom-5 right-5 z-50 p-3 rounded-full
+                     bg-gradient-to-br from-pink-500 via-red-500 to-yellow-400
+                     text-white 
+                     shadow-[0_6px_15px_rgba(0,0,0,0.25)] 
+                     hover:shadow-[0_10px_20px_rgba(0,0,0,0.35)]
+                     hover:scale-110 hover:-translate-y-0.5
+                     active:scale-95 active:translate-y-0.5
+                     focus:outline-none focus:ring-2 focus:ring-pink-300"
         >
-          <ArrowUp className="w-5 h-5" />
-        </button>
+          <ArrowUp className="w-5 h-5 drop-shadow-sm" />
+        </motion.button>
       )}
-    </>
+    </AnimatePresence>
   );
 }
