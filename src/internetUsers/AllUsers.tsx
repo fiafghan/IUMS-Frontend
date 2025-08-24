@@ -162,10 +162,10 @@ export default function InternetUsersList(): JSX.Element {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5, duration: 0.6 }}
-                        className="mb-8"
+                        className=""
                     >
                         <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6">
-                            <div className="flex items-center gap-3 mb-4">
+                            <div className="flex items-center gap-3">
                                 <div className="p-2 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg">
                                     <Filter className="w-5 h-5 text-white" />
                                 </div>
@@ -279,7 +279,7 @@ export default function InternetUsersList(): JSX.Element {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9, duration: 0.6 }}
-                        className="mt-8 flex justify-center"
+                        className="mt-4 flex justify-center"
                     >
                         <div className="flex gap-2">
                             {Array.from({ length: totalPages }, (_, i) => (
