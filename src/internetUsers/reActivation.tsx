@@ -20,6 +20,8 @@ export default function ReactivateUserForm() {
   const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
+    if (selectedUser) return;
+
     if (search.length < 2) {
       setResults([]);
       setLoading(false);
