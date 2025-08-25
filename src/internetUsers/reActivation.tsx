@@ -83,7 +83,6 @@ export default function ReactivateUserForm() {
           },
         }
       );
-      // Make sure SweetAlert2 (Swal) is loaded
       const Toast = Swal.mixin({
         toast: true,
         position: "bottom-end",          // bottom-right

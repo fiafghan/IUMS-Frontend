@@ -61,7 +61,6 @@ export default function AddViolationForm() {
         }));
     };
 
-    // وقتی نوع تخلف تغییر کرد
     const handleViolationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setForm(prev => ({
             ...prev,
@@ -69,7 +68,6 @@ export default function AddViolationForm() {
         }));
     };
 
-    // تغییر در فیلد توضیحات
     const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setForm(prev => ({
             ...prev,
@@ -99,13 +97,34 @@ export default function AddViolationForm() {
                 }
             );
             if (res.status === 201) {
-                Swal.fire({
-                    position: "top",
-                    icon: "success",
-                    title: "Violation On The User Was Added!",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+               const Toast = Swal.mixin({
+                       toast: true,
+                       position: "bottom-end",          // bottom-right
+                       showConfirmButton: false,        // no OK button
+                       timer: 2000,                     // auto close (ms)
+                       timerProgressBar: true,
+                       showCloseButton: true,           // small "x" to dismiss
+                       iconColor: "#22c55e",            // Tailwind green-500
+                       background: "#0f172a",           // slate-900
+                       color: "#e2e8f0",                // slate-300
+                       customClass: {
+                         popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+                         title: "text-sm font-medium tracking-wide",
+                         timerProgressBar: "bg-white/40",
+                       },
+                       didOpen: (toast) => {
+                         toast.addEventListener("mouseenter", Swal.stopTimer);
+                         toast.addEventListener("mouseleave", Swal.resumeTimer);
+                       },
+                     });
+               
+                     Toast.fire({
+                       title: "The Violation was successfully added!",
+                       icon: "success",
+                       // draggable is supported in newer SweetAlert2 versions
+                       draggable: true,
+                     });
+               
                 setMessage("Violation created successfully!");
                 setForm({ internet_user_id: "", violation_type_id: "", comment: "" });
             } else {
