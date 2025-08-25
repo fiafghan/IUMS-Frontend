@@ -83,11 +83,35 @@ export default function ReactivateUserForm() {
           },
         }
       );
-      Swal.fire({
+      // Make sure SweetAlert2 (Swal) is loaded
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 2000,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
+        customClass: {
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+
+      Toast.fire({
         title: "The Internet User Was Successfully Activated!",
         icon: "success",
-        draggable: true
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
       });
+
       setSelectedUser(null);
       setSearch("");
       setReason("");
@@ -290,11 +314,10 @@ export default function ReactivateUserForm() {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={!selectedUser || !reason.trim()}
-                    className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${
-                      !selectedUser || !reason.trim()
+                    className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${!selectedUser || !reason.trim()
                         ? "bg-slate-300 cursor-not-allowed text-slate-500"
                         : "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-center gap-2">
                       <RotateCcw className="w-5 h-5" />
