@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import axios from "axios";
 import GradientSidebar from "../components/Sidebar";
-import type { InternetUser, ViolationType } from "../types/types";
+import type { InternetUser } from "../types/types";
 import { route } from "../config";
 import ScrollToTopButton from "../components/scrollToTop";
 import UserRow from "../components/userRow";
@@ -12,7 +12,6 @@ import { Users, Filter, AlertCircle } from "lucide-react";
 
 type Option = { id: number; name: string };
 
-const headers = ["Name", "Last Name", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"];
 
 export default function InternetUsersList(): JSX.Element {
     const [users, setUsers] = useState<InternetUser[]>([]);
@@ -30,11 +29,13 @@ export default function InternetUsersList(): JSX.Element {
     const [groupOptions, setGroupOptions] = useState<Option[]>([]);
     const [selectedGroup, setSelectedGroup] = useState("");
 
-    const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
 
     const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     const token = currentUser?.token;
     const isViewer = currentUser?.user.role === "viewer";
+
+    const headers = ["Name", "Last Name", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"];
+
 
     // Fetch users
     useEffect(() => {
@@ -71,18 +72,6 @@ export default function InternetUsersList(): JSX.Element {
             }
         };
         fetchOptions();
-    }, [token]);
-
-    useEffect(() => { // add
-        const fetchViolationTypes = async () => {
-            try {
-                const res = await axios.get(`${route}/violation`, { headers: { Authorization: `Bearer ${token}` } });
-                setViolationTypes(res.data.data || []); // controller returns { message, data: [...] }
-            } catch (err) {
-                console.error("Failed to fetch violation types:", err);
-            }
-        };
-        fetchViolationTypes();
     }, [token]);
 
     // Save updated user from Modal
@@ -289,8 +278,8 @@ export default function InternetUsersList(): JSX.Element {
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setCurrentPage(i + 1)}
                                     className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${currentPage === i + 1
-                                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
-                                            : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                                        : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                                         }`}
                                 >
                                     {i + 1}
@@ -307,7 +296,6 @@ export default function InternetUsersList(): JSX.Element {
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     onSave={handleUserSave}
-                    violationTypes={violationTypes}
                     deputyMinistryOptions={deputyMinistryOptions}
                 />
             )}

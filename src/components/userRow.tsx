@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Edit, Trash, Eye, Building, Briefcase, Users } from "lucide-react";
+import { Edit, Trash, Building, Briefcase, Users } from "lucide-react";
 import type { InternetUser } from "../types/types";
 
 interface UserRowProps {
@@ -12,7 +12,7 @@ interface UserRowProps {
   currentUserRole: string;
 }
 
-const UserRow = memo(({ user, handleEdit, handleDelete, handleView, isViewer, currentUserRole }: UserRowProps) => {
+const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRole }: UserRowProps) => {
   const isRedCard = user.violation_count === 2;
   const isYellowCard = user.violation_count === 1;
 
@@ -155,17 +155,10 @@ const UserRow = memo(({ user, handleEdit, handleDelete, handleView, isViewer, cu
       </td>
 
       {/* Actions Column */}
+       {!isViewer && (
       <td className="px-4 py-3">
         <div className="flex items-center justify-center space-x-2">
-          {isViewer && (
-            <button 
-              onClick={() => handleView(user)} 
-              title="View Details"
-              className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-200 hover:scale-105 shadow-sm"
-            >
-              <Eye className="w-4 h-4" />
-            </button>
-          )}
+         
           {currentUserRole !== "viewer" && (
             <>
               <button 
@@ -186,6 +179,7 @@ const UserRow = memo(({ user, handleEdit, handleDelete, handleView, isViewer, cu
           )}
         </div>
       </td>
+       )}
     </>
   );
 });

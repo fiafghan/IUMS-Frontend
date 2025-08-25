@@ -32,7 +32,7 @@ function App() {
         <Route path="/re-activate" element={<RoleChecker allowedRoles={['Admin', 'User']}><ReactivateUserForm /></RoleChecker>} />
         <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
         <Route path="/add-violation-type" element={<RoleChecker allowedRoles={['Admin', 'User']}><AddViolationType /></RoleChecker>} />
-        <Route path="/" element={<RoleChecker allowedRoles={['Admin', 'User']}><Dashboard /></RoleChecker>} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/all-re-activations" element={<RoleChecker allowedRoles={['Admin', 'User']}><AllReactivations/></RoleChecker>} />
         <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />
         <Route path="/all-violations-from-users" element={<PrivateRoute><AllViolationsFromUsers /></PrivateRoute>} />
