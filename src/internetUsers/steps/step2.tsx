@@ -60,7 +60,7 @@ export function Step2({
     <div className="grid grid-cols-3 gap-5">
       <InputField
         label="Position"
-        icon={<Briefcase className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
+        icon={<Briefcase className="w-5 h-5  text-white bg-gradient-to-br from-pink-500 to-blue-600 rounded-md p-1" />}
         name="position"
         type="text"
         placeholder="Position"
@@ -70,7 +70,7 @@ export function Step2({
 
       <SelectField
         label="Employment Type"
-        icon={<User className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
+        icon={<User className="w-5 h-5  text-white bg-gradient-to-br from-blue-500 to-pink-600 rounded-md p-1" />}
         name="employment_type"
         value={form.employment_type}
         onChange={onChange}
@@ -78,7 +78,7 @@ export function Step2({
 
       <SelectField
         label="Directorate"
-        icon={<Building2 className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
+        icon={<Building2 className="w-5 h-5  text-white bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-1" />}
         name="directorate"
         value={form.directorate}
         onChange={handleDirectorateChange}
@@ -94,7 +94,7 @@ export function Step2({
 
       <InputField
         label="Deputy Ministry"
-        icon={<Building className="w-5 h-5  text-white bg-blue-400 rounded-md p-1" />}
+        icon={<Building className="w-5 h-5  text-white bg-gradient-to-br from-green-500 to-blue-600 rounded-md p-1" />}
         name="deputyMinistry"
         value={deputyMinistryValue}
         type="text"
