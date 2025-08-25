@@ -70,17 +70,18 @@ export default function LoginForm(): JSX.Element {
     } catch (error) {
       console.error("Login error:", error);
       Swal.fire({
+        toast: true,
+        position: "bottom-end",
         icon: "error",
-        title: "Invalid Credentials",
-        text: "Please check your email and password.",
-        confirmButtonText: "Try Again",
-        confirmButtonColor: "#ef4444", // Tailwind red-500
+        title: "Invalid Credentials!",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
         background: "#1e293b", // slate-800
-        color: "#f1f5f9",      // slate-100
+        color: "#f1f5f9",       // slate-100
         customClass: {
           popup: "rounded-2xl shadow-lg backdrop-blur-sm",
           title: "text-lg font-semibold",
-          confirmButton: "px-4 py-2 rounded-lg",
         },
       });
 

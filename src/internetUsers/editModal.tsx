@@ -2,10 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import type { JSX } from "react";
 import axios from "axios";
 import { Combobox, Tab } from "@headlessui/react";
-import { Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness, 
-    Landmark, AlertTriangle, HardDrive, Laptop, Smartphone, Tablet, Monitor } from "lucide-react";
-import type { InternetUser} from "../types/types";
+import {
+    Check, ChevronDown, X, Save, User, UserRound, BadgeCheck, Mail, Phone, Building2, Users, BriefcaseBusiness,
+    Landmark, AlertTriangle, HardDrive, Laptop, Smartphone, Tablet, Monitor
+} from "lucide-react";
+import type { InternetUser } from "../types/types";
 import { route } from "../config";
+import Swal from "sweetalert2";
 
 
 type Option = { id: number; name: string };
@@ -194,14 +197,14 @@ export default function EditUserModal({
                     device_limit: u.device_limit ?? prev.device_limit,
                     mac_address: u.mac_address ?? prev.mac_address,
                     employment_type: u.employment_type ?? prev.employment_type,
-                  
+
                 }));
 
                 // Map device type names to IDs after device list is loaded
                 if (Array.isArray(u.device_type) && allDeviceList.length > 0) {
                     const deviceTypeIds = u.device_type
                         .map((name: string) => {
-                            const deviceType = allDeviceList.find(dt => 
+                            const deviceType = allDeviceList.find(dt =>
                                 dt.name.toLowerCase() === name.toLowerCase()
                             );
                             return deviceType?.id;
@@ -289,7 +292,7 @@ export default function EditUserModal({
             if (response.data.exists) {
                 setEmailError("This email is already registered");
             }
-            } catch (err) {
+        } catch (err) {
             console.error("Error checking email:", err);
         } finally {
             setIsCheckingEmail(false);
@@ -362,7 +365,7 @@ export default function EditUserModal({
                 const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
                 const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
                 const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
-                
+
                 // Fix: Device types are returned directly as array
                 const devs: Option[] = (devRes.data as any[]).map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
 
@@ -579,7 +582,35 @@ export default function EditUserModal({
             onClose();
         } catch (err) {
             console.error("Update failed:", err);
-            alert("Failed to update user. Please check required fields and try again.");
+            // Make sure SweetAlert2 (Swal) is loaded
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom-end",          // bottom-right
+                showConfirmButton: false,        // no OK button
+                timer: 2000,                     // auto close (ms)
+                timerProgressBar: true,
+                showCloseButton: true,           // small "x" to dismiss
+                iconColor: "#22c55e",            // Tailwind green-500
+                background: "#0f172a",           // slate-900
+                color: "#e2e8f0",                // slate-300
+                customClass: {
+                    popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+                    title: "text-sm font-medium tracking-wide",
+                    timerProgressBar: "bg-white/40",
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+            });
+
+            Toast.fire({
+                title: "Failed to update user. Please check required fields and try again!",
+                icon: "error",
+                // draggable is supported in newer SweetAlert2 versions
+                draggable: true,
+            });
+
         }
     };
 
@@ -607,25 +638,25 @@ export default function EditUserModal({
         items-start md:items-center z-50 px-2 md:px-4 py-4">
             <div className="bg-white rounded-3xl shadow-2xl w-full sm:w-[95vw] md:w-[90vw] 
             lg:w-[80vw] max-w-[1200px] max-h-[90vh] overflow-hidden transform scale-95 md:scale-100 flex flex-col">
-                
+
                 {/* Enhanced Header */}
                 <div className="relative px-8 py-6 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 overflow-hidden flex-shrink-0">
                     <div className="absolute inset-0 bg-black/20"></div>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-400/20 rounded-full translate-y-12 -translate-x-12"></div>
-                    
+
                     <div className="relative flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
                                 <User className="w-8 h-8 text-white" />
                             </div>
-        <div>
+                            <div>
                                 <h2 className="text-2xl md:text-3xl font-bold text-white">Edit Internet User</h2>
                                 <p className="text-blue-100 mt-1 font-medium">Update user information and settings</p>
                             </div>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="p-3 rounded-2xl hover:bg-white/10 transition-all duration-200 hover:scale-105"
                         >
                             <X className="w-6 h-6 text-white" />
@@ -642,10 +673,9 @@ export default function EditUserModal({
                                     <Tab
                                         key={tab}
                                         className={({ selected }) =>
-                                            `px-6 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${
-                                                selected 
-                                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105" 
-                                                    : "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-800"
+                                            `px-6 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${selected
+                                                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105"
+                                                : "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-800"
                                             }`
                                         }
                                     >
@@ -800,26 +830,25 @@ export default function EditUserModal({
                                                 {allDeviceList.map((deviceType) => {
                                                     const isSelected = selectedDeviceTypes.includes(deviceType.id);
                                                     const canSelect = remainingLimit > 0 || isSelected;
-                                                    
+
                                                     return (
                                                         <button
                                                             key={deviceType.id}
                                                             onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
                                                             disabled={!canSelect}
-                                                            className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                                                                isSelected
+                                                            className={`p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
                                                                     ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
                                                                     : canSelect
-                                                                    ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
-                                                                    : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
-                                                            }`}
+                                                                        ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
+                                                                        : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
+                                                                }`}
                                                         >
                                                             <div className="flex flex-col items-center gap-3 text-center">
                                                                 <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
                                                                     {getDeviceIcon(deviceType.name)}
-                </div>
+                                                                </div>
                                                                 <span className="text-sm font-medium">{deviceType.name}</span>
-        </div>
+                                                            </div>
                                                         </button>
                                                     );
                                                 })}
@@ -838,7 +867,7 @@ export default function EditUserModal({
                                                         const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
                                                         if (!deviceType) return null;
 
-    return (
+                                                        return (
                                                             <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="p-2 bg-blue-100 rounded-lg">
@@ -856,9 +885,9 @@ export default function EditUserModal({
                                                         );
                                                     })}
                                                 </div>
-                                                
+
                                                 <div className="mt-6 pt-4 border-t border-blue-200">
-                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="grid grid-cols-2 gap-4">
                                                         <div className="text-center p-3 bg-white rounded-xl border border-blue-100">
                                                             <div className="text-2xl font-bold text-blue-600">{selectedDeviceTypes.length}</div>
                                                             <div className="text-sm text-blue-700">Total Selected</div>
@@ -894,8 +923,8 @@ export default function EditUserModal({
                         )}
                     </div>
                     <div className="flex items-center gap-3">
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="px-6 py-3 rounded-xl border border-slate-300 hover:bg-white text-slate-700 text-sm font-medium transition-all duration-200 hover:shadow-md"
                         >
                             Cancel
@@ -903,11 +932,10 @@ export default function EditUserModal({
                         <button
                             onClick={handleSave}
                             disabled={!canSave}
-                            className={`px-8 py-3 rounded-xl text-white text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${
-                                canSave 
-                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105" 
+                            className={`px-8 py-3 rounded-xl text-white text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${canSave
+                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105"
                                     : "bg-slate-400 cursor-not-allowed"
-                            }`}
+                                }`}
                         >
                             <Save className="w-4 h-4" />
                             Save Changes
