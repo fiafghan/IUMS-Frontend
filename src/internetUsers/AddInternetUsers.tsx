@@ -141,20 +141,35 @@ export default function InternetUserAddForm(): JSX.Element {
 
   const nextStep = () => {
     if (!validateStep(currentStep)) {
-      Swal.fire({
-        icon: "error",
-        title: "Required Fields",
-        text: "Please fill out all required fields.",
-        confirmButtonText: "Okay",
-        confirmButtonColor: "#ef4444", // Tailwind red-500
-        background: "#1e293b", // slate-800
-        color: "#f1f5f9",      // slate-100
+      // Make sure SweetAlert2 (Swal) is loaded
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 2000,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
         customClass: {
-          popup: "rounded-2xl shadow-lg backdrop-blur-sm",
-          title: "text-lg font-semibold",
-          confirmButton: "px-4 py-2 rounded-lg",
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
       });
+
+      Toast.fire({
+        title: "Please fill out all the required fields!",
+        icon: "error",
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
+      });
+
 
       return;
     }
@@ -165,12 +180,34 @@ export default function InternetUserAddForm(): JSX.Element {
 
   const handleSubmit = async () => {
     if (!validateStep(2)) {
-      Swal.fire({
-        icon: "error",
-        title: "Required Fields!!!",
-        text: "Please fill all the required fields!",
-        footer: "Press Okay!",
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 2000,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
+        customClass: {
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
       });
+
+      Toast.fire({
+        title: "Please fill out all the required fields!",
+        icon: "error",
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
+      });
+
       setCurrentStep(2);
       return;
     }
@@ -202,21 +239,33 @@ export default function InternetUserAddForm(): JSX.Element {
         },
       });
 
-      Swal.fire({
-        icon: "success",
-        title: "Internet User Created",
-        text: "The internet user was created successfully.",
-        showConfirmButton: false,    // ✅ no confirm button
-        timer: 1500,                 // ✅ disappears after 1.5 seconds
-        timerProgressBar: true,      // optional: shows a small progress bar
-        background: "#1e293b",       // slate-800
-        color: "#f1f5f9",            // slate-100
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 3000,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
         customClass: {
-          popup: "rounded-2xl shadow-lg backdrop-blur-sm",
-          title: "text-lg font-semibold",
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
         },
       });
 
+      Toast.fire({
+        title: "The internet user was successfully created!",
+        icon: "success",
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
+      });
 
       setCurrentStep(0);
       navigate("/all-users");
