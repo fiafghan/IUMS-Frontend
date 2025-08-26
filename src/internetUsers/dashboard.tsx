@@ -78,7 +78,7 @@ export default function Dashboard(): JSX.Element {
           className="mb-8"
         >
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 bg-slate-900 rounded-md shadow-lg">
+            <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-md shadow-lg">
               <LayoutDashboard className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -130,7 +130,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl shadow-lg">
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors duration-300" />
@@ -155,7 +155,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-100 to-green-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl shadow-lg">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-green-500 transition-colors duration-300" />
@@ -182,7 +182,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-100 to-red-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl shadow-lg">
                       <XCircle className="w-6 h-6 text-white" />
                     </div>
                     <ArrowDownRight className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors duration-300" />
@@ -202,15 +202,19 @@ export default function Dashboard(): JSX.Element {
                 initial="hidden"
                 animate="visible"
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-xl border 
+                border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 
+                to-purple-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30
+                 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl shadow-lg">
                       <Briefcase className="w-6 h-6 text-white" />
                     </div>
-                    <BarChart3 className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors duration-300" />
+                    <BarChart3 className="w-5 h-5 text-slate-400 group-hover:text-purple-500 
+                    transition-colors duration-300" />
                   </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Employment Types</h3>
                   <div className="text-3xl font-bold text-slate-900 mb-2">{Object.keys(employmentTypeCounts).length}</div>
@@ -232,7 +236,7 @@ export default function Dashboard(): JSX.Element {
                 className="bg-white rounded-2xl p-6 shadow-xl border border-slate-100"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-slate-900 rounded-lg">
+                  <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg">
                     <Briefcase className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900">Employment Distribution</h3>
@@ -292,7 +296,7 @@ export default function Dashboard(): JSX.Element {
               <h3 className="text-xl font-semibold text-slate-900 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-blue-100 hover:to-blue-200 rounded-xl border border-blue-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                  <div className="p-2  bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
@@ -302,7 +306,7 @@ export default function Dashboard(): JSX.Element {
                 </button>
 
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-green-100 hover:to-green-200 rounded-xl border border-green-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                  <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
@@ -311,8 +315,11 @@ export default function Dashboard(): JSX.Element {
                   </div>
                 </button>
 
-                <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-purple-100 hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-purple-100
+                 hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 
+                 hover:shadow-md group">
+                  <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500
+                   rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Eye className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
