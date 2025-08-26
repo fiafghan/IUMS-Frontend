@@ -133,7 +133,7 @@ export default function InternetUsersList(): JSX.Element {
                     className="mb-8"
                 >
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-slate-800 rounded-md shadow-lg">
+                        <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-600 rounded-md shadow-lg">
                             <Users className="w-8 h-8 text-white" />
                         </div>
                         <div>
@@ -167,45 +167,45 @@ export default function InternetUsersList(): JSX.Element {
                                 setSearchTerm={setSearchTerm}
                             />
                             <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="bg-slate-800">
-                                        {headers.map((h, index) => (
-                                            <motion.th
-                                                key={h}
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                                            {headers.map((h, index) => (
+                                                <motion.th
+                                                    key={h}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                                                    className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700"
+                                                >
+                                                    {h}
+                                                </motion.th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {visibleUsers.map((user, index) => (
+                                            <motion.tr
+                                                key={user.id}
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
-                                                className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700"
+                                                transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                                                className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
                                             >
-                                                {h}
-                                            </motion.th>
+                                                <UserRow
+                                                    user={user}
+                                                    idx={index}
+                                                    handleEdit={handleEditClick}
+                                                    handleDelete={handleDelete}
+                                                    handleView={() => { }}
+                                                    isViewer={isViewer}
+                                                    currentUserRole={currentUser?.user.role}
+                                                />
+                                            </motion.tr>
                                         ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {visibleUsers.map((user, index) => (
-                                        <motion.tr
-                                            key={user.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                                            className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
-                                        >
-                                            <UserRow
-                                                user={user}
-                                                idx={index}
-                                                handleEdit={handleEditClick}
-                                                handleDelete={handleDelete}
-                                                handleView={() => { }}
-                                                isViewer={isViewer}
-                                                currentUserRole={currentUser?.user.role}
-                                            />
-                                        </motion.tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -253,7 +253,7 @@ export default function InternetUsersList(): JSX.Element {
                         transition={{ delay: 0.6, duration: 0.6 }}
                         className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
                     >
-                        
+
                     </motion.div>
                 )}
 

@@ -27,7 +27,7 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
       <td className="px-4 py-3">
         <div className="flex items-center space-x-2">
           <div className="relative flex-shrink-0">
-              <div className="w-7 h-7 bg-slate-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-7 h-7 bg-gradient-to-r from-slate-800 to-slate-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {user.name?.charAt(0)?.toUpperCase() || 'U'}
               </div>            
           </div>
@@ -146,7 +146,7 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleEdit(user)}
-                  className="p-2 bg-slate-700 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                  className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
                   title="Edit User"
                 >
                   <Pencil className="w-4 h-4" />
@@ -154,7 +154,8 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
                 <button
                   onClick={() => handleDelete(user.id)}
                   title="Delete User"
-                  className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200 hover:scale-105 shadow-sm"
+                  className="p-2 bg-gradient-to-r from-red-400 to-red-300 text-white rounded-md hover:bg-red-600 transition-all 
+                  duration-200 hover:scale-105 shadow-sm"
                 >
                   <Trash className="w-4 h-4" />
                 </button>
