@@ -16,7 +16,7 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
         />
         <div
           aria-hidden="true"
-          className="absolute top-4 left-0 h-1 rounded-full bg-gradient-to-r from-blue-400 to-green-300 transition-all duration-700 ease-in-out"
+          className="absolute top-4 left-0 h-1 rounded-full bg-gradient-to-r from-slate-600 to-slate-100 transition-all duration-700 ease-in-out"
           style={{ width: `${((currentStep) / (totalSteps - 1)) * 100}%` }}
         />
 
@@ -35,8 +35,8 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
                   w-10 h-10 rounded-full flex items-center justify-center border-4
                   shadow-lg
                   transition-all duration-500 ease-in-out
-                  ${isCompleted ? "bg-gradient-to-br from-amber-500 to-amber-100 border-blue-400 shadow-green-400/60" : ""}
-                  ${isActive && !isCompleted ? "border-amber-400 bg-white shadow-blue-500/50" : ""}
+                  ${isCompleted ? "bg-gradient-to-br from-slate-600 to-amber-100 border-slate-400 shadow-green-400/60" : ""}
+                  ${isActive && !isCompleted ? "border-slate-400 bg-white shadow-blue-500/50" : ""}
                   ${!isCompleted && !isActive ? "bg-white border-gray-300" : ""}
                 `}
               >
@@ -45,7 +45,7 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
                 ) : (
                   <span
                     className={`font-bold select-none text-lg
-                      ${isActive ? "text-blue-600" : "text-gray-400"}
+                      ${isActive ? "text-slate-600" : "text-gray-400"}
                     `}
                   >
                     {idx + 1}
@@ -53,12 +53,11 @@ export function ProgressBar({ currentStep, totalSteps, stepsLabels }: ProgressBa
                 )}
               </div>
 
-              {/* لیبل مرحله */}
               <span
                 className={`
                   mt-3 text-sm font-semibold text-center select-none max-w-[80px]
-                  ${isCompleted ? "text-gradient bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent" : ""}
-                  ${isActive ? "text-blue-600" : "text-gray-400"}
+                  ${isCompleted ? "text-slate-600" : ""}
+                  ${isActive ? "text-green-500" : "text-gray-400"}
                 `}
               >
                 {label}
