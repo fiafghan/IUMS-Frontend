@@ -292,8 +292,8 @@ export default function Dashboard(): JSX.Element {
             >
               <h3 className="text-xl font-semibold text-slate-900 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-xl border border-blue-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-blue-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-blue-100 hover:to-blue-200 rounded-xl border border-blue-200 transition-all duration-200 hover:shadow-md group">
+                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
@@ -302,8 +302,8 @@ export default function Dashboard(): JSX.Element {
                   </div>
                 </button>
 
-                <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-xl border border-green-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-green-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-green-100 hover:to-green-200 rounded-xl border border-green-200 transition-all duration-200 hover:shadow-md group">
+                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
@@ -312,8 +312,8 @@ export default function Dashboard(): JSX.Element {
                   </div>
                 </button>
 
-                <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 hover:shadow-md group">
-                  <div className="p-2 bg-purple-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
+                <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-purple-100 hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 hover:shadow-md group">
+                  <div className="p-2 bg-slate-800 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Eye className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
