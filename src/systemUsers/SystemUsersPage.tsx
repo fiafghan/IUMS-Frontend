@@ -173,7 +173,7 @@ export default function SystemUsersPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate("/register")}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
               >
                 <UserPlus className="w-5 h-5" />
                 Add New User
@@ -192,7 +192,7 @@ export default function SystemUsersPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+                <tr className="bg-gradient-to-r from-slate-900 via-slate-700 to-slate-600">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">ID</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">User</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700">Email</th>
@@ -245,7 +245,7 @@ export default function SystemUsersPage() {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEditClick(user)}
-                            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                            className="p-2 bg-slate-800 text-white rounded-lg hover:bg-slate-600 transition-colors duration-200"
                             title="Edit User"
                           >
                             <Pencil className="w-4 h-4" />
