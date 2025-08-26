@@ -35,7 +35,7 @@ export default function ScrollToTopButton() {
                      hover:shadow-[0_10px_20px_rgba(0,0,0,0.35)]
                      hover:scale-110 hover:-translate-y-0.5
                      active:scale-95 active:translate-y-0.5
-                     focus:outline-none focus:ring-2 focus:ring-pink-300 scale-80"
+                     focus:outline-none focus:ring-2 focus:slate-500 scale-80"
         >
           <ArrowUp className="w-5 h-5 drop-shadow-sm" />
         </motion.button>
