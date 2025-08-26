@@ -71,14 +71,14 @@ export default function Dashboard(): JSX.Element {
       {/* Main Content */}
       <main className="flex-1 ml-64 p-8 overflow-auto">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-lg">
+            <div className="p-3 bg-slate-900 rounded-md shadow-lg">
               <LayoutDashboard className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -89,11 +89,11 @@ export default function Dashboard(): JSX.Element {
                 Welcome to your Internet User Management System Overview
               </p>
             </div>
-        </div>
+          </div>
         </motion.div>
 
         {loading ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="flex justify-center items-center py-20"
@@ -104,7 +104,7 @@ export default function Dashboard(): JSX.Element {
             </div>
           </motion.div>
         ) : error ? (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-20"
@@ -130,7 +130,7 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors duration-300" />
@@ -155,8 +155,8 @@ export default function Dashboard(): JSX.Element {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-100 to-green-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-green-500 transition-colors duration-300" />
@@ -166,10 +166,10 @@ export default function Dashboard(): JSX.Element {
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <div className="w-16 bg-slate-200 rounded-full h-2">
                       <div className="bg-green-500 h-2 rounded-full" style={{ width: `${activePercentage}%` }}></div>
-                </div>
+                    </div>
                     <span className="text-green-600 font-medium">{activePercentage}%</span>
-              </div>
-            </div>
+                  </div>
+                </div>
               </motion.div>
 
               {/* Inactive Users Card */}
@@ -182,8 +182,8 @@ export default function Dashboard(): JSX.Element {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-100 to-red-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
                       <XCircle className="w-6 h-6 text-white" />
                     </div>
                     <ArrowDownRight className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors duration-300" />
@@ -208,17 +208,17 @@ export default function Dashboard(): JSX.Element {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full -translate-y-16 translate-x-16 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                    <div className="p-3 bg-slate-900 rounded-xl shadow-lg">
                       <Briefcase className="w-6 h-6 text-white" />
-              </div>
+                    </div>
                     <BarChart3 className="w-5 h-5 text-slate-400 group-hover:text-purple-500 transition-colors duration-300" />
-                </div>
+                  </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Employment Types</h3>
                   <div className="text-3xl font-bold text-slate-900 mb-2">{Object.keys(employmentTypeCounts).length}</div>
                   <div className="text-sm text-slate-500">
                     <span className="text-purple-600 font-medium">Diverse workforce</span> categories
+                  </div>
                 </div>
-              </div>
               </motion.div>
             </div>
 
@@ -233,7 +233,7 @@ export default function Dashboard(): JSX.Element {
                 className="bg-white rounded-2xl p-6 shadow-xl border border-slate-100"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg">
+                  <div className="p-2 bg-slate-900 rounded-lg">
                     <Briefcase className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900">Employment Distribution</h3>
@@ -246,24 +246,25 @@ export default function Dashboard(): JSX.Element {
                       initial="hidden"
                       animate="visible"
                       transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                      className="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors duration-200"
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-xl
+                       hover:bg-slate-100 transition-colors duration-200"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full"></div>
+                        <div className="w-3 h-3 bg-slate-900 rounded-full"></div>
                         <span className="font-medium text-slate-700">{type}</span>
                       </div>
-                <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3">
                         <div className="w-20 bg-slate-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500" 
+                          <div
+                            className="bg-slate-900 h-2 rounded-full transition-all duration-500"
                             style={{ width: `${(count / totalUsers) * 100}%` }}
                           ></div>
-                </div>
+                        </div>
                         <span className="font-bold text-slate-900 min-w-[3rem] text-right">{count}</span>
-              </div>
+                      </div>
                     </motion.div>
                   ))}
-            </div>
+                </div>
               </motion.div>
 
               {/* Group Distribution Chart */}
@@ -276,8 +277,8 @@ export default function Dashboard(): JSX.Element {
               >
                 <div className="h-80 w-full flex items-center justify-center overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center">
-              <GroupTypePieChart />
-            </div>
+                    <GroupTypePieChart />
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -296,21 +297,21 @@ export default function Dashboard(): JSX.Element {
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
-                  <button onClick={() => navigate("/adduser")}><div className="font-medium text-blue-900">Add New User</div></button>
+                    <button onClick={() => navigate("/adduser")}><div className="font-medium text-blue-900">Add New User</div></button>
                     <div className="text-sm text-blue-600">Create new internet user account</div>
                   </div>
                 </button>
-                
+
                 <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-xl border border-green-200 transition-all duration-200 hover:shadow-md group">
                   <div className="p-2 bg-green-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Activity className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-left">
-                   <button onClick={() => navigate("/all-users")}><div className="font-medium text-green-900">View All Users</div></button>
+                    <button onClick={() => navigate("/all-users")}><div className="font-medium text-green-900">View All Users</div></button>
                     <div className="text-sm text-green-600">Browse complete user list</div>
                   </div>
                 </button>
-                
+
                 <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 hover:shadow-md group">
                   <div className="p-2 bg-purple-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <Eye className="w-5 h-5 text-white" />
@@ -320,7 +321,7 @@ export default function Dashboard(): JSX.Element {
                     <div className="text-sm text-purple-600">Generate detailed analytics</div>
                   </div>
                 </button>
-          </div>
+              </div>
             </motion.div>
           </>
         )}

@@ -9,8 +9,9 @@ type ApiRow = { group_type: string; total: number };
 type ChartRow = { name: string; value: number };
 
 const COLORS = [
-  "#3B82F6", "#10B981", "#F59E0B", "#EF4444",
-  "#8B5CF6", "#06B6D4", "#84CC16", "#F472B6"
+  "#CBD5E1", // slate-200 (light)
+  "#64748B", // slate-500 (medium)
+  "#1E293B", // slate-800 (dark)
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -32,8 +33,8 @@ const CustomLegend = ({ payload }: any) => {
     <div className="flex flex-wrap justify-center gap-3 mt-4">
       {payload?.map((entry: any, index: number) => (
         <div key={index} className="flex items-center gap-2">
-          <div 
-            className="w-3 h-3 rounded-full" 
+          <div
+            className="w-3 h-3 rounded-full"
             style={{ backgroundColor: entry.color }}
           />
           <span className="text-xs font-medium text-slate-700">
@@ -56,7 +57,7 @@ export default function GroupTypePieChart() {
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     axios
       .get<ApiRow[]>(`${route}/group-count`, {
-         headers: {
+        headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
@@ -114,7 +115,7 @@ export default function GroupTypePieChart() {
   const totalUsers = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
@@ -123,7 +124,7 @@ export default function GroupTypePieChart() {
       {/* Chart Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg">
+          <div className="p-2 bg-slate-900 rounded-lg">
             <BarChart3 className="w-5 h-5 text-white" />
           </div>
           <div>
@@ -154,8 +155,8 @@ export default function GroupTypePieChart() {
               strokeWidth={2}
             >
               {data.map((_, idx) => (
-                <Cell 
-                  key={`cell-${idx}`} 
+                <Cell
+                  key={`cell-${idx}`}
                   fill={COLORS[idx % COLORS.length]}
                   className="hover:opacity-80 transition-opacity duration-200"
                 />
@@ -177,8 +178,8 @@ export default function GroupTypePieChart() {
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200"
           >
-            <div 
-              className="w-3 h-3 rounded-full" 
+            <div
+              className="w-3 h-3 rounded-full"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
             <div className="flex-1 min-w-0">
