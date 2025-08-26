@@ -139,8 +139,7 @@ export default function Dashboard(): JSX.Element {
                   <div className="text-3xl font-bold text-slate-900 mb-2">{totalUsers.toLocaleString()}</div>
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="text-green-600 font-medium">+{activeUsers}</span>
-                    <span>active accounts</span>
+                    <span className="text-green-600 font-medium">+{activeUsers} Total Users</span>
                   </div>
                 </div>
               </motion.div>
