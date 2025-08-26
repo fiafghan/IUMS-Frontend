@@ -8,7 +8,7 @@ import UserRow from "../components/userRow";
 import UserFiltersPanel from "../components/UserFilters";
 import EditUserModal from "./editModal";
 import { motion } from "framer-motion";
-import { Users, Filter, AlertCircle } from "lucide-react";
+import { Users, AlertCircle } from "lucide-react";
 
 type Option = { id: number; name: string };
 
@@ -133,7 +133,7 @@ export default function InternetUsersList(): JSX.Element {
                     className="mb-8"
                 >
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-slate-800 rounded-2xl shadow-lg">
+                        <div className="p-3 bg-slate-800 rounded-md shadow-lg">
                             <Users className="w-8 h-8 text-white" />
                         </div>
                         <div>
@@ -154,16 +154,6 @@ export default function InternetUsersList(): JSX.Element {
                         className=""
                     >
                         <div className="bg-gray-100 rounded-sm p-0">
-                            <div className="flex items-center gap-3">
-                                
-                                <div className="p-2 bg-slate-800 
-                                mt-2 ml-7 rounded-md">
-                                    <Filter className="w-5 h-5 text-white" />
-                                </div>
-                                <h3 className="text-lg font-semibold text-slate-900">Search & Filters</h3>
-                                
-                            </div>
-                            
                             <UserFiltersPanel
                                 directorateOptions={directorateOptions}
                                 groupOptions={groupOptions}
