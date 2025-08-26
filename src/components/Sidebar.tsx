@@ -339,6 +339,7 @@ export default function GradientSidebar(): JSX.Element {
         )}
 
         {/* Reports */}
+        {!isViewer && (
         <motion.button
           whileHover={{ scale: 1.02, x: 4 }}
           whileTap={{ scale: 0.98 }}
@@ -350,6 +351,7 @@ export default function GradientSidebar(): JSX.Element {
           </div>
           <span className="font-medium text-sm">Reports</span>
         </motion.button>
+        )}
 
         {/* Settings */}
         <motion.button
