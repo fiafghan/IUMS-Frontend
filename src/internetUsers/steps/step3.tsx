@@ -193,7 +193,7 @@ export function Step3({ form, onChange }: {
           onClick={addDevice}
           disabled={remainingLimit <= 0}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
-            ? 'bg-blue-600 hover:bg-blue-700'
+            ? 'bg-slate-600 hover:bg-slate-500'
             : 'bg-gray-400 cursor-not-allowed'
             }`}
         >

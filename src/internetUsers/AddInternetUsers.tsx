@@ -360,19 +360,19 @@ export default function InternetUserAddForm(): JSX.Element {
 
             <div className="mt-8 flex justify-between">
               {currentStep > 0 ? (
-                <button type="button" onClick={prevStep} className="bg-slate-700 text-white w-22">
+                <button type="button" onClick={prevStep} className="bg-slate-600 text-white w-22">
                   Back
                 </button>
               ) : (
                 <div />
               )}
               {currentStep < stepTitles.length - 1 ? (
-                <button type="button" onClick={nextStep} className="h-10 px-6 bg-slate-700 text-white">
+                <button type="button" onClick={nextStep} className="h-10 px-6 bg-slate-600 text-white">
                   Next
                 </button>
               ) : (
-                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading} className="h-10 px-6 bg-gradient-to-r 
-                from-blue-300 to blue-200">
+                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading} className="h-10 px-6 bg-slate-600
+                text-white">
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <Spinner />
