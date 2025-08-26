@@ -105,7 +105,7 @@ export default function Reports() {
     return (
         <div className="min-h-screen flex bg-white">
             {/* Sidebar */}
-                <GradientSidebar />
+            <GradientSidebar />
             <div className="flex justify-center items-center min-h-screen 
             bg-slate-200 mx-auto mt-5 mb-5">
                 {/* A4 Container */}
@@ -115,10 +115,11 @@ export default function Reports() {
                 >
                     {/* Header */}
                     <div className="p-6 border-b border-slate-300">
-                        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                        <h1 className="text-3xl font-bold 
+                        print:text-center text-slate-700">
                             Reports
                         </h1>
-                        <p className="text-slate-600">View and manage all reports here.</p>
+                        <p className="text-slate-600 print:hidden">View and manage all reports here.</p>
                     </div>
 
                     {/* Tabs */}
@@ -126,8 +127,8 @@ export default function Reports() {
                         <button
                             onClick={() => setActiveTab("individual")}
                             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === "individual"
-                                ? "text-blue-600 border-b-2 border-blue-600"
-                                : "text-slate-500 hover:text-slate-700"
+                                ? "text-slate-900 border-b-2 border-slate-700"
+                                : "text-slate-500 hover:text-slate-600"
                                 }`}
                         >
                             <FileText className="w-5 h-5" />
@@ -137,7 +138,7 @@ export default function Reports() {
                         <button
                             onClick={() => setActiveTab("general")}
                             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === "general"
-                                ? "text-blue-600 border-b-2 border-blue-600"
+                                ? "text-slate-900 border-b-2 border-slate-700"
                                 : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
@@ -189,7 +190,7 @@ export default function Reports() {
                                             />
                                             <button
                                                 onClick={handleSearchIndividual}
-                                                className="px-4 bg-blue-600 text-white rounded-r-lg 
+                                                className="px-4 bg-slate-700 text-white rounded-r-lg 
                                             print:hidden hover:bg-blue-700 flex items-center gap-2"
                                             >
                                                 <Search className="w-4 h-4" /> Search
@@ -226,7 +227,7 @@ export default function Reports() {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="violations"
-                                                    stroke="#2563eb"
+                                                    stroke="#020b29"
                                                     strokeWidth={2}
                                                     dot={{ r: 4 }}
                                                 />
@@ -267,7 +268,8 @@ export default function Reports() {
                                     <div className="flex items-end print:hidden">
                                         <button
                                             onClick={handleSearchGeneral}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                                            className="px-4 py-2 bg-slate-700 text-white rounded-lg 
+                                            hover:bg-blue-700 flex items-center gap-2"
                                         >
                                             <Search className="w-4 h-4" /> Search
                                         </button>
@@ -312,7 +314,7 @@ export default function Reports() {
                                                 <XAxis dataKey="directorate" />
                                                 <YAxis />
                                                 <Tooltip />
-                                                <Bar dataKey="violations" fill="#2563eb" />
+                                                <Bar dataKey="violations" fill="#020b29" />
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </div>
@@ -322,8 +324,8 @@ export default function Reports() {
                         <div className="mt-10 flex">
                             <button
                                 onClick={handlePrint}
-                                className="px-6 py-2 bg-blue-500 text-white rounded-md
-                     hover:bg-blue-600 print:hidden"
+                                className="px-6 py-2 bg-slate-700 text-white rounded-md
+                     hover:bg-slate-500 print:hidden"
                             >
                                 Print Report
                             </button>
