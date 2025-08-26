@@ -1,6 +1,7 @@
 import { memo } from "react";
-import { Edit, Trash, Building, Briefcase, Users } from "lucide-react";
+import { Trash, Building, Briefcase, Users, Pencil } from "lucide-react";
 import type { InternetUser } from "../types/types";
+import { motion } from "framer-motion";
 
 interface UserRowProps {
   user: InternetUser;
@@ -13,8 +14,6 @@ interface UserRowProps {
 }
 
 const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRole }: UserRowProps) => {
-  const isRedCard = user.violation_count === 2;
-  const isYellowCard = user.violation_count === 1;
 
   // Safe text truncation with better length management
   const truncateText = (text: string | undefined, maxLength: number = 30) => {
@@ -28,25 +27,9 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
       <td className="px-4 py-3">
         <div className="flex items-center space-x-2">
           <div className="relative flex-shrink-0">
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs 
-            font-semibold text-white shadow-sm ${
-              isRedCard 
-                ? "bg-red-500" 
-                : isYellowCard 
-                  ? "bg-yellow-500"
-                  : "bg-gray-400"
-            }`}>
-              {user.name?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
-            {/* Violation indicators */}
-            {isYellowCard && (
-              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-yellow-400 
-              rounded-full border-2 border-white shadow-sm"></div>
-            )}
-            {isRedCard && (
-              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 
-              rounded-full border-2 border-white shadow-sm"></div>
-            )}
+              <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                {user.name?.charAt(0)?.toUpperCase() || 'U'}
+              </div>            
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium text-gray-900 break-words" title={user.name || 'N/A'}>
@@ -135,51 +118,51 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
       {/* Status Column */}
       <td className="px-4 py-3">
         <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full shadow-sm ${
-            user.status === 1 
-              ? "bg-green-500" 
-              : user.status === 0 
-                ? "bg-red-500" 
-                : "bg-gray-400"
-          }`}></div>
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-            user.status === 1 
-              ? "text-green-700 bg-green-100" 
-              : user.status === 0 
-                ? "text-red-700 bg-red-100" 
-                : "text-gray-700 bg-gray-100"
-          }`}>
+          <div className={`w-2 h-2 rounded-full shadow-sm ${user.status === 1
+            ? "bg-green-500"
+            : user.status === 0
+              ? "bg-red-500"
+              : "bg-gray-400"
+            }`}></div>
+          <span className={`text-xs font-medium px-2 py-1 rounded-full ${user.status === 1
+            ? "text-green-700 bg-green-100"
+            : user.status === 0
+              ? "text-red-700 bg-red-100"
+              : "text-gray-700 bg-gray-100"
+            }`}>
             {user.status === 1 ? "Active" : user.status === 0 ? "Inactive" : "-"}
           </span>
         </div>
       </td>
 
       {/* Actions Column */}
-       {!isViewer && (
-      <td className="px-4 py-3">
-        <div className="flex items-center justify-center space-x-2">
-         
-          {currentUserRole !== "viewer" && (
-            <>
-              <button 
-                onClick={() => handleEdit(user)} 
-                title="Edit User"
-                className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all duration-200 hover:scale-105 shadow-sm"
-              >
-                <Edit className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => handleDelete(user.id)} 
-                title="Delete User"
-                className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200 hover:scale-105 shadow-sm"
-              >
-                <Trash className="w-4 h-4" />
-              </button>
-            </>
-          )}
-        </div>
-      </td>
-       )}
+      {!isViewer && (
+        <td className="px-4 py-3">
+          <div className="flex items-center justify-center space-x-2">
+
+            {currentUserRole !== "viewer" && (
+              <>
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleEdit(user)}
+                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                  title="Edit User"
+                >
+                  <Pencil className="w-4 h-4" />
+                </motion.button>
+                <button
+                  onClick={() => handleDelete(user.id)}
+                  title="Delete User"
+                  className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200 hover:scale-105 shadow-sm"
+                >
+                  <Trash className="w-4 h-4" />
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+      )}
     </>
   );
 });

@@ -170,7 +170,8 @@ export function Step3({ form, onChange }: {
       <div className="grid grid-cols-2 gap-5">
         <InputField
           label="Device Limit"
-          icon={<Hash className="w-5 h-5 text-white bg-blue-400 rounded-md p-1" />}
+          icon={<Hash className="w-5 h-5 text-white 
+            scale-150 bg-blue-400 rounded-sm p-1" />}
           name="device_limit"
           type="number"
           placeholder="Number of devices allowed"
@@ -202,7 +203,7 @@ export function Step3({ form, onChange }: {
       </div>
       {/* Group Type (only once for all devices) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1 ">
+        <label className="block text-lg font-medium text-gray-700 mb-1 ">
           Group Type
         </label>
         <select

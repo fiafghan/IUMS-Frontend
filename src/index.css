@@ -19,7 +19,6 @@
 }
 
 
-/* استایل سفارشی اسکرول بار افقی */
 .scrollbar-custom::-webkit-scrollbar {
   height: 10px;
 }

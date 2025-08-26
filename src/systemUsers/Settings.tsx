@@ -102,10 +102,32 @@ export default function SettingsPage() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      Swal.fire({
-        title: "✅ Profile updated successfully.",
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 2500,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
+        customClass: {
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+
+      Toast.fire({
+        title: "Profile Updated Successfully!",
         icon: "success",
-        draggable: true
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
       });
       setForm((prev) => ({ ...prev, password: "" })); // Clear password field after update
     } catch (error: any) {
@@ -141,12 +163,12 @@ export default function SettingsPage() {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-slate-200 bg-white shadow-lg z-20">
           <GradientSidebar />
         </div>
-        
+
         <main className="flex-1 ml-64 p-8 overflow-auto">
           {/* Header Section */}
           <motion.div

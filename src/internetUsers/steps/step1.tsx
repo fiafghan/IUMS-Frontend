@@ -152,7 +152,8 @@ export function Step1({
           <InputField
             label="Name"
             icon={
-              <User className="w-5 h-5 text-white bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-1" />
+              <User className="w-5 h-5 text-white bg-gradient-to-br from-blue-500 
+              to-blue-600 rounded-sm p-1 scale-150" />
             }
             name="name"
             type="text"
@@ -167,7 +168,8 @@ export function Step1({
           <InputField
             label="Last Name"
             icon={
-              <IdCard className="w-5 h-5 text-white bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md p-1" />
+              <IdCard className="w-5 h-5 text-white bg-gradient-to-br from-blue-500 
+              to-indigo-600 rounded-sm p-1 scale-150" />
             }
             name="last_name"
             type="text"
@@ -182,7 +184,8 @@ export function Step1({
           <InputField
             label="Username"
             icon={
-              <User className="w-5 h-5 text-white bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-1" />
+              <User className="w-5 h-5 text-white bg-gradient-to-br 
+              from-indigo-500 to-purple-600 rounded-sm p-1 scale-150" />
             }
             name="username"
             type="text"
@@ -200,7 +203,8 @@ export function Step1({
           <InputField
             label="Email"
             icon={
-              <Mail className="w-5 h-5 text-white bg-gradient-to-br from-emerald-500 to-green-600 rounded-md p-1" />
+              <Mail className="w-5 h-5 text-white bg-gradient-to-br from-emerald-500 
+              to-green-600 rounded-sm p-1 scale-150" />
             }
             name="email"
             type="email"
@@ -216,7 +220,8 @@ export function Step1({
           <InputField
             label="Phone"
             icon={
-              <Phone className="w-5 h-5 text-white bg-gradient-to-br from-pink-500 to-red-600 rounded-md p-1" />
+              <Phone className="w-5 h-5 text-white bg-gradient-to-br
+               from-pink-500 to-red-600 rounded-sm p-1 scale-150" />
             }
             name="phone"
             type="tel"

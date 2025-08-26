@@ -34,7 +34,7 @@ export default function InternetUsersList(): JSX.Element {
     const token = currentUser?.token;
     const isViewer = currentUser?.user.role === "viewer";
 
-    const headers = ["Name", "Last Name", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"];
+    const headers = ["Name", "LastName", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"];
 
 
     // Fetch users

@@ -25,7 +25,7 @@ export default function UserFiltersPanel({
 }: Props) {
 
   return (
-    <div className="grid grid-cols-4 justify-center w-full mb-6 mt-6">
+    <div className="grid grid-cols-4 justify-center w-full mb-2 mt-2">
 
       {/* Search */}
       <div className="relative group">
@@ -41,7 +41,7 @@ export default function UserFiltersPanel({
           bg-white/80 backdrop-blur-sm shadow-lg focus:outline-none 
           focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 
           transition-all duration-300 hover:border-gray-300 
-          placeholder-gray-400 text-gray-700 font-medium scale-80 w-full"
+          placeholder-gray-400 text-gray-700 font-medium scale-80"
         />
       </div>
       {/* Directorate */}

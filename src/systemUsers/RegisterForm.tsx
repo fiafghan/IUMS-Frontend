@@ -91,10 +91,32 @@ export default function RegisterForm() {
         }
       );
 
-      Swal.fire({
-        title: "Registration successful!",
-        text: "Registration Was successful!",
-        icon: "success"
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",          // bottom-right
+        showConfirmButton: false,        // no OK button
+        timer: 2000,                     // auto close (ms)
+        timerProgressBar: true,
+        showCloseButton: true,           // small "x" to dismiss
+        iconColor: "#22c55e",            // Tailwind green-500
+        background: "#0f172a",           // slate-900
+        color: "#e2e8f0",                // slate-300
+        customClass: {
+          popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+          title: "text-sm font-medium tracking-wide",
+          timerProgressBar: "bg-white/40",
+        },
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
+
+      Toast.fire({
+        title: "Registration was successful!",
+        icon: "success",
+        // draggable is supported in newer SweetAlert2 versions
+        draggable: true,
       });
       navigate('/all-system-users');
       setForm({
@@ -102,7 +124,7 @@ export default function RegisterForm() {
         email: "",
         password: "",
         password_confirmation: "",
-        role:"User"
+        role: "User"
       });
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed.");
@@ -333,11 +355,10 @@ export default function RegisterForm() {
                       key={role}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className={`relative cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 ${
-                        form.role === role
+                      className={`relative cursor-pointer p-4 rounded-xl border-2 transition-all duration-200 ${form.role === role
                           ? `border-blue-500 bg-gradient-to-r ${getRoleColor(role)} text-white shadow-lg`
                           : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100'
-                      }`}
+                        }`}
                     >
                       <input
                         type="radio"
@@ -384,11 +405,10 @@ export default function RegisterForm() {
                   whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={loading}
-                  className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${
-                    loading
+                  className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${loading
                       ? "bg-slate-400 cursor-not-allowed text-white"
                       : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl"
-                  }`}
+                    }`}
                 >
                   {loading ? (
                     <div className="flex items-center justify-center gap-2">
