@@ -155,13 +155,13 @@ export default function RegisterForm() {
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'Admin':
-        return <Crown className="w-5 h-5 text-amber-500" />;
+        return <Crown className="w-5 h-5 text-orange-200" />;
       case 'User':
-        return <UserCheck className="w-5 h-5 text-blue-500" />;
+        return <UserCheck className="w-5 h-5 text-blue-300" />;
       case 'Viewer':
-        return <Eye className="w-5 h-5 text-green-500" />;
+        return <Eye className="w-5 h-5 text-green-300" />;
       default:
-        return <UserCheck className="w-5 h-5 text-gray-500" />;
+        return <UserCheck className="w-5 h-5 text-white" />;
     }
   };
 
@@ -193,7 +193,7 @@ export default function RegisterForm() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden mb-6"
         >
-          <div className="px-8 py-6 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+          <div className="px-8 py-6 bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-sm">
                 <UserPlus className="w-8 h-8 text-white" />
@@ -236,7 +236,8 @@ export default function RegisterForm() {
                 <label className="block text-sm font-semibold text-slate-700">Full Name</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User className="w-5 h-5 text-blue-600" />
+                    <User className="w-5 h-5 text-white bg-gradient-to-r from-slate-800 to-slate-600 p-1
+                    rounded-full" />
                   </div>
                   <input
                     name="name"
@@ -259,7 +260,8 @@ export default function RegisterForm() {
                 <label className="block text-sm font-semibold text-slate-700">Email Address</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-5 h-5 text-blue-600" />
+                    <Mail className="w-5 h-5 text-white bg-gradient-to-r 
+                    from-slate-800 to-slate-600 rounded-full p-1" />
                   </div>
                   <input
                     name="email"
@@ -293,7 +295,8 @@ export default function RegisterForm() {
                 <label className="block text-sm font-semibold text-slate-700">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-5 h-5 text-blue-600" />
+                    <Lock className="w-5 h-5 text-white bg-gradient-to-r from-slate-800 to-slate-600
+                    rounded-full p-1" />
                   </div>
                   <input
                     name="password"
@@ -317,7 +320,8 @@ export default function RegisterForm() {
                 <label className="block text-sm font-semibold text-slate-700">Confirm Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-5 h-5 text-blue-600" />
+                    <Lock className="w-5 h-5 text-white bg-gradient-to-r from-slate-800 to-slate-600
+                    rounded-full p-1" />
                   </div>
                   <input
                     name="password_confirmation"
@@ -407,7 +411,7 @@ export default function RegisterForm() {
                   disabled={loading}
                   className={`w-full py-4 rounded-xl font-medium transition-all duration-200 ${loading
                       ? "bg-slate-400 cursor-not-allowed text-white"
-                      : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl"
+                      : "bg-gradient-to-r from-slate-800 to-slate-500 hover:bg-slate-400 text-white shadow-lg hover:shadow-xl"
                     }`}
                 >
                   {loading ? (
