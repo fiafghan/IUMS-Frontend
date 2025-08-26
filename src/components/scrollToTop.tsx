@@ -29,13 +29,13 @@ export default function ScrollToTopButton() {
           onClick={scrollToTop}
           title="Back to top"
           className="fixed bottom-5 right-5 z-50 p-3 rounded-full
-                     bg-gradient-to-br from-pink-500 via-red-500 to-yellow-400
+                     bg-gradient-to-br from-slate-800 to-slate-500
                      text-white 
                      shadow-[0_6px_15px_rgba(0,0,0,0.25)] 
                      hover:shadow-[0_10px_20px_rgba(0,0,0,0.35)]
                      hover:scale-110 hover:-translate-y-0.5
                      active:scale-95 active:translate-y-0.5
-                     focus:outline-none focus:ring-2 focus:ring-pink-300"
+                     focus:outline-none focus:ring-2 focus:ring-pink-300 scale-80"
         >
           <ArrowUp className="w-5 h-5 drop-shadow-sm" />
         </motion.button>

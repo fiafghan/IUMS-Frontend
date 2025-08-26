@@ -253,13 +253,13 @@ export default function Dashboard(): JSX.Element {
                        hover:bg-slate-100 transition-colors duration-200"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 bg-slate-900 rounded-full"></div>
+                        <div className="w-3 h-3 bg-gradient-to-r from-slate-800 to-slate-400 rounded-full"></div>
                         <span className="font-medium text-slate-700">{type}</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="w-20 bg-slate-200 rounded-full h-2">
                           <div
-                            className="bg-slate-900 h-2 rounded-full transition-all duration-500"
+                            className="bg-gradient-to-r from-slate-800 to-slate-200 h-2 rounded-full transition-all duration-500"
                             style={{ width: `${(count / totalUsers) * 100}%` }}
                           ></div>
                         </div>
