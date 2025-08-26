@@ -273,7 +273,7 @@ export default function InternetUsersList(): JSX.Element {
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setCurrentPage(i + 1)}
                                     className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${currentPage === i + 1
-                                        ? "bg-slate-800 text-white shadow-lg"
+                                        ? "bg-gradient-to-r from-slate-800 to-slate-500 text-white shadow-lg"
                                         : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                                         }`}
                                 >
