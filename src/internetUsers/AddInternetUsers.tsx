@@ -321,7 +321,7 @@ export default function InternetUserAddForm(): JSX.Element {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <span className="bg-gradient-to-r from-blue-400 to-blue-300 text-transparent bg-clip-text">
+              <span className="text-slate-600">
                 {stepTitles[currentStep]}
               </span>
             </motion.h2>
@@ -360,18 +360,19 @@ export default function InternetUserAddForm(): JSX.Element {
 
             <div className="mt-8 flex justify-between">
               {currentStep > 0 ? (
-                <button type="button" onClick={prevStep} className="bg-gradient-to-l from-red-400 to-gray-50 w-22">
+                <button type="button" onClick={prevStep} className="bg-slate-700 text-white w-22">
                   Back
                 </button>
               ) : (
                 <div />
               )}
               {currentStep < stepTitles.length - 1 ? (
-                <button type="button" onClick={nextStep} className="h-10 px-6 bg-gradient-to-r from-blue-300 to blue-200">
+                <button type="button" onClick={nextStep} className="h-10 px-6 bg-slate-700 text-white">
                   Next
                 </button>
               ) : (
-                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading} className="h-10 px-6 bg-gradient-to-r from-blue-300 to blue-200">
+                <AnimatedSubmitButton onClick={handleSubmit} disabled={loading} className="h-10 px-6 bg-gradient-to-r 
+                from-blue-300 to blue-200">
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <Spinner />

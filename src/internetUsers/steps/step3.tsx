@@ -171,7 +171,7 @@ export function Step3({ form, onChange }: {
         <InputField
           label="Device Limit"
           icon={<Hash className="w-5 h-5 text-white 
-            scale-150 bg-blue-400 rounded-sm p-1" />}
+            scale-150 bg-slate-600 rounded-sm p-1 mr-1" />}
           name="device_limit"
           type="number"
           placeholder="Number of devices allowed"
@@ -181,8 +181,8 @@ export function Step3({ form, onChange }: {
 
         <div className="flex items-center justify-center bg-gray-50 rounded-lg p-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{remainingLimit}</div>
-            <div className="text-sm text-gray-600">Devices Remaining</div>
+            <div className="text-2xl font-bold text-slate-600">{remainingLimit}</div>
+            <div className="text-sm text-blue-500">Devices Remaining</div>
           </div>
         </div>
       </div>
