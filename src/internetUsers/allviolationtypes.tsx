@@ -214,19 +214,19 @@ export default function AllViolationTypes(): JSX.Element {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                <AlertTriangle className="w-6 h-6 text-blue-300" />
+              <div className="flex items-center justify-center w-12 h-12 bg-slate-200 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-slate-800" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-blue-400 mr-50">All Violation Types</h1>
-                <p className="text-blue-300">Manage violation types in the system</p>
+                <h1 className="text-3xl font-bold text-slate-800 mr-50">All Violation Types</h1>
+                <p className="text-slate-500">Manage violation types in the system</p>
               </div>
             </div>
             {currentUser?.user.role !== "viewer" && (
               <button
                 onClick={() => navigate("/add-violation-type")}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-300 text-white rounded-xl 
-              hover:from-blue-500 hover:to-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-800 text-white rounded-xl 
+              hover:bg-slate-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 <Plus className="w-5 h-5" />
                 Add New Type
@@ -237,13 +237,17 @@ export default function AllViolationTypes(): JSX.Element {
           {/* Search Bar */}
           <div className="mb-6">
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 
+              bg-slate-800 rounded-full p-1 h-5 text-white" />
               <input
                 type="text"
                 placeholder="Search violation types..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-400 focus:border-transparent transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 rounded-md 
+                focus:ring-2 focus:ring-red-400 focus:border-transparent 
+                border-1 borer-slate-800 transition-all duration-200
+                shadow-md shadow-slate-300"
               />
             </div>
           </div>
@@ -323,7 +327,7 @@ export default function AllViolationTypes(): JSX.Element {
                               <>
                                 <button
                                   onClick={() => handleEdit(violationType)}
-                                  className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors duration-150"
+                                  className="p-2 text-slate-800 hover:bg-slate-200 rounded-lg transition-colors duration-150"
                                   title="Edit"
                                 >
                                   <Edit className="w-4 h-4" />
