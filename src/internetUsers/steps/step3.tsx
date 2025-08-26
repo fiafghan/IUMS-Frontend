@@ -171,7 +171,7 @@ export function Step3({ form, onChange }: {
         <InputField
           label="Device Limit"
           icon={<Hash className="w-5 h-5 text-white 
-            scale-150 bg-slate-600 rounded-sm p-1 mr-1" />}
+            scale-150 bg-slate-600 rounded-sm p-1 mr-2" />}
           name="device_limit"
           type="number"
           placeholder="Number of devices allowed"
@@ -209,7 +209,7 @@ export function Step3({ form, onChange }: {
         <select
           value={selectedGroup || ""}
           onChange={(e) => setSelectedGroup(Number(e.target.value))}
-          className="block w-full border rounded-full p-2 border-blue-400"
+          className="block w-1/2 border rounded-sm p-2 border-gray-200 shadow-sm bg-gray-100"
         >
           <option value="">Select Group</option>
           {groups.map((group) => (

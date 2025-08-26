@@ -152,7 +152,7 @@ export function Step1({
           <InputField
             label="Name"
             icon={
-              <User className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150" />
+              <User className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150 mr-2" />
             }
             name="name"
             type="text"
@@ -167,7 +167,7 @@ export function Step1({
           <InputField
             label="Last Name"
             icon={
-              <IdCard className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150" />
+              <IdCard className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150 mr-2" />
             }
             name="last_name"
             type="text"
@@ -182,7 +182,7 @@ export function Step1({
           <InputField
             label="Username"
             icon={
-              <User className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150" />
+              <User className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150 mr-2" />
             }
             name="username"
             type="text"
@@ -200,7 +200,7 @@ export function Step1({
           <InputField
             label="Email"
             icon={
-              <Mail className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150" />
+              <Mail className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150 mr-2" />
             }
             name="email"
             type="email"
@@ -216,7 +216,7 @@ export function Step1({
           <InputField
             label="Phone"
             icon={
-              <Phone className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150" />
+              <Phone className="w-5 h-5 text-white bg-slate-600 rounded-sm p-1 scale-150 mr-2" />
             }
             name="phone"
             type="tel"
