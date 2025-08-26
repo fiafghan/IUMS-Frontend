@@ -86,7 +86,7 @@ export default function Dashboard(): JSX.Element {
                 Dashboard
               </h1>
               <p className="text-slate-600 mt-1 font-medium">
-                Welcome to your Internet User Management System overview
+                Welcome to your Internet User Management System Overview
               </p>
             </div>
         </div>

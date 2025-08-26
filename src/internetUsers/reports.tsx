@@ -191,7 +191,7 @@ export default function Reports() {
                                             <button
                                                 onClick={handleSearchIndividual}
                                                 className="px-4 bg-slate-700 text-white rounded-r-lg 
-                                            print:hidden hover:bg-blue-700 flex items-center gap-2"
+                                            print:hidden hover:bg-slate-500 flex items-center gap-2"
                                             >
                                                 <Search className="w-4 h-4" /> Search
                                             </button>
@@ -269,7 +269,7 @@ export default function Reports() {
                                         <button
                                             onClick={handleSearchGeneral}
                                             className="px-4 py-2 bg-slate-700 text-white rounded-lg 
-                                            hover:bg-blue-700 flex items-center gap-2"
+                                            hover:bg-slate-500 flex items-center gap-2"
                                         >
                                             <Search className="w-4 h-4" /> Search
                                         </button>
