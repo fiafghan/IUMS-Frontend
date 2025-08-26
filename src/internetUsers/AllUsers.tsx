@@ -133,7 +133,7 @@ export default function InternetUsersList(): JSX.Element {
                     className="mb-8"
                 >
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl shadow-lg">
+                        <div className="p-3 bg-slate-800 rounded-2xl shadow-lg">
                             <Users className="w-8 h-8 text-white" />
                         </div>
                         <div>
@@ -156,7 +156,7 @@ export default function InternetUsersList(): JSX.Element {
                         <div className="bg-gray-100 rounded-sm p-0">
                             <div className="flex items-center gap-3">
                                 
-                                <div className="p-2 bg-slate-700 
+                                <div className="p-2 bg-slate-800 
                                 mt-2 ml-7 rounded-md">
                                     <Filter className="w-5 h-5 text-white" />
                                 </div>
@@ -179,7 +179,7 @@ export default function InternetUsersList(): JSX.Element {
                             <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+                                    <tr className="bg-slate-800">
                                         {headers.map((h, index) => (
                                             <motion.th
                                                 key={h}
@@ -283,7 +283,7 @@ export default function InternetUsersList(): JSX.Element {
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setCurrentPage(i + 1)}
                                     className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 ${currentPage === i + 1
-                                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                                        ? "bg-slate-800 text-white shadow-lg"
                                         : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
                                         }`}
                                 >

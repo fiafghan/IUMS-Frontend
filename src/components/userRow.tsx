@@ -27,7 +27,7 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
       <td className="px-4 py-3">
         <div className="flex items-center space-x-2">
           <div className="relative flex-shrink-0">
-              <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-7 h-7 bg-slate-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                 {user.name?.charAt(0)?.toUpperCase() || 'U'}
               </div>            
           </div>
@@ -146,7 +146,7 @@ const UserRow = memo(({ user, handleEdit, handleDelete, isViewer, currentUserRol
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleEdit(user)}
-                  className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                  className="p-2 bg-slate-700 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
                   title="Edit User"
                 >
                   <Pencil className="w-4 h-4" />
