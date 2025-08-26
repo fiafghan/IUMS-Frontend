@@ -119,7 +119,7 @@ export default function InternetUsersList(): JSX.Element {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
     return (
-        <div className="min-h-screen flex bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="min-h-screen flex bg-white">
             <ScrollToTopButton />
             <div className="fixed top-0 left-0 bottom-0 w-64 border-r border-slate-200 bg-white shadow-lg z-20">
                 <GradientSidebar />
@@ -153,13 +153,17 @@ export default function InternetUsersList(): JSX.Element {
                         transition={{ delay: 0.5, duration: 0.6 }}
                         className=""
                     >
-                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6">
+                        <div className="bg-gray-100 rounded-sm p-0">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg">
+                                
+                                <div className="p-2 bg-slate-700 
+                                mt-2 ml-7 rounded-md">
                                     <Filter className="w-5 h-5 text-white" />
                                 </div>
                                 <h3 className="text-lg font-semibold text-slate-900">Search & Filters</h3>
+                                
                             </div>
+                            
                             <UserFiltersPanel
                                 directorateOptions={directorateOptions}
                                 groupOptions={groupOptions}
@@ -172,6 +176,46 @@ export default function InternetUsersList(): JSX.Element {
                                 searchTerm={searchTerm}
                                 setSearchTerm={setSearchTerm}
                             />
+                            <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
+                                        {headers.map((h, index) => (
+                                            <motion.th
+                                                key={h}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                                                className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700"
+                                            >
+                                                {h}
+                                            </motion.th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {visibleUsers.map((user, index) => (
+                                        <motion.tr
+                                            key={user.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                                            className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
+                                        >
+                                            <UserRow
+                                                user={user}
+                                                idx={index}
+                                                handleEdit={handleEditClick}
+                                                handleDelete={handleDelete}
+                                                handleView={() => { }}
+                                                isViewer={isViewer}
+                                                currentUserRole={currentUser?.user.role}
+                                            />
+                                        </motion.tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -219,46 +263,7 @@ export default function InternetUsersList(): JSX.Element {
                         transition={{ delay: 0.6, duration: 0.6 }}
                         className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden"
                     >
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900">
-                                        {headers.map((h, index) => (
-                                            <motion.th
-                                                key={h}
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
-                                                className="px-6 py-4 text-left text-sm font-semibold text-white border-b border-slate-700"
-                                            >
-                                                {h}
-                                            </motion.th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {visibleUsers.map((user, index) => (
-                                        <motion.tr
-                                            key={user.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                                            className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-200"
-                                        >
-                                            <UserRow
-                                                user={user}
-                                                idx={index}
-                                                handleEdit={handleEditClick}
-                                                handleDelete={handleDelete}
-                                                handleView={() => { }}
-                                                isViewer={isViewer}
-                                                currentUserRole={currentUser?.user.role}
-                                            />
-                                        </motion.tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                        
                     </motion.div>
                 )}
 
