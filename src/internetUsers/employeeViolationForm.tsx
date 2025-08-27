@@ -116,7 +116,6 @@ export default function EmployeeViolationForm() {
                         setSearchTerm(user.username);
                         setShowDropdown(false);
 
-                        // دوباره فیلتر کنه
                         const filtered = users.filter(u =>
                           u.username.toLowerCase().includes(user.username.toLowerCase())
                         );
