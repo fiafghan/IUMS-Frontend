@@ -54,7 +54,7 @@ export default function Reports() {
                 name: apiData.name || "",
                 lastname: apiData.lastname || "",
                 directorate: apiData.directorate || "",
-                deputyMinistry: apiData.deputy || "",
+                deputyMinistry: apiData.deputyMinistry || "",
                 violations: apiData.violations ?? 0,
                 trend: Array.isArray(apiData.trend)
                     ? apiData.trend.map((t: any) => ({
@@ -63,6 +63,7 @@ export default function Reports() {
                     }))
                     : [],
             });
+
         } catch (err: any) {
             console.error("Error fetching individual report:", err);
             setUserData(null);
