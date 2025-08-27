@@ -11,6 +11,8 @@ export default function EmployeeViolationForm() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<ViolationProps | null>(null);
   const printRef = useRef<HTMLDivElement>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+
 
 
   useEffect(() => {
@@ -18,7 +20,6 @@ export default function EmployeeViolationForm() {
       try {
         const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
         const token = currentUser?.token;
-
         const res = await axios.get(`${route}/violation-form`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -33,7 +34,7 @@ export default function EmployeeViolationForm() {
         setFilteredUsers(payload);
       } catch (err) {
         console.error("Failed to fetch users", err);
-        setUsers([]);         
+        setUsers([]);
         setFilteredUsers([]);
       }
     }
@@ -98,10 +99,14 @@ export default function EmployeeViolationForm() {
                 type="text"
                 placeholder="جستجو یوزر..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowDropdown(true);
+                }}
+
                 className="w-full px-3 py-2 rounded bg-white text-sm shadow-none border-none"
               />
-              {searchTerm && (
+              {showDropdown && searchTerm && (
                 <ul className="absolute top-full mt-1 right-0 left-0 bg-white rounded shadow max-h-48 overflow-y-auto z-50">
                   {filteredUsers.map((user) => (
                     <li
@@ -109,8 +114,15 @@ export default function EmployeeViolationForm() {
                       onClick={() => {
                         setSelectedUser(user);
                         setSearchTerm(user.username);
-                        setFilteredUsers([]);
+                        setShowDropdown(false);
+
+                        // دوباره فیلتر کنه
+                        const filtered = users.filter(u =>
+                          u.username.toLowerCase().includes(user.username.toLowerCase())
+                        );
+                        setFilteredUsers(filtered);
                       }}
+
                       className="px-3 py-2 hover:bg-blue-100 cursor-pointer text-sm">
                       {user.id} / {user.username}
                     </li>
