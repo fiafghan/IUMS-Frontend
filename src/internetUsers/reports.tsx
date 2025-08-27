@@ -53,32 +53,18 @@ export default function Reports() {
     });
 
 
-    const handleSearchIndividual = async () => {
-        if (!selectedUsername) {
-            setUserData(null);
-            return alert("Please select a username");
-        }
-
-        const username = selectedUsername.value;
+    const handleSearchIndividual = async (usernameValue: string) => {
+        if (!usernameValue.trim()) return alert("Please enter a username");
 
         try {
             const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-            if (!token) return alert("User is not logged in or token missing");
-
             const res = await axios.get(`${route}/reports/individual`, {
-                params: { username, startDate, endDate },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
+                params: { username: usernameValue, startDate, endDate },
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             const apiData = res.data?.data;
-
-            if (!apiData || !apiData.name) {
-                setUserData(null);
-                return alert("User not found or incomplete data");
-            }
+            if (!apiData || !apiData.name) return alert("User not found or incomplete data");
 
             setUserData({
                 name: apiData.name || "",
@@ -93,13 +79,12 @@ export default function Reports() {
                     }))
                     : [],
             });
-
         } catch (err: any) {
-            console.error("Error fetching individual report:", err);
-            setUserData(null);
+            console.error(err);
             alert(err.response?.data?.message || "Failed to fetch individual report");
         }
     };
+
 
 
 
@@ -211,7 +196,10 @@ export default function Reports() {
                                         <Select
                                             options={userOptions}
                                             value={selectedUsername}
-                                            onChange={(option) => setSelectedUsername(option)}
+                                            onChange={(selected) => {
+                                                setSelectedUsername(selected);
+                                                if (selected) handleSearchIndividual(selected.value);
+                                            }}
                                             placeholder="Select username..."
                                             isClearable
                                             className="basic-single rounded-md"
