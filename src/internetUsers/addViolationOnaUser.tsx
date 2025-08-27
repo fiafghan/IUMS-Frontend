@@ -121,8 +121,6 @@ export default function AddViolationForm() {
                      Toast.fire({
                        title: "The Violation was successfully added!",
                        icon: "success",
-                       // draggable is supported in newer SweetAlert2 versions
-                       draggable: true,
                      });
                
                 setMessage("Violation created successfully!");
