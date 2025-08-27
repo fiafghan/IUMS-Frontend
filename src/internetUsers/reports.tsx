@@ -15,6 +15,9 @@ export default function Reports() {
     const [userData, setUserData] = useState<any | null>(null);
     const [generalData, setGeneralData] = useState<any[] | null>(null);
     const printRef = useRef<HTMLDivElement>(null);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     const handlePrint = useReactToPrint({
         contentRef: printRef,
@@ -31,11 +34,14 @@ export default function Reports() {
         try {
             const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
             if (!token) return alert("User is not logged in or token missing");
-
             const res = await axios.get(`${route}/reports/individual`, {
-                params: { username },
-                headers: { Authorization: `Bearer ${token}` },
+                params: { username, startDate, endDate },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
             });
+
 
             const apiData = res.data?.data;
 
@@ -141,13 +147,25 @@ export default function Reports() {
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Start Date
                                         </label>
-                                        <input type="date" className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none print:shadow-none" />
+                                        <input
+                                            type="date"
+                                            value={startDate}
+                                            onChange={(e) => setStartDate(e.target.value)}
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 
+                                            print:border-none print:shadow-none"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             End Date
                                         </label>
-                                        <input type="date" className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none print:shadow-none" />
+                                        <input
+                                            type="date"
+                                            value={endDate}
+                                            onChange={(e) => setEndDate(e.target.value)}
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 
+                                            print:border-none print:shadow-none"
+                                        />
                                     </div>
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
