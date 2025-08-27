@@ -138,14 +138,14 @@ export default function EmployeeViolationForm() {
                   <thead className="bg-gray-100">
                     <tr>
                       <th className="px-3 py-2 border 
-                    border-gray-300 text-center">نام</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">وظیفه</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">ریاست</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">معینیت</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">تعداد تخلفات</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">توضیحات تخلف</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">امضای کارمند</th>
-                      <th className="px-3 py-2 border border-gray-300 text-center">امضای ریاست مربوطه</th>
+                    border-gray-300 text-center bg-slate-800 text-white">نام</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">وظیفه</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">ریاست</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">معینیت</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">تعداد تخلفات</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">توضیحات تخلف</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">امضای کارمند</th>
+                      <th className="px-3 py-2 border border-gray-300 text-center bg-slate-800 text-white">امضای ریاست مربوطه</th>
                     </tr>
                   </thead>
                   <tbody>
