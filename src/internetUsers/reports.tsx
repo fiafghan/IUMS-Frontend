@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FileText, BarChart2, Search } from "lucide-react";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -8,10 +8,11 @@ import { useReactToPrint } from "react-to-print";
 import GradientSidebar from "../components/Sidebar";
 import axios from "axios";
 import { route } from "../config";
+import Select from "react-select";
+
 
 export default function Reports() {
     const [activeTab, setActiveTab] = useState<"individual" | "general">("individual");
-    const [username, setUsername] = useState("");
     const [userData, setUserData] = useState<any | null>(null);
     const [generalData, setGeneralData] = useState<any[] | null>(null);
     const printRef = useRef<HTMLDivElement>(null);
@@ -19,7 +20,31 @@ export default function Reports() {
     const [endDate, setEndDate] = useState("");
     const [generalStartDate, setGeneralStartDate] = useState("");
     const [generalEndDate, setGeneralEndDate] = useState("");
+    const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
+    const [selectedUsername, setSelectedUsername] = useState<{ value: string; label: string } | null>(null);
 
+
+    const fetchUsernames = async () => {
+        try {
+            const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+            const res = await axios.get(`${route}/internet`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const options = res.data.map((user: any) => ({
+                value: user.username,
+                label: user.username
+            }));
+
+            setUserOptions(options);
+        } catch (err) {
+            console.error("Error fetching usernames:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchUsernames();
+    }, []);
 
 
     const handlePrint = useReactToPrint({
@@ -29,14 +54,17 @@ export default function Reports() {
 
 
     const handleSearchIndividual = async () => {
-        if (!username.trim()) {
+        if (!selectedUsername) {
             setUserData(null);
-            return alert("Please enter a username");
+            return alert("Please select a username");
         }
+
+        const username = selectedUsername.value;
 
         try {
             const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
             if (!token) return alert("User is not logged in or token missing");
+
             const res = await axios.get(`${route}/reports/individual`, {
                 params: { username, startDate, endDate },
                 headers: {
@@ -44,7 +72,6 @@ export default function Reports() {
                     "Content-Type": "application/json",
                 },
             });
-
 
             const apiData = res.data?.data;
 
@@ -76,6 +103,7 @@ export default function Reports() {
 
 
 
+
     const handleSearchGeneral = async () => {
         try {
             const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -103,9 +131,6 @@ export default function Reports() {
         ? generalData.reduce((min, d) => (d.violations < min.violations ? d : min), generalData[0])
         : null;
 
-    // -----------------------------
-    // JSX
-    // -----------------------------
     return (
         <div className="min-h-screen flex bg-white">
             <GradientSidebar />
@@ -179,26 +204,20 @@ export default function Reports() {
                                             print:border-none print:shadow-none"
                                         />
                                     </div>
-                                    <div className="md:col-span-2">
+                                    <div className="md:col-span-2 p-0.5">
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Username
                                         </label>
-                                        <div className="flex">
-                                            <input
-                                                type="text"
-                                                value={username}
-                                                onChange={(e) => setUsername(e.target.value)}
-                                                placeholder="Enter username..."
-                                                className="flex-1 border border-slate-300 rounded-l-lg px-3 py-2"
-                                            />
-                                            <button
-                                                onClick={handleSearchIndividual}
-                                                className="px-4 bg-slate-700 text-white rounded-r-lg print:hidden hover:bg-slate-500 flex items-center gap-2"
-                                            >
-                                                <Search className="w-4 h-4" /> Search
-                                            </button>
-                                        </div>
+                                        <Select
+                                            options={userOptions}
+                                            value={selectedUsername}
+                                            onChange={(option) => setSelectedUsername(option)}
+                                            placeholder="Select username..."
+                                            isClearable
+                                            className="basic-single rounded-md"
+                                        />
                                     </div>
+
                                 </div>
 
                                 {userData && (
