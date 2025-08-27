@@ -66,14 +66,14 @@ export default function EmployeeViolationForm() {
         <div id="printable-content" ref={printRef} >
           {/* Logos Row */}
           <div className="flex items-center justify-between mb-1">
-            <img src="/moph.png" alt="Logo Left" className="w-30" />
-            <h1 className="text-center font-bold" style={{ fontFamily: 'BNazanin, sans-serif' }}>
-              وزارت صحت عامه
-            </h1>
+            <img src="/emirate.png" alt="Logo Left" className="w-30" />
             <h1 className="text-center font-bold" style={{ fontFamily: 'BNazanin, sans-serif' }}>
               امارت اسلامی افغانستان
             </h1>
-            <img src="/emirate.png" alt="Logo Right" className="w-30" />
+            <h1 className="text-center font-bold" style={{ fontFamily: 'BNazanin, sans-serif' }}>
+              وزارت صحت عامه
+            </h1>
+            <img src="/moph.png" alt="Logo Right" className="w-30" />
           </div>
           <h1 className="text-center" style={{ fontFamily: 'BNazanin, sans-serif' }}>
             معینیت امور مالی و اداری
