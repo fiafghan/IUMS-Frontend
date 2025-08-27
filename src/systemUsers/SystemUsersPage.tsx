@@ -157,7 +157,8 @@ export default function SystemUsersPage() {
               {/* Search Bar */}
               <div className="relative flex-1 max-w-md">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="w-5 h-5 text-slate-400" />
+                  <Search className="w-5 h-5 text-white bg-gradient-to-r 
+                  from-slate-800 to-slate-600 rounded-full p-1" />
                 </div>
                 <input
                   type="text"
@@ -173,7 +174,10 @@ export default function SystemUsersPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate("/register")}
-                className="px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-slate-800 
+                to-slate-600 text-white rounded-xl font-medium
+                 hover:bg-slate-400 transition-all duration-200 shadow-lg 
+                 hover:shadow-xl flex items-center gap-2"
               >
                 <UserPlus className="w-5 h-5" />
                 Add New User
@@ -217,7 +221,7 @@ export default function SystemUsersPage() {
                       <td className="px-6 py-4 text-sm font-mono text-slate-600">#{user.id}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                          <div className="w-10 h-10 bg-gradient-to-br from-slate-800 to-slate-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                             {user.name?.charAt(0)?.toUpperCase() || 'U'}
                           </div>
                           <div>

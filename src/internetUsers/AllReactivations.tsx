@@ -140,8 +140,8 @@ export default function AllReactivations(): JSX.Element {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-100 rounded-full">
-              <FileText className="w-6 h-6 text-blue-600" />
+            <div className="p-3 bg-gradient-to-r from-slate-900 to-slate-600 rounded-full">
+              <FileText className="w-6 h-6 text-blue-300" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Account Reactivations</h1>
@@ -182,7 +182,7 @@ export default function AllReactivations(): JSX.Element {
           <div className="overflow-x-auto rounded-xl shadow-lg bg-white border border-gray-200">
             <table className="table-auto w-full text-left text-sm">
               <thead>
-                <tr className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs uppercase tracking-wider">
+                <tr className="bg-gradient-to-r from-slate-800 to-slate-600 text-blue-300 text-xs uppercase tracking-wider">
                   {headers.map((h) => (
                     <th key={h} className="px-6 py-4 font-semibold">
                       {h}
@@ -200,8 +200,8 @@ export default function AllReactivations(): JSX.Element {
                     {/* Username */}
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-blue-100 rounded-full">
-                          <User className="w-4 h-4 text-blue-600" />
+                        <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-600 rounded-full">
+                          <User className="w-4 h-4 text-blue-300" />
                         </div>
                         <span className="font-medium text-gray-900">
                           {reactivation.username}
@@ -260,7 +260,8 @@ export default function AllReactivations(): JSX.Element {
                         <div className="flex space-x-2">
                           <button
                             onClick={() => handleEdit(reactivation)}
-                            className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                            className="p-2 bg-gradient-to-r from-slate-900 to-slate-500 
+                            text-blue-300 rounded-md hover:bg-slate-400 transition-colors"
                             title="Edit"
                           >
                             <Edit className="w-4 h-4" />

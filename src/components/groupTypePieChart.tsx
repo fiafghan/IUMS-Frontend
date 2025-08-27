@@ -125,7 +125,7 @@ export default function GroupTypePieChart() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg">
-            <BarChart3 className="w-5 h-5 text-white" />
+            <BarChart3 className="w-5 h-5 text-blue-300" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Group Distribution</h3>

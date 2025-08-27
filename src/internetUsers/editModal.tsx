@@ -664,7 +664,7 @@ export default function EditUserModal({
                     </div>
                 </div>
 
-                {/* Enhanced Body - Now Scrollable */}
+                {/* Enhanced Body */}
                 <div className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-50 to-blue-50">
                     <div className="p-8">
                         <Tab.Group>
@@ -674,7 +674,7 @@ export default function EditUserModal({
                                         key={tab}
                                         className={({ selected }) =>
                                             `px-6 py-3 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-200 ${selected
-                                                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg transform scale-105"
+                                                ? "bg-gradient-to-r from-slate-800 to-slate-600 text-blue-300 shadow-lg transform scale-105"
                                                 : "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-800"
                                             }`
                                         }
@@ -694,7 +694,7 @@ export default function EditUserModal({
                                                 name="name"
                                                 value={editForm.name || ""}
                                                 placeholder="Enter full name"
-                                                icon={<User className="w-5 h-5 text-blue-600" />}
+                                                icon={<User className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                             />
                                             <InputWithIcon
@@ -702,7 +702,7 @@ export default function EditUserModal({
                                                 name="lastname"
                                                 value={editForm.lastname || ""}
                                                 placeholder="Enter last name"
-                                                icon={<UserRound className="w-5 h-5 text-blue-600" />}
+                                                icon={<UserRound className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                             />
                                             <InputWithIcon
@@ -710,7 +710,7 @@ export default function EditUserModal({
                                                 name="username"
                                                 value={editForm.username || ""}
                                                 placeholder="Enter username"
-                                                icon={<BadgeCheck className="w-5 h-5 text-blue-600" />}
+                                                icon={<BadgeCheck className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                             />
                                             <InputWithIcon
@@ -719,7 +719,7 @@ export default function EditUserModal({
                                                 type="email"
                                                 value={editForm.email || ""}
                                                 placeholder="Enter email address"
-                                                icon={<Mail className="w-5 h-5 text-blue-600" />}
+                                                icon={<Mail className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                                 error={emailError}
                                                 isLoading={isCheckingEmail}
@@ -729,7 +729,7 @@ export default function EditUserModal({
                                                 name="phone"
                                                 value={editForm.phone || ""}
                                                 placeholder="+937xxxxxxxx"
-                                                icon={<Phone className="w-5 h-5 text-blue-600" />}
+                                                icon={<Phone className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                                 error={phoneError}
                                                 isLoading={isCheckingPhone}
@@ -739,7 +739,7 @@ export default function EditUserModal({
                                                 name="position"
                                                 value={editForm.position || ""}
                                                 placeholder="Enter job position"
-                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-600" />}
+                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
                                             />
                                         </div>
@@ -757,7 +757,7 @@ export default function EditUserModal({
                                                 filtered={filteredDirectorates}
                                                 query={qDirectorate}
                                                 setQuery={setQDirectorate}
-                                                icon={<Building2 className="w-5 h-5 text-blue-600" />}
+                                                icon={<Building2 className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                             />
                                             <ComboBoxField
                                                 label="Group"
@@ -766,7 +766,7 @@ export default function EditUserModal({
                                                 filtered={filteredGroups}
                                                 query={qGroup}
                                                 setQuery={setQGroup}
-                                                icon={<Users className="w-5 h-5 text-blue-600" />}
+                                                icon={<Users className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                             />
                                             <ComboBoxField
                                                 label="Employment Type"
@@ -775,7 +775,7 @@ export default function EditUserModal({
                                                 filtered={filteredEmployment}
                                                 query={qEmployment}
                                                 setQuery={setQEmployment}
-                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-600" />}
+                                                icon={<BriefcaseBusiness className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                             />
                                             <ComboBoxField
                                                 label="Deputy Ministry"
@@ -784,7 +784,7 @@ export default function EditUserModal({
                                                 filtered={filteredDeputies}
                                                 query={qDeputy}
                                                 setQuery={setQDeputy}
-                                                icon={<Landmark className="w-5 h-5 text-blue-600" />}
+                                                icon={<Landmark className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                             />
                                         </div>
                                     </div>
@@ -796,7 +796,7 @@ export default function EditUserModal({
                                         {/* Device Limit Section */}
                                         <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                                             <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                                                <HardDrive className="w-5 h-5 text-blue-600" />
+                                                <HardDrive className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />
                                                 Device Management
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -806,7 +806,7 @@ export default function EditUserModal({
                                                     type="number"
                                                     value={editForm.device_limit ?? ""}
                                                     placeholder="Number of devices allowed"
-                                                    icon={<HardDrive className="w-5 h-5 text-blue-600" />}
+                                                    icon={<HardDrive className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                     onChange={handleEditChange}
                                                 />
 
@@ -932,8 +932,8 @@ export default function EditUserModal({
                         <button
                             onClick={handleSave}
                             disabled={!canSave}
-                            className={`px-8 py-3 rounded-xl text-white text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${canSave
-                                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-105"
+                            className={`px-8 py-3 rounded-xl text-blue-300 text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${canSave
+                                    ? "bg-gradient-to-r from-slate-800 to-slate-600 hover:to-slate-400 shadow-lg hover:shadow-xl transform hover:scale-105"
                                     : "bg-slate-400 cursor-not-allowed"
                                 }`}
                         >

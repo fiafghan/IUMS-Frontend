@@ -25,11 +25,12 @@ export default function Reports() {
 
     const handlePrint = useReactToPrint({
         contentRef: printRef,
-        documentTitle: "Reports",
+        documentTitle: "IUMS-Report",
     });
 
     // Mock Data for Individual Report
     const mockUser = {
+        name: "Nisar",
         lastname: "Ahmadi",
         directorate: "IT Directorate",
         deputyMinistry: "Digital Services",
@@ -205,6 +206,7 @@ export default function Reports() {
                                         <h3 className="text-lg font-semibold mb-2 text-slate-800">
                                             User Information
                                         </h3>
+                                        <p><span className="font-medium">Lastname:</span> {userData.name}</p>
                                         <p><span className="font-medium">Lastname:</span> {userData.lastname}</p>
                                         <p><span className="font-medium">Directorate:</span> {userData.directorate}</p>
                                         <p><span className="font-medium">Deputy Ministry:</span> {userData.deputyMinistry}</p>
