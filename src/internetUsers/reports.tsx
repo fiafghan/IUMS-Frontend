@@ -166,7 +166,8 @@ export default function Reports() {
 
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                                        <label className="block text-sm font-medium 
+                                        print:ml-3 text-slate-700 mb-1">
                                             Start Date
                                         </label>
                                         <input
@@ -178,7 +179,8 @@ export default function Reports() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                                        <label className="block text-sm font-medium 
+                                        print:ml-3 text-slate-700 mb-1">
                                             End Date
                                         </label>
                                         <input
@@ -189,7 +191,7 @@ export default function Reports() {
                                             print:border-none print:shadow-none"
                                         />
                                     </div>
-                                    <div className="md:col-span-2 p-0.5">
+                                    <div className="md:col-span-2 p-0.5 print:border-none">
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Username
                                         </label>
@@ -202,7 +204,7 @@ export default function Reports() {
                                             }}
                                             placeholder="Select username..."
                                             isClearable
-                                            className="basic-single rounded-md"
+                                            className="basic-single"
                                         />
                                     </div>
 
@@ -249,7 +251,8 @@ export default function Reports() {
 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                                        <label className="block text-sm font-medium 
+                                        print:ml-3 text-slate-700 mb-1">
                                             Start Date
                                         </label>
                                         <input
@@ -259,7 +262,8 @@ export default function Reports() {
                                             className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none"
                                         />                                    </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                                        <label className="block text-sm font-medium 
+                                        print:ml-3 text-slate-700 mb-1">
                                             End Date
                                         </label>
                                         <input
