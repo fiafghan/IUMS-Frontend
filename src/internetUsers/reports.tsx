@@ -17,6 +17,9 @@ export default function Reports() {
     const printRef = useRef<HTMLDivElement>(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [generalStartDate, setGeneralStartDate] = useState("");
+    const [generalEndDate, setGeneralEndDate] = useState("");
+
 
 
     const handlePrint = useReactToPrint({
@@ -75,13 +78,21 @@ export default function Reports() {
 
     const handleSearchGeneral = async () => {
         try {
-            const res = await axios.get(`${route}/reports/general`);
+            const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+            const res = await axios.get(`${route}/reports/general`, {
+                params: { startDate: generalStartDate, endDate: generalEndDate },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                }
+            });
             setGeneralData(res.data);
         } catch (err: any) {
             console.error(err);
             alert(err.response?.data?.message || "Failed to fetch general report");
         }
     };
+
 
 
     // Compute max and min violations for General Report
@@ -190,7 +201,7 @@ export default function Reports() {
                                     </div>
                                 </div>
 
-                                {userData ? (
+                                {userData && (
                                     <div className="mb-6 bg-slate-50 p-4 rounded-xl shadow">
                                         <h3 className="text-lg font-semibold mb-2 text-slate-800">
                                             User Information
@@ -201,7 +212,7 @@ export default function Reports() {
                                         <p><span className="font-medium">Deputy Ministry:</span> {userData.deputyMinistry}</p>
                                         <p><span className="font-medium">Number of Violations:</span> {userData.violations}</p>
                                     </div>
-                                ) : (<p>No user data available.</p>)}
+                                )}
 
                                 {userData && (
                                     <div className="bg-slate-50 p-4 rounded-xl shadow h-80">
@@ -234,14 +245,22 @@ export default function Reports() {
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Start Date
                                         </label>
-                                        <input type="date" className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none" />
-                                    </div>
+                                        <input
+                                            type="date"
+                                            value={generalStartDate}
+                                            onChange={e => setGeneralStartDate(e.target.value)}
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none"
+                                        />                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             End Date
                                         </label>
-                                        <input type="date" className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none" />
-                                    </div>
+                                        <input
+                                            type="date"
+                                            value={generalEndDate}
+                                            onChange={e => setGeneralEndDate(e.target.value)}
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none"
+                                        />                                    </div>
                                     <div className="flex items-end print:hidden">
                                         <button
                                             onClick={handleSearchGeneral}
