@@ -10,6 +10,15 @@ import axios from "axios";
 import { route } from "../config";
 import Select from "react-select";
 
+const AngleTick = ({ x, y, payload }: any) => (
+    <g transform={`translate(${x},${y})`}>
+        <text dy={12} textAnchor="end" transform="rotate(-90)" fontSize={8}>
+            {payload.value}
+        </text>
+    </g>
+);
+
+
 
 export default function Reports() {
     const [activeTab, setActiveTab] = useState<"individual" | "general">("individual");
@@ -308,14 +317,21 @@ export default function Reports() {
                                 )}
 
                                 {generalData && (
-                                    <div className="bg-slate-50 p-4 rounded-xl shadow h-80">
+                                    <div className="bg-white p-4 h-80">
                                         <h3 className="text-lg font-semibold mb-4 text-slate-800">
                                             Violations per Directorate
                                         </h3>
                                         <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={generalData}>
+                                            <BarChart data={generalData} margin={{ top: 10, right: 10, left: 10, bottom: 70 }}>
                                                 <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="directorate" />
+                                                <XAxis
+                                                    dataKey="directorate"
+                                                    interval={0}          
+                                                    height={70}           
+                                                    tickLine={false}      
+                                                    tick={<AngleTick />}
+                                                />
+
                                                 <YAxis />
                                                 <Tooltip />
                                                 <Bar dataKey="violations" fill="#020b29" />
