@@ -267,8 +267,8 @@ export default function Reports() {
                                             {selectedUsername?.value
                                                 ? selectedUsername.value.charAt(0).toUpperCase() + selectedUsername.value.slice(1) + " "
                                                 : ""}
-                                                User Information
-                                             
+                                            User Information
+
                                         </h3>
                                         <div className="grid grid-cols-1">
                                             {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>) : <span className="font-medium">Start Date: All</span>}
@@ -405,16 +405,28 @@ export default function Reports() {
                             </div>
                         )}
 
-                        {(userData || generalData) && (
+                        {userData && activeTab === "individual" && (
                             <div className="mt-10 flex">
-                            <button
-                                onClick={handlePrint}
-                                className="px-6 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-500 print:hidden"
-                            >
-                                Print Report
-                            </button>
-                        </div>
-                    )}
+                                <button
+                                    onClick={handlePrint}
+                                    className="px-6 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-500 print:hidden"
+                                >
+                                    Print {selectedUsername?.value
+                                        ? selectedUsername.value.charAt(0).toUpperCase() + selectedUsername.value.slice(1) + " "
+                                        : ""} Report
+                                </button>
+                            </div>
+                        )}
+                        {generalData && activeTab === "general" && (
+                            <div className="mt-10 flex">
+                                <button
+                                    onClick={handlePrint}
+                                    className="px-6 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-500 print:hidden"
+                                >
+                                    Print General Report
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
