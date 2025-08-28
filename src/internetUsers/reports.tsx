@@ -156,15 +156,15 @@ export default function Reports() {
                         {/* Header Content */}
                         <div className="flex flex-col items-center text-center">
                             {/* Main Title */}
-                            <h1 className="text-md font-extrabold bg-gradient-to-r from-slate-800 via-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tight flex items-center gap-3 drop-shadow-sm">
+                            <h1 className="text-xl font-extrabold bg-gradient-to-r from-slate-800 via-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tight flex items-center gap-3 drop-shadow-sm">
                                 Information Technology Directorate
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-3 text-sm text-slate-600 italic tracking-wide font-medium">
+                            <p className="mt-3 text-sm text-slate-600 tracking-wide font-medium">
                                 Network and System Department
                             </p>
-                            <p className="mt-3 text-sm text-slate-600 italic tracking-wide font-medium">
+                            <p className="mt-3 text-sm text-slate-600 tracking-wide font-medium">
                                 IUMS Violations Report
                             </p>
 
