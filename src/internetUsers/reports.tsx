@@ -266,6 +266,10 @@ export default function Reports() {
                                         <h3 className="text-lg font-semibold mb-2 text-slate-800">
                                             User Information
                                         </h3>
+                                        <div className="grid grid-cols-1">
+                                        {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>): <span className="font-medium">Start Date: All</span>}
+                                        {endDate ? (<p><span className="font-medium">End Date:</span> {endDate}</p>): <span className="font-medium">End Date: All</span>}
+                                        </div>
                                         <p><span className="font-medium">User Name:</span> {selectedUsername?.value}</p>
                                         <p><span className="font-medium">Name:</span> {userData.name}</p>
                                         <p><span className="font-medium">Lastname:</span> {userData.lastname}</p>
