@@ -211,14 +211,14 @@ export default function Reports() {
                         {/* Individual Reports */}
                         {activeTab === "individual" && (
                             <div>
-                                <h2 className="text-xl font-semibold mb-4 text-slate-800">
+                                <h2 className="text-xl font-semibold mb-4 text-slate-800 print:hidden">
                                     Individual Reports
                                 </h2>
 
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
                                     <div>
                                         <label className="block text-sm font-medium 
-                                        print:ml-3 text-slate-700 mb-1">
+                                        print:ml-3 text-slate-700 mb-1 print:hidden">
                                             Start Date
                                         </label>
                                         <input
@@ -226,12 +226,12 @@ export default function Reports() {
                                             value={startDate}
                                             onChange={(e) => setStartDate(e.target.value)}
                                             className="w-full border border-slate-300 rounded-lg px-3 py-2 
-                                            print:border-none print:shadow-none"
+                                            print:border-none print:hidden"
                                         />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium 
-                                        print:ml-3 text-slate-700 mb-1">
+                                        print:ml-3 text-slate-700 mb-1 print:hidden">
                                             End Date
                                         </label>
                                         <input
@@ -239,7 +239,7 @@ export default function Reports() {
                                             value={endDate}
                                             onChange={(e) => setEndDate(e.target.value)}
                                             className="w-full border border-slate-300 rounded-lg px-3 py-2 
-                                            print:border-none print:shadow-none"
+                                            print:border-none print:hidden"
                                         />
                                     </div>
                                     <div className="md:col-span-2 p-0.5 print:hidden">
@@ -262,9 +262,9 @@ export default function Reports() {
                                 </div>
 
                                 {userData && (
-                                    <div className="mb-6 bg-slate-50 p-4 rounded-xl shadow">
-                                        <h3 className="text-lg font-semibold mb-2 text-slate-800">
-                                            User Information
+                                    <div className="mb-6 bg-white">
+                                        <h3 className="text-lg font-semibold mb-2 text-slate-800 print:text-center print:text-3xl print:underline">
+                                            User's Violation Information
                                         </h3>
                                         <div className="grid grid-cols-1">
                                         {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>): <span className="font-medium">Start Date: All</span>}
@@ -280,9 +280,9 @@ export default function Reports() {
                                 )}
 
                                 {userData && (
-                                    <div className="bg-slate-50 p-4 rounded-xl shadow h-80">
-                                        <h3 className="text-lg font-semibold mb-4 text-slate-800">
-                                            Violations Trend
+                                    <div className="bg-white p-4 h-80">
+                                        <h3 className="text-xl font-semibold mb-4 text-slate-800 print:text-center">
+                                           {selectedUsername?.value} Violations Trend
                                         </h3>
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={userData.trend}>
