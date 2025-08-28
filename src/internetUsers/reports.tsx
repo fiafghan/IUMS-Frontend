@@ -405,7 +405,8 @@ export default function Reports() {
                             </div>
                         )}
 
-                        {userData && (<div className="mt-10 flex">
+                        {(userData || generalData) && (
+                            <div className="mt-10 flex">
                             <button
                                 onClick={handlePrint}
                                 className="px-6 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-500 print:hidden"
