@@ -242,7 +242,7 @@ export default function Reports() {
                                             print:border-none print:shadow-none"
                                         />
                                     </div>
-                                    <div className="md:col-span-2 p-0.5">
+                                    <div className="md:col-span-2 p-0.5 print:hidden">
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Username
                                         </label>
@@ -255,7 +255,7 @@ export default function Reports() {
                                             }}
                                             placeholder="Search & Select Username..."
                                             isClearable
-                                            className="basic-single print:border-none"
+                                            className="basic-single"
                                         />
                                     </div>
 
@@ -266,6 +266,7 @@ export default function Reports() {
                                         <h3 className="text-lg font-semibold mb-2 text-slate-800">
                                             User Information
                                         </h3>
+                                        <p><span className="font-medium">User Name:</span> {selectedUsername?.value}</p>
                                         <p><span className="font-medium">Name:</span> {userData.name}</p>
                                         <p><span className="font-medium">Lastname:</span> {userData.lastname}</p>
                                         <p><span className="font-medium">Directorate:</span> {userData.directorate}</p>
