@@ -267,8 +267,8 @@ export default function Reports() {
                                             User's Violation Information
                                         </h3>
                                         <div className="grid grid-cols-1">
-                                        {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>): <span className="font-medium">Start Date: All</span>}
-                                        {endDate ? (<p><span className="font-medium">End Date:</span> {endDate}</p>): <span className="font-medium">End Date: All</span>}
+                                            {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>) : <span className="font-medium">Start Date: All</span>}
+                                            {endDate ? (<p><span className="font-medium">End Date:</span> {endDate}</p>) : <span className="font-medium">End Date: All</span>}
                                         </div>
                                         <p><span className="font-medium">User Name:</span> {selectedUsername?.value}</p>
                                         <p><span className="font-medium">Name:</span> {userData.name}</p>
@@ -282,7 +282,7 @@ export default function Reports() {
                                 {userData && (
                                     <div className="bg-gray-100 p-4 h-80">
                                         <h3 className="text-xl font-semibold mb-4 text-slate-800 print:text-center">
-                                           {selectedUsername?.value} Violations Trend
+                                            {selectedUsername?.value} Violations Trend
                                         </h3>
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={userData.trend}>
@@ -301,32 +301,32 @@ export default function Reports() {
                         {/* General Reports */}
                         {activeTab === "general" && (
                             <div>
-                                <h2 className="text-xl font-semibold mb-4 text-slate-800">
+                                <h2 className="text-xl font-semibold text-slate-800 print:text-center print:underline print:text-3xl">
                                     General Reports
                                 </h2>
 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                     <div>
                                         <label className="block text-sm font-medium 
-                                        print:ml-3 text-slate-700 mb-1">
+                                        print:ml-3 text-slate-700 mb-1 print:hidden">
                                             Start Date
                                         </label>
                                         <input
                                             type="date"
                                             value={generalStartDate}
                                             onChange={e => setGeneralStartDate(e.target.value)}
-                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none"
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:hidden"
                                         />                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium 
-                                        print:ml-3 text-slate-700 mb-1">
+                                        print:ml-3 text-slate-700 mb-1 print:hidden">
                                             End Date
                                         </label>
                                         <input
                                             type="date"
                                             value={generalEndDate}
                                             onChange={e => setGeneralEndDate(e.target.value)}
-                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:border-none"
+                                            className="w-full border border-slate-300 rounded-lg px-3 py-2 print:hidden"
                                         />                                    </div>
                                     <div className="flex items-end print:hidden">
                                         <button
@@ -339,10 +339,20 @@ export default function Reports() {
                                 </div>
 
                                 {generalData && (
-                                    <div className="mb-6 bg-slate-50 p-4 rounded-xl shadow">
-                                        <h3 className="text-lg font-semibold mb-3 text-slate-800">
-                                            Directorate Violations Summary
+
+                                    <div className="mb-6 bg-white p-4">
+                                        <h3 className="text-lg font-semibold mb-3 text-slate-800 print:text-2xl 
+                                        print:mb-5">
+                                            Directorates Violations Summary
                                         </h3>
+                                        <div className="flex gap-15 ml-6">
+                                            {generalStartDate ? (<label htmlFor=""><span className="font-bold">Start Date: </span>{generalStartDate}</label>):
+                                                <label htmlFor=""><span className="font-bold">Start Date: </span>All</label>
+                                            }
+                                            {generalEndDate ? (<label htmlFor=""><span className="font-bold">End Date: </span>{generalEndDate}</label>):
+                                                <label htmlFor=""><span className="font-bold">End Date: </span>All</label>
+                                            }
+                                        </div>
                                         <ul className="list-disc ml-6 mb-3 text-slate-700">
                                             {generalData.map((d, i) => (
                                                 <li key={i}>
