@@ -135,6 +135,16 @@ export default function Reports() {
                     ref={printRef}
                 >
                     <div className="relative p-8 border-b border-slate-300 bg-gradient-to-r from-slate-50 via-white to-slate-50 shadow-sm">
+                        <style>
+                            {`
+                                @media print {
+                                    @page {
+                                    size: A4 portrait;
+                                    margin: 12mm;
+                                    }
+                                }
+                                `}
+                        </style>
                         {/* Decorative gradient bar */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-700 via-slate-900 to-slate-700"></div>
 

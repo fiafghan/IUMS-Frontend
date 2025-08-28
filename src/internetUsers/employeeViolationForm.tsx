@@ -66,6 +66,16 @@ export default function EmployeeViolationForm() {
         <div id="printable-content" ref={printRef} >
           {/* Logos Row */}
           <div className="flex items-center justify-between mb-1">
+            <style>
+              {`
+                                @media print {
+                                    @page {
+                                    size: A4 landscape;
+                                    margin: 12mm;
+                                    }
+                                }
+                                `}
+            </style>
             <img src="/emirate.png" alt="Logo Left" className="w-30" />
             <h1 className="text-center font-bold" style={{ fontFamily: 'BNazanin, sans-serif' }}>
               امارت اسلامی افغانستان
