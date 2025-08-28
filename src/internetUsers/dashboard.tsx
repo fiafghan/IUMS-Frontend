@@ -300,7 +300,7 @@ export default function Dashboard(): JSX.Element {
                     <User className="w-3 h-3 text-blue-300" />
                   </div>
                   <div className="text-left">
-                    <button onClick={() => navigate("/adduser")}><div className="font-medium text-blue-900">Add New User</div></button>
+                    <div onClick={() => navigate("/adduser")}><div className="font-medium text-blue-900">Add New User</div></div>
                     <div className="text-sm text-blue-600">Create new internet user account</div>
                   </div>
                 </button>

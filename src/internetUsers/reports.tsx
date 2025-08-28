@@ -1,14 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { FileText, BarChart2 } from "lucide-react";
+import { FileText, BarChart2, Home } from "lucide-react";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar
 } from "recharts";
 import { useReactToPrint } from "react-to-print";
-import GradientSidebar from "../components/Sidebar";
 import axios from "axios";
 import { route } from "../config";
 import Select from "react-select";
+import { useNavigate } from "react-router-dom";
+
+
 
 const AngleTick = ({ x, y, payload }: any) => (
     <g transform={`translate(${x},${y})`}>
@@ -17,6 +19,7 @@ const AngleTick = ({ x, y, payload }: any) => (
         </text>
     </g>
 );
+
 
 
 
@@ -31,6 +34,9 @@ export default function Reports() {
     const [generalEndDate, setGeneralEndDate] = useState("");
     const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
     const [selectedUsername, setSelectedUsername] = useState<{ value: string; label: string } | null>(null);
+
+
+    const navigate = useNavigate();
 
 
     const fetchUsernames = async () => {
@@ -126,11 +132,11 @@ export default function Reports() {
         : null;
 
     return (
-        <div className="min-h-screen flex bg-white">
-            <GradientSidebar />
-            <div className="flex justify-center items-center min-h-screen bg-slate-200 mx-auto mt-5 mb-5">
+        <div className="min-h-screen flex justify-center items-center bg-white">
+            <div className="flex max-h-screen bg-slate-200 mx-auto mt-5 mb-5">
+
                 <div
-                    className="bg-white shadow-xl overflow-hidden"
+                    className="bg-white shadow-sm"
                     style={{ width: "210mm", height: "297mm" }}
                     ref={printRef}
                 >
@@ -204,6 +210,13 @@ export default function Reports() {
                         >
                             <BarChart2 className="w-5 h-5" />
                             General Reports
+                        </button>
+                        <button
+                            onClick={() => navigate("/")}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all text-slate-500"
+                        >
+                            <Home className="w-5 h-5" />
+                            Home
                         </button>
                     </div>
 
