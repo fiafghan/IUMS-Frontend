@@ -140,13 +140,13 @@ export default function Reports() {
                                 @media print {
                                     @page {
                                     size: A4 portrait;
-                                    margin: 12mm;
+                                    margin: 0.5mm;
                                     }
                                 }
                                 `}
                         </style>
                         {/* Decorative gradient bar */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-700 via-slate-900 to-slate-700"></div>
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-slate-700 via-slate-900 to-slate-700"></div>
 
                         {/* Logos Section */}
                         <div className="absolute top-3 left-6 flex flex-col items-center">
