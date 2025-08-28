@@ -134,11 +134,41 @@ export default function Reports() {
                     style={{ width: "210mm", height: "297mm" }}
                     ref={printRef}
                 >
-                    <div className="p-6 border-b border-slate-300">
-                        <h1 className="text-3xl font-bold print:text-center text-slate-700">
-                            Reports
-                        </h1>
-                        <p className="text-slate-600 print:hidden">View and manage all reports here.</p>
+                    <div className="relative p-8 border-b border-slate-300 bg-gradient-to-r from-slate-50 via-white to-slate-50 shadow-sm">
+                        {/* Decorative gradient bar */}
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-700 via-slate-900 to-slate-700"></div>
+
+                        {/* Logos Section */}
+                        <div className="absolute top-3 left-6 flex flex-col items-center">
+                            <img src="/emirate.png" alt="Left Logo" className="w-16 h-16 object-contain" />
+                            <span className="mt-1 text-xs font-semibold text-slate-700 tracking-wide">
+                                Islamic Emirate of Afghanistan
+                            </span>
+                        </div>
+
+                        <div className="absolute top-3 right-6 flex flex-col items-center">
+                            <img src="/moph.png" alt="Right Logo" className="w-16 h-16 object-contain" />
+                            <span className="mt-1 text-xs font-semibold text-slate-700 tracking-wide">
+                                Ministry of Public Health
+                            </span>
+                        </div>
+
+                        {/* Header Content */}
+                        <div className="flex flex-col items-center text-center">
+                            {/* Main Title */}
+                            <h1 className="text-5xl font-extrabold bg-gradient-to-r from-slate-800 via-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tight flex items-center gap-3 drop-shadow-sm">
+                                <FileText className="w-10 h-10 text-slate-800 drop-shadow-md" />
+                                Reports
+                            </h1>
+
+                            {/* Subtitle */}
+                            <p className="mt-3 text-lg text-slate-600 italic tracking-wide font-medium print:hidden">
+                                View and manage all reports here.
+                            </p>
+
+                            {/* Underline Accent */}
+                            <div className="mt-4 h-1.5 w-36 bg-gradient-to-r from-slate-800 via-slate-600 to-slate-800 rounded-full shadow-md"></div>
+                        </div>
                     </div>
 
                     <div className="flex gap-4 px-6 pt-4 border-b border-slate-200">
@@ -326,9 +356,9 @@ export default function Reports() {
                                                 <CartesianGrid strokeDasharray="3 3" />
                                                 <XAxis
                                                     dataKey="directorate"
-                                                    interval={0}          
-                                                    height={70}           
-                                                    tickLine={false}      
+                                                    interval={0}
+                                                    height={70}
+                                                    tickLine={false}
                                                     tick={<AngleTick />}
                                                 />
 

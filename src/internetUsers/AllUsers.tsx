@@ -134,10 +134,10 @@ export default function InternetUsersList(): JSX.Element {
                 >
                     <div className="flex items-center gap-4 mb-6">
                         <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-600 rounded-md shadow-lg">
-                            <Users className="w-8 h-8 text-white" />
+                            <Users className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                            <h1 className="text-xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                                 Internet Users
                             </h1>
                             <p className="text-slate-600 mt-1 font-medium">
