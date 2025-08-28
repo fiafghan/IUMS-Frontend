@@ -188,7 +188,7 @@ export default function Reports() {
                             onClick={() => setActiveTab("individual")}
                             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === "individual"
                                 ? "text-slate-900 border-b-2 border-slate-700"
-                                : "text-slate-500 hover:text-slate-600"
+                                : "text-slate-500 hover:text-slate-600 print:hidden"
                                 }`}
                         >
                             <FileText className="w-5 h-5" />
@@ -199,7 +199,7 @@ export default function Reports() {
                             onClick={() => setActiveTab("general")}
                             className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${activeTab === "general"
                                 ? "text-slate-900 border-b-2 border-slate-700"
-                                : "text-slate-500 hover:text-slate-700"
+                                : "text-slate-500 hover:text-slate-700 print:hidden"
                                 }`}
                         >
                             <BarChart2 className="w-5 h-5" />
@@ -263,8 +263,12 @@ export default function Reports() {
 
                                 {userData && (
                                     <div className="mb-6 bg-white">
-                                        <h3 className="text-lg font-semibold mb-2 text-slate-800 print:text-center print:text-3xl print:underline">
-                                            User's Violation Information
+                                        <h3 className="text-lg font-bold mb-2 text-slate-800 print:text-xl">
+                                            {selectedUsername?.value
+                                                ? selectedUsername.value.charAt(0).toUpperCase() + selectedUsername.value.slice(1) + " "
+                                                : ""}
+                                                User Information
+                                             
                                         </h3>
                                         <div className="grid grid-cols-1">
                                             {startDate ? (<p><span className="font-medium">Start Date:</span> {startDate}</p>) : <span className="font-medium">Start Date: All</span>}
@@ -282,7 +286,9 @@ export default function Reports() {
                                 {userData && (
                                     <div className="bg-gray-100 p-4 h-80">
                                         <h3 className="text-xl font-semibold mb-4 text-slate-800 print:text-center">
-                                            {selectedUsername?.value} Violations Trend
+                                            {selectedUsername?.value
+                                                ? selectedUsername.value.charAt(0).toUpperCase() + selectedUsername.value.slice(1) + " "
+                                                : ""} Violations Trend
                                         </h3>
                                         <ResponsiveContainer width="100%" height="100%">
                                             <LineChart data={userData.trend}>
@@ -346,10 +352,10 @@ export default function Reports() {
                                             Directorates Violations Summary
                                         </h3>
                                         <div className="flex gap-15 ml-6">
-                                            {generalStartDate ? (<label htmlFor=""><span className="font-bold">Start Date: </span>{generalStartDate}</label>):
+                                            {generalStartDate ? (<label htmlFor=""><span className="font-bold">Start Date: </span>{generalStartDate}</label>) :
                                                 <label htmlFor=""><span className="font-bold">Start Date: </span>All</label>
                                             }
-                                            {generalEndDate ? (<label htmlFor=""><span className="font-bold">End Date: </span>{generalEndDate}</label>):
+                                            {generalEndDate ? (<label htmlFor=""><span className="font-bold">End Date: </span>{generalEndDate}</label>) :
                                                 <label htmlFor=""><span className="font-bold">End Date: </span>All</label>
                                             }
                                         </div>
