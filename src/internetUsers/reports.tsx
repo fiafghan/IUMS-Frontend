@@ -156,18 +156,20 @@ export default function Reports() {
                         {/* Header Content */}
                         <div className="flex flex-col items-center text-center">
                             {/* Main Title */}
-                            <h1 className="text-5xl font-extrabold bg-gradient-to-r from-slate-800 via-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tight flex items-center gap-3 drop-shadow-sm">
-                                <FileText className="w-10 h-10 text-slate-800 drop-shadow-md" />
-                                Reports
+                            <h1 className="text-md font-extrabold bg-gradient-to-r from-slate-800 via-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tight flex items-center gap-3 drop-shadow-sm">
+                                Information Technology Directorate
                             </h1>
 
                             {/* Subtitle */}
-                            <p className="mt-3 text-lg text-slate-600 italic tracking-wide font-medium print:hidden">
-                                View and manage all reports here.
+                            <p className="mt-3 text-sm text-slate-600 italic tracking-wide font-medium">
+                                Network and System Department
+                            </p>
+                            <p className="mt-3 text-sm text-slate-600 italic tracking-wide font-medium">
+                                IUMS Violations Report
                             </p>
 
                             {/* Underline Accent */}
-                            <div className="mt-4 h-1.5 w-36 bg-gradient-to-r from-slate-800 via-slate-600 to-slate-800 rounded-full shadow-md"></div>
+                            <div className="mt-4 h-1.5 w-36 bg-gradient-to-r from-slate-800 via-slate-400 to-slate-800 rounded-full shadow-md"></div>
                         </div>
                     </div>
 
