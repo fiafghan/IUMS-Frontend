@@ -128,7 +128,7 @@ export default function GroupTypePieChart() {
             <BarChart3 className="w-3 h-3 text-blue-300" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-slate-900">Group Distribution</h3>
+            <h3 className="text-md font-semibold text-slate-900">Group Distribution</h3>
             <p className="text-sm text-slate-500">Total: {totalUsers} users</p>
           </div>
         </div>

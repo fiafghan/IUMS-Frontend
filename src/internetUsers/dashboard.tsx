@@ -79,10 +79,10 @@ export default function Dashboard(): JSX.Element {
         >
           <div className="flex items-center gap-4 mb-6">
             <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-md">
-              <LayoutDashboard className="w-8 h-8 text-blue-300" />
+              <LayoutDashboard className="w-5 h-5 text-blue-300" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
                 Dashboard
               </h1>
               <p className="text-slate-600 mt-1 font-medium">
@@ -136,7 +136,7 @@ export default function Dashboard(): JSX.Element {
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors duration-300" />
                   </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Total Users</h3>
-                  <div className="text-3xl font-bold text-slate-900 mb-2">{totalUsers.toLocaleString()}</div>
+                  <div className="text-xl font-bold text-slate-900 mb-2">{totalUsers.toLocaleString()}</div>
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <TrendingUp className="w-4 h-4 text-green-500" />
                     <span className="text-green-600 font-medium">+{activeUsers} Total Users</span>
@@ -161,7 +161,7 @@ export default function Dashboard(): JSX.Element {
                     <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-green-500 transition-colors duration-300" />
                   </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Active Users</h3>
-                  <div className="text-3xl font-bold text-slate-900 mb-2">{activeUsers.toLocaleString()}</div>
+                  <div className="text-xl font-bold text-slate-900 mb-2">{activeUsers.toLocaleString()}</div>
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <div className="w-16 bg-slate-200 rounded-full h-2">
                       <div className="bg-green-500 h-2 rounded-full" style={{ width: `${activePercentage}%` }}></div>
@@ -188,7 +188,7 @@ export default function Dashboard(): JSX.Element {
                     <ArrowDownRight className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-colors duration-300" />
                   </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Inactive Users</h3>
-                  <div className="text-3xl font-bold text-slate-900 mb-2">{deactiveUsers.toLocaleString()}</div>
+                  <div className="text-xl font-bold text-slate-900 mb-2">{deactiveUsers.toLocaleString()}</div>
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <Clock className="w-4 h-4 text-red-500" />
                     <span className="text-red-600 font-medium">Requires attention</span>
@@ -217,7 +217,7 @@ export default function Dashboard(): JSX.Element {
                     transition-colors duration-300" />
                   </div>
                   <h3 className="text-slate-600 text-sm font-medium mb-2">Employment Types</h3>
-                  <div className="text-3xl font-bold text-slate-900 mb-2">{Object.keys(employmentTypeCounts).length}</div>
+                  <div className="text-xl font-bold text-slate-900 mb-2">{Object.keys(employmentTypeCounts).length}</div>
                   <div className="text-sm text-slate-500">
                     <span className="text-purple-600 font-medium">Diverse workforce</span> categories
                   </div>
@@ -239,7 +239,7 @@ export default function Dashboard(): JSX.Element {
                   <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg">
                     <Briefcase className="w-3 h-3 text-blue-300" />
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-900">Employment Distribution</h3>
+                  <h3 className="text-md font-semibold text-slate-900">Employment Distribution</h3>
                 </div>
                 <div className="space-y-4">
                   {Object.entries(employmentTypeCounts).map(([type, count], index) => (
@@ -293,7 +293,7 @@ export default function Dashboard(): JSX.Element {
               transition={{ duration: 0.6, delay: 0.8 }}
               className="mt-8 bg-white rounded-2xl p-6 border border-slate-100"
             >
-              <h3 className="text-xl font-semibold text-slate-900 mb-4">Quick Actions</h3>
+              <h3 className="text-md font-semibold text-slate-900 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-blue-100 hover:to-blue-200 rounded-xl border border-blue-200 transition-all duration-200 group">
                   <div className="p-2  bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg group-hover:scale-110 transition-transform duration-200">

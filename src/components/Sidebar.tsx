@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import {
-  Settings, AlertOctagon, Users, LogOut, ChevronDown, Shield, Home,
-  ClipboardList
+  Settings, AlertOctagon, Users, LogOut, ChevronDown, Shield,
+  ClipboardList,
+  LayoutDashboard
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, type JSX } from "react";
@@ -112,7 +113,7 @@ export default function GradientSidebar(): JSX.Element {
           className="group flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-cyan-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
         >
           <div className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
-            <Home className="w-3.5 h-3.5 text-white" />
+            <LayoutDashboard className="w-3.5 h-3.5 text-white" />
           </div>
           <span className="font-medium text-sm">Dashboard</span>
         </motion.button>
