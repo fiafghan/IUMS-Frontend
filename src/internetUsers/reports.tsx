@@ -280,7 +280,7 @@ export default function Reports() {
                                 )}
 
                                 {userData && (
-                                    <div className="bg-white p-4 h-80">
+                                    <div className="bg-gray-100 p-4 h-80">
                                         <h3 className="text-xl font-semibold mb-4 text-slate-800 print:text-center">
                                            {selectedUsername?.value} Violations Trend
                                         </h3>
