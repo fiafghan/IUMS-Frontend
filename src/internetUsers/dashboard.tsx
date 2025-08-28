@@ -310,7 +310,7 @@ export default function Dashboard(): JSX.Element {
                     <Activity className="w-3 h-3 text-green-300" />
                   </div>
                   <div className="text-left">
-                    <button onClick={() => navigate("/all-users")}><div className="font-medium text-green-900">View All Users</div></button>
+                    <div onClick={() => navigate("/all-users")}><div className="font-medium text-green-900">View All Users</div></div>
                     <div className="text-sm text-green-600">Browse complete user list</div>
                   </div>
                 </button>
