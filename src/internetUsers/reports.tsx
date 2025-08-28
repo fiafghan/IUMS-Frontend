@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FileText, BarChart2, Search } from "lucide-react";
+import { FileText, BarChart2 } from "lucide-react";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar
@@ -339,7 +339,7 @@ export default function Reports() {
                                             onClick={handleSearchGeneral}
                                             className="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-500 flex items-center gap-2"
                                         >
-                                            <Search className="w-4 h-4" /> Search
+                                            <FileText className="w-4 h-4" /> Generate
                                         </button>
                                     </div>
                                 </div>
