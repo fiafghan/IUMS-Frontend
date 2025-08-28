@@ -242,7 +242,7 @@ export default function Reports() {
                                             print:border-none print:shadow-none"
                                         />
                                     </div>
-                                    <div className="md:col-span-2 p-0.5 print:border-none">
+                                    <div className="md:col-span-2 p-0.5">
                                         <label className="block text-sm font-medium text-slate-700 mb-1">
                                             Username
                                         </label>
@@ -253,9 +253,9 @@ export default function Reports() {
                                                 setSelectedUsername(selected);
                                                 if (selected) handleSearchIndividual(selected.value);
                                             }}
-                                            placeholder="Select username..."
+                                            placeholder="Search & Select Username..."
                                             isClearable
-                                            className="basic-single"
+                                            className="basic-single print:border-none"
                                         />
                                     </div>
 

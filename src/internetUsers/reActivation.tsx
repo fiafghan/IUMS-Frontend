@@ -106,9 +106,7 @@ export default function ReactivateUserForm() {
 
       Toast.fire({
         title: "The Internet User Was Successfully Activated!",
-        icon: "success",
-        // draggable is supported in newer SweetAlert2 versions
-        draggable: true,
+        icon: "success"
       });
 
       setSelectedUser(null);
