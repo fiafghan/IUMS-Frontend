@@ -97,8 +97,8 @@ export default function GradientSidebar(): JSX.Element {
             <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
           </div>
         </div>
-        <h1 className="text-center mt-2 text-xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-          IUMS
+        <h1 className="text-center mt-2 text-md font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          MOPH-IUMS
         </h1>
         <p className="text-slate-400 text-xs mt-1 font-medium">Internet Users Management System</p>
       </div>

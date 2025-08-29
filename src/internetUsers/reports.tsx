@@ -213,10 +213,11 @@ export default function Reports() {
                         </button>
                         <button
                             onClick={() => navigate("/")}
-                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-all text-slate-500"
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
+                            rounded-t-lg transition-all text-slate-500"
                         >
-                            <Home className="w-5 h-5" />
-                            Home
+                            <Home className="w-5 h-5 print:hidden" />
+                            <span className="print:hidden">Home</span>
                         </button>
                     </div>
 
