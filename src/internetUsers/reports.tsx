@@ -20,9 +20,6 @@ const AngleTick = ({ x, y, payload }: any) => (
     </g>
 );
 
-
-
-
 export default function Reports() {
     const [activeTab, setActiveTab] = useState<"individual" | "general">("individual");
     const [userData, setUserData] = useState<any | null>(null);
@@ -34,7 +31,6 @@ export default function Reports() {
     const [generalEndDate, setGeneralEndDate] = useState("");
     const [userOptions, setUserOptions] = useState<{ value: string; label: string }[]>([]);
     const [selectedUsername, setSelectedUsername] = useState<{ value: string; label: string } | null>(null);
-
 
     const navigate = useNavigate();
 
