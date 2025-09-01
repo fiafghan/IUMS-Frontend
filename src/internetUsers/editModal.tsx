@@ -243,17 +243,14 @@ export default function EditUserModal({
         setSelectedDeviceTypes(deviceTypeIds);
 
         // Keep deviceMacs in sync with selectedDeviceTypes
-        if (editForm.device_macs && typeof editForm.device_macs === 'object') {
-            const macs: { [deviceTypeId: number]: string } = {};
-            deviceTypeIds.forEach(id => {
-                if (editForm.device_macs[id]) {
-                    macs[id] = editForm.device_macs[id];
-                }
-            });
-            setDeviceMacs(macs);
-        } else {
-            setDeviceMacs({});
-        }
+        const sourceMacs = (editForm.device_macs && typeof editForm.device_macs === 'object') ? editForm.device_macs : {};
+        const macs: { [deviceTypeId: number]: string } = {};
+        deviceTypeIds.forEach((id) => {
+            const m = sourceMacs?.[id];
+            if (m) macs[id] = m;
+        });
+        setDeviceMacs(macs);
+
     }, [isOpen, editForm, allDeviceList]);
 
 

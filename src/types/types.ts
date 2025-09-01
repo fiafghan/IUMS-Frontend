@@ -15,7 +15,9 @@ export type InternetUser = {
   directorate: number;
   deputy: string;
   device_limit: number;
-  device_type_id: number;
+  device_type_id?: number[];
+  device_type?: string[];
+  device_macs?: Record<number, string>;
   mac_address?: string;
   status?: "active" | "deactive" | 1 | 0;
   violation_count?: number;
@@ -24,7 +26,7 @@ export type InternetUser = {
   violation_type?: string;
   group_id: number;
   groups: number;
-  devices?: SelectedDevice[]; // Add this line
+  devices?: SelectedDevice[]; 
 };
 
 
@@ -89,7 +91,7 @@ export type FormState = {
   device_type: string;
   mac_address: string;
   status: string;
-  selectedDevices: SelectedDevice[]; // Add this
+  selectedDevices: SelectedDevice[]; 
 };
 
 export type SelectOption = {
@@ -117,4 +119,3 @@ export type InputProps = {
   disabled?: boolean;
   readOnly?: boolean;
 };
-
