@@ -172,7 +172,8 @@ export default function EditUserModal({
     const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
-    
+    const [deviceMacs, setDeviceMacs] = useState<{ [deviceTypeId: number]: string }>({});
+
 
     useEffect(() => {
         if (!isOpen || !user?.id) return;
@@ -183,6 +184,7 @@ export default function EditUserModal({
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
+                console.log('API user edit response:', res.data);
                 const u = res.data?.data ?? res.data;
 
                 setEditForm(prev => ({
@@ -196,25 +198,13 @@ export default function EditUserModal({
                     position: u.position ?? prev.position,
                     status: u.status ?? prev.status,
                     device_limit: u.device_limit ?? prev.device_limit,
-                    mac_address: u.mac_address ?? prev.mac_address,
                     employment_type: u.employment_type ?? prev.employment_type,
-
+                    device_type_id: Array.isArray(u.device_type_id) ? u.device_type_id : prev.device_type_id ?? [],
+                    device_type: Array.isArray(u.device_type) ? u.device_type : prev.device_type ?? [],
+                    device_macs: (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : prev.device_macs ?? {},
                 }));
+                setDeviceMacs((u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : {});
 
-                // Map device type names to IDs after device list is loaded
-                if (Array.isArray(u.device_type) && allDeviceList.length > 0) {
-                    const deviceTypeIds = u.device_type
-                        .map((name: string) => {
-                            const deviceType = allDeviceList.find(dt =>
-                                dt.name.toLowerCase() === name.toLowerCase()
-                            );
-                            return deviceType?.id;
-                        })
-                        .filter((id: number | undefined) => id !== undefined) as number[];
-                    setSelectedDeviceTypes(deviceTypeIds);
-                }
-
-                // Preselect dropdowns if lists already loaded
                 if (allDirectoratesList.length) {
                     const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
                     setSelectedDirectorate(d);
@@ -232,17 +222,39 @@ export default function EditUserModal({
                     setSelectedDeputy(dep);
                 }
 
-                setEmailError("");
-                setPhoneError("");
-                setMacError("");
             } catch (e) {
                 console.error("Failed to load user for edit:", e);
             }
         };
-
         fetchUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, user?.id, token, allDeviceList]);
+
+    useEffect(() => {
+        if (!isOpen || !editForm || allDeviceList.length === 0) return;
+
+        // Only use device_type_id as an array of numbers
+        let deviceTypeIds: number[] = [];
+        if (Array.isArray(editForm.device_type_id)) {
+            deviceTypeIds = editForm.device_type_id
+                .map((id: any) => Number(id))
+                .filter((id: number) => allDeviceList.some(dt => dt.id === id));
+        }
+        setSelectedDeviceTypes(deviceTypeIds);
+
+        // Keep deviceMacs in sync with selectedDeviceTypes
+        if (editForm.device_macs && typeof editForm.device_macs === 'object') {
+            const macs: { [deviceTypeId: number]: string } = {};
+            deviceTypeIds.forEach(id => {
+                if (editForm.device_macs[id]) {
+                    macs[id] = editForm.device_macs[id];
+                }
+            });
+            setDeviceMacs(macs);
+        } else {
+            setDeviceMacs({});
+        }
+    }, [isOpen, editForm, allDeviceList]);
 
 
     // Validation functions
@@ -427,10 +439,16 @@ export default function EditUserModal({
     const addDeviceType = (deviceTypeId: number) => {
         if (remainingLimit <= 0 || selectedDeviceTypes.includes(deviceTypeId)) return;
         setSelectedDeviceTypes(prev => [...prev, deviceTypeId]);
+        setDeviceMacs(prev => ({ ...prev, [deviceTypeId]: "" })); // Add empty MAC field
     };
 
     const removeDeviceType = (deviceTypeId: number) => {
         setSelectedDeviceTypes(prev => prev.filter(id => id !== deviceTypeId));
+        setDeviceMacs(prev => {
+            const updated = { ...prev };
+            delete updated[deviceTypeId];
+            return updated;
+        });
     };
 
     const getDeviceIcon = (deviceTypeName: string) => {
@@ -573,7 +591,8 @@ export default function EditUserModal({
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
             deputy: selectedDeputy?.name,
-            device_type_ids: selectedDeviceTypes, // Just send the array of device type IDs
+            device_type_ids: selectedDeviceTypes,
+            device_macs: deviceMacs,
             mac_address: editForm.mac_address ?? null,
         };
 
@@ -608,7 +627,6 @@ export default function EditUserModal({
             Toast.fire({
                 title: "Failed to update user. Please check required fields and try again!",
                 icon: "error",
-                // draggable is supported in newer SweetAlert2 versions
                 draggable: true,
             });
 
@@ -880,13 +898,14 @@ export default function EditUserModal({
                                                                 <div className="mt-4">
                                                                     <InputWithIcon
                                                                         label="MAC Address"
-                                                                        name="mac_address"
-                                                                        value={editForm.mac_address || ""}
+                                                                        name={`mac_address_${deviceTypeId}`}
+                                                                        value={deviceMacs[deviceTypeId] || ""}
                                                                         placeholder="XX:XX:XX:XX:XX:XX"
                                                                         icon={<HardDrive className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
-                                                                        onChange={handleEditChange}
-                                                                        error={macError}
-                                                                        isLoading={isCheckingMac}
+                                                                        onChange={e => {
+                                                                            const formatted = formatMacAddress(e.target.value);
+                                                                            setDeviceMacs(prev => ({ ...prev, [deviceTypeId]: formatted }));
+                                                                        }}
                                                                     />
                                                                 </div>
 
