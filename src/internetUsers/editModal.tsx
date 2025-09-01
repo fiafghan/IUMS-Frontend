@@ -438,7 +438,7 @@ export default function EditUserModal({
 
     // Simple device type management functions
     const addDeviceType = (deviceTypeId: number) => {
-        if (remainingLimit <= 0 || selectedDeviceTypes.includes(deviceTypeId)) return;
+        if (remainingLimit <= 0) return;
         setSelectedDeviceTypes(prev => [...prev, deviceTypeId]);
         setDeviceMacs(prev => ({ ...prev, [deviceTypeId]: "" })); // Add empty MAC field
     };
@@ -858,17 +858,17 @@ export default function EditUserModal({
                                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                                 {allDeviceList.map((deviceType) => {
                                                     const isSelected = selectedDeviceTypes.includes(deviceType.id);
-                                                    const canSelect = remainingLimit > 0 || isSelected;
+                                                    const canSelect = remainingLimit > 0; //fardin 2050: allow adding even if already selected
 
                                                     return (
                                                         <button
                                                             key={deviceType.id}
-                                                            onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
+                                                            onClick={() => addDeviceType(deviceType.id)} //fardin 2050: always add a new row
                                                             disabled={!canSelect}
                                                             className={`p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
                                                                 ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
                                                                 : canSelect
-                                                                    ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
+                                                                    ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
                                                                     : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
                                                                 }`}
                                                         >

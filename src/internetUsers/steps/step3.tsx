@@ -1,7 +1,7 @@
 import { Cpu, Hash, Laptop, Plus, X, Monitor, Smartphone, Tablet } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react"; // fardin: add useRef for debounce per device
 import axios from "axios";
 import { route } from "../../config";
 
@@ -20,34 +20,56 @@ export function Step3({ form, onChange }: {
   { target: { name: string; value: string | SelectedDevice[] } }) => void;
 }): JSX.Element {
 
-
-  const [macError, setMacError] = useState<string | null>(null);
   const [deviceTypes, setDeviceTypes] = useState<{ id: number; name: string }[]>([]);
   const [groups, setGroups] = useState<{ id: number; name: string }[]>([]);
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevice[]>(form.selectedDevices || []);
   const [remainingLimit, setRemainingLimit] = useState(Number(form.device_limit) || 0);
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
 
+  const [dupErrors, setDupErrors] = useState<Record<string, string | null>>({}); // fardin: per-device duplicate errors
+  const [existErrors, setExistErrors] = useState<Record<string, string | null>>({}); // fardin: per-device exists-in-DB errors
 
-  const checkMacAddress = (mac: string) => {
-    if (!mac) {
-      setMacError(null);
-      return;
-    }
-    const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-    axios.post(`${route}/check-mac-address`, { mac_address: mac }, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        if (res.data.exists) {
-          setMacError(res.data.message);
-        } else {
-          setMacError(null);
-        }
+  const macDebounceRef = useRef<Record<string, any>>({}); // fardin: debounce per device
+
+  const checkMacAddress = (mac: string, deviceId: string) => { // fardin
+    if (macDebounceRef.current[deviceId]) clearTimeout(macDebounceRef.current[deviceId]);
+    macDebounceRef.current[deviceId] = setTimeout(() => {
+      if (!mac) {
+        // keep duplicate error untouched; clear exists error
+        setExistErrors(prev => ({ ...prev, [deviceId]: null }));
+        return;
+      }
+      const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      axios.post(`${route}/check-mac-address`, { mac_address: mac }, {
+        headers: { Authorization: `Bearer ${token}` }
       })
-      .catch(() => {
-        setMacError(null);
-      });
+        .then(res => {
+          setExistErrors(prev => ({
+            ...prev,
+            [deviceId]: res.data?.exists ? (res.data?.message || 'This MAC address is already in use.') : null
+          }));
+        })
+        .catch(() => {
+          // ignore network errors for exists check
+        });
+    }, 400);
+  };
+
+  // fardin: recompute duplicate errors for all rows
+  const recomputeDuplicateErrors = (devices: SelectedDevice[]) => {
+    const counts: Record<string, number> = {};
+    const norm = (m: string) => (m || '').toUpperCase();
+    devices.forEach(d => {
+      const key = norm(d.macAddress);
+      if (!key) return;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    const errors: Record<string, string | null> = {};
+    devices.forEach(d => {
+      const key = norm(d.macAddress);
+      errors[d.id] = key && counts[key] > 1 ? 'Duplicate MAC among selected devices.' : null;
+    });
+    setDupErrors(errors);
   };
 
   useEffect(() => {
@@ -70,14 +92,6 @@ export function Step3({ form, onChange }: {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      checkMacAddress(form.mac_address);
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [form.mac_address]);
 
   // Update remaining limit when device limit changes
   useEffect(() => {
@@ -112,13 +126,10 @@ export function Step3({ form, onChange }: {
       macAddress: ""
     };
 
-
     const newDevices = [...selectedDevices, newDevice];
     setSelectedDevices(newDevices);
     onChange({ target: { name: "selectedDevices", value: newDevices } });
   };
-
-
 
   // Update the removeDevice function
   const removeDevice = (deviceId: string) => {
@@ -234,7 +245,6 @@ export function Step3({ form, onChange }: {
               </button>
             </div>
 
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Device Type */}
               <div>
@@ -277,12 +287,22 @@ export function Step3({ form, onChange }: {
                         .match(/.{1,2}/g)?.join(":") || "";
 
                       if (mac.length > 17) mac = mac.slice(0, 17);
-                      updateDevice(device.id, 'macAddress', mac);
+                      // fardin: compute updated devices locally to avoid stale state
+                      const updated = selectedDevices.map(d => d.id === device.id ? { ...d, macAddress: mac } : d);
+                      updateSelectedDevices(updated);
+                      // duplicates: recompute for all rows
+                      recomputeDuplicateErrors(updated);
+                      // backend existence check (debounced per device)
+                      checkMacAddress(mac, device.id);
                     }}
                     placeholder="00:00:00:00:00:00"
                     className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
                   />
                 </div>
+                {/* fardin: inline error per device (duplicate + exists) */}
+                {(dupErrors[device.id] || existErrors[device.id]) && (
+                  <p className="text-red-600 text-xs mt-1">{[dupErrors[device.id], existErrors[device.id]].filter(Boolean).join(' ')}</p>
+                )}
               </div>
             </div>
           </div>
@@ -307,8 +327,6 @@ export function Step3({ form, onChange }: {
           </div>
         </div>
       )}
-
-      {macError && <p className="text-red-600 text-sm mt-1">{macError}</p>}
     </div>
   );
 }
