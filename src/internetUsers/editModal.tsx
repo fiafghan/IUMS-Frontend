@@ -172,6 +172,7 @@ export default function EditUserModal({
     const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
+    
 
     useEffect(() => {
         if (!isOpen || !user?.id) return;
@@ -837,10 +838,10 @@ export default function EditUserModal({
                                                             onClick={() => isSelected ? removeDeviceType(deviceType.id) : addDeviceType(deviceType.id)}
                                                             disabled={!canSelect}
                                                             className={`p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
-                                                                    ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
-                                                                    : canSelect
-                                                                        ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
-                                                                        : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
+                                                                ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
+                                                                : canSelect
+                                                                    ? 'border-slate-200 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md'
+                                                                    : 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed'
                                                                 }`}
                                                         >
                                                             <div className="flex flex-col items-center gap-3 text-center">
@@ -875,6 +876,20 @@ export default function EditUserModal({
                                                                     </div>
                                                                     <span className="font-medium text-slate-900">{deviceType.name}</span>
                                                                 </div>
+                                                                {/* MAC Address */}
+                                                                <div className="mt-4">
+                                                                    <InputWithIcon
+                                                                        label="MAC Address"
+                                                                        name="mac_address"
+                                                                        value={editForm.mac_address || ""}
+                                                                        placeholder="XX:XX:XX:XX:XX:XX"
+                                                                        icon={<HardDrive className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
+                                                                        onChange={handleEditChange}
+                                                                        error={macError}
+                                                                        isLoading={isCheckingMac}
+                                                                    />
+                                                                </div>
+
                                                                 <button
                                                                     onClick={() => removeDeviceType(deviceTypeId)}
                                                                     className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
@@ -933,8 +948,8 @@ export default function EditUserModal({
                             onClick={handleSave}
                             disabled={!canSave}
                             className={`px-8 py-3 rounded-xl text-blue-300 text-sm font-medium inline-flex items-center gap-2 transition-all duration-200 ${canSave
-                                    ? "bg-gradient-to-r from-slate-800 to-slate-600 hover:to-slate-400 shadow-lg hover:shadow-xl transform hover:scale-105"
-                                    : "bg-slate-400 cursor-not-allowed"
+                                ? "bg-gradient-to-r from-slate-800 to-slate-600 hover:to-slate-400 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                : "bg-slate-400 cursor-not-allowed"
                                 }`}
                         >
                             <Save className="w-4 h-4" />
