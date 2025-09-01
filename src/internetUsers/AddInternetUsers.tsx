@@ -214,6 +214,18 @@ export default function InternetUserAddForm(): JSX.Element {
 
     setLoading(true);
 
+    // Build device_macs map keyed by device_type_id
+    const device_macs = form.selectedDevices.reduce<Record<string, string | null>>((acc, d) => {
+      const raw = (d as any).macAddress || "";
+      const cleaned = (raw || "")
+        .toString()
+        .toUpperCase()
+        .replace(/[^0-9A-F]/g, "")
+        .match(/.{1,2}/g)?.join(":") || "";
+      acc[String(d.deviceTypeId)] = cleaned.length ? cleaned : null;
+      return acc;
+    }, {});
+
     const payload = {
       username: form.username.trim(),
       status: parseInt(form.status, 10),
@@ -223,12 +235,12 @@ export default function InternetUserAddForm(): JSX.Element {
       employee_type_id: parseInt(form.employment_type, 10),
       position: form.position.trim(),
       device_limit: parseInt(form.device_limit, 10),
-      mac_address: form.mac_address || form.selectedDevices[0]?.macAddress || null,
       group_id: form.group_id,
       name: form.name.trim(),
       lastname: form.last_name.trim(),
       device_type_ids: form.selectedDevices.map((d) => d.deviceTypeId),
-    };
+      device_macs,
+    } as const;
 
     try {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");

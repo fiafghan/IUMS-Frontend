@@ -351,7 +351,11 @@ export default function EditUserModal({
     // Load base user into form (do not touch device rows here)
     useEffect(() => {
         if (!isOpen) return;
-        setEditForm({ ...user });
+        // Initialize from user only if editForm is empty to avoid overwriting fetched data
+        setEditForm((prev) => {
+            const isEmpty = !prev || Object.keys(prev).length === 0;
+            return isEmpty ? { ...user } : prev;
+        });
 
         setEmailError("");
         setPhoneError("");
@@ -585,6 +589,13 @@ export default function EditUserModal({
     const handleSave = async () => {
         if (!user) return;
 
+        // Build device_macs only for currently selected device types and normalize format
+        const sanitizedDeviceMacs: Record<number, string> = {};
+        selectedDeviceTypes.forEach((id) => {
+            const raw = deviceMacs[id] || "";
+            sanitizedDeviceMacs[id] = formatMacAddress(raw).toUpperCase();
+        });
+
         const payload: any = {
             ...editForm,
             directorate_id: selectedDirectorate?.id,
@@ -592,9 +603,12 @@ export default function EditUserModal({
             employee_type_id: selectedEmployment?.id,
             deputy: selectedDeputy?.name,
             device_type_ids: selectedDeviceTypes,
-            device_macs: deviceMacs,
-            mac_address: editForm.mac_address ?? null,
+            device_macs: sanitizedDeviceMacs,
+            // Remove legacy single mac field to avoid backend confusion
         };
+
+        // TEMP: debug payload to verify distinct MACs per deviceTypeId
+        console.log('Update payload', { device_type_ids: payload.device_type_ids, device_macs: payload.device_macs });
 
         try {
             await axios.put(`${route}/internet/${user.id}`, payload, { headers: { Authorization: `Bearer ${token}` } });
@@ -627,7 +641,6 @@ export default function EditUserModal({
             Toast.fire({
                 title: "Failed to update user. Please check required fields and try again!",
                 icon: "error",
-                draggable: true,
             });
 
         }
