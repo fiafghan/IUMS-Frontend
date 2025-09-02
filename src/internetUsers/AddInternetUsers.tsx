@@ -166,8 +166,7 @@ export default function InternetUserAddForm(): JSX.Element {
       Toast.fire({
         title: "Please fill out all the required fields!",
         icon: "error",
-        // draggable is supported in newer SweetAlert2 versions
-        draggable: true,
+        
       });
 
 
@@ -204,8 +203,7 @@ export default function InternetUserAddForm(): JSX.Element {
       Toast.fire({
         title: "Please fill out all the required fields!",
         icon: "error",
-        // draggable is supported in newer SweetAlert2 versions
-        draggable: true,
+       
       });
 
       setCurrentStep(2);
@@ -277,8 +275,7 @@ export default function InternetUserAddForm(): JSX.Element {
       Toast.fire({
         title: "The internet user was successfully created!",
         icon: "success",
-        // draggable is supported in newer SweetAlert2 versions
-        draggable: true,
+       
       });
 
       setCurrentStep(0);
