@@ -10,7 +10,6 @@ import type { InternetUser } from "../types/types";
 import { route } from "../config";
 import Swal from "sweetalert2";
 
-
 type Option = { id: number; name: string };
 
 type Props = {
@@ -150,17 +149,14 @@ export default function EditUserModal({
     const [selectedEmployment, setSelectedEmployment] = useState<Option | null>(null);
     const [selectedDeputy, setSelectedDeputy] = useState<Option | null>(null);
 
-    // Simple device type management - just IDs as backend expects
-    const [selectedDeviceTypes, setSelectedDeviceTypes] = useState<number[]>([]);
+    const [selectedDevices, setSelectedDevices] = useState<Array<{ rowId: string; device_type_id: number; mac_address: string }>>([]);
     const [remainingLimit, setRemainingLimit] = useState(Number(user?.device_limit) || 0);
 
-    // Queries for filtering in combobox
     const [qDirectorate, setQDirectorate] = useState("");
     const [qGroup, setQGroup] = useState("");
     const [qEmployment, setQEmployment] = useState("");
     const [qDeputy, setQDeputy] = useState("");
 
-    // Validation states
     const [emailError, setEmailError] = useState("");
     const [phoneError, setPhoneError] = useState("");
     const [macError, setMacError] = useState("");
@@ -168,12 +164,9 @@ export default function EditUserModal({
     const [isCheckingPhone, setIsCheckingPhone] = useState(false);
     const [isCheckingMac, setIsCheckingMac] = useState(false);
 
-    // Add debouncing for API calls
     const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
-    const [deviceMacs, setDeviceMacs] = useState<{ [deviceTypeId: number]: string }>({});
-
 
     useEffect(() => {
         if (!isOpen || !user?.id) return;
@@ -203,7 +196,38 @@ export default function EditUserModal({
                     device_type: Array.isArray(u.device_type) ? u.device_type : prev.device_type ?? [],
                     device_macs: (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : prev.device_macs ?? {},
                 }));
-                setDeviceMacs((u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : {});
+
+                if (Array.isArray(u.devices)) {
+                    const typeCounts: Record<number, number> = {};
+                    setSelectedDevices(u.devices.map((d: any) => {
+                        const tId = Number(d.device_type_id);
+                        const count = (typeCounts[tId] = (typeCounts[tId] || 0) + 1);
+                        return {
+                            rowId: `${u.id || 'u'}-${tId}-${count}`,
+                            device_type_id: tId,
+                            mac_address: String(d.mac_address || ''),
+                        };
+                    }));
+                } else {
+                    const ids: number[] = Array.isArray(u.device_type_id) ? u.device_type_id.map((x: any) => Number(x)) : [];
+                    const macs = (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : {};
+                    const rows: Array<{ rowId: string; device_type_id: number; mac_address: string }> = [];
+                    const typeCounts: Record<number, number> = {};
+                    ids.forEach((id: number) => {
+                        const count = (typeCounts[id] = (typeCounts[id] || 0) + 1);
+                        const entry = (macs as any)[id];
+                        let mac = '';
+                        if (Array.isArray(entry)) {
+                            mac = String(entry[count - 1] || '');
+                        } else if (count === 1) {
+                            mac = String(entry || '');
+                        } else {
+                            mac = '';
+                        }
+                        rows.push({ rowId: `${u.id || 'u'}-${id}-${count}`, device_type_id: id, mac_address: mac });
+                    });
+                    setSelectedDevices(rows);
+                }
 
                 if (allDirectoratesList.length) {
                     const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
@@ -233,28 +257,37 @@ export default function EditUserModal({
     useEffect(() => {
         if (!isOpen || !editForm || allDeviceList.length === 0) return;
 
-        // Only use device_type_id as an array of numbers
-        let deviceTypeIds: number[] = [];
-        if (Array.isArray(editForm.device_type_id)) {
-            deviceTypeIds = editForm.device_type_id
-                .map((id: any) => Number(id))
-                .filter((id: number) => allDeviceList.some(dt => dt.id === id));
-        }
-        setSelectedDeviceTypes(deviceTypeIds);
-
-        // Keep deviceMacs in sync with selectedDeviceTypes
-        const sourceMacs = (editForm.device_macs && typeof editForm.device_macs === 'object') ? editForm.device_macs : {};
-        const macs: { [deviceTypeId: number]: string } = {};
-        deviceTypeIds.forEach((id) => {
-            const m = sourceMacs?.[id];
-            if (m) macs[id] = m;
-        });
-        setDeviceMacs(macs);
-
+        const limit = Number(editForm.device_limit) || 0;
+        setRemainingLimit(limit - selectedDevices.length);
     }, [isOpen, editForm, allDeviceList]);
 
+    useEffect(() => {
+        const run = async () => {
+            try {
+                const [groupsRes, dirRes, empRes, devRes] = await Promise.all([
+                    axios.get(`${route}/groups`, { headers: { Authorization: `Bearer ${token}` } }),
+                    axios.get(`${route}/directorate`, { headers: { Authorization: `Bearer ${token}` } }),
+                    axios.get(`${route}/employment-type`, { headers: { Authorization: `Bearer ${token}` } }),
+                    axios.get(`${route}/device-types`, { headers: { Authorization: `Bearer ${token}` } }),
+                ]);
 
-    // Validation functions
+                const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
+                const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
+                const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
+
+                const devs: Option[] = (devRes.data as any[]).map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
+
+                setAllGroupsList(groups);
+                setAllDirectoratesList(dirs);
+                setAllEmploymentList(emps);
+                setAllDeviceList(devs);
+            } catch (err) {
+                console.error("Error fetching dropdown data:", err);
+            }
+        };
+        run();
+    }, [token]);
+
     const validateEmail = (email: string) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email) return "";
@@ -273,7 +306,6 @@ export default function EditUserModal({
 
     const validateMacAddress = (mac: string) => {
         if (!mac) return "";
-        // Allow partial MAC addresses during typing
         if (mac.length < 17) return "";
         const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
         if (!macRegex.test(mac)) return "MAC address must be in format: XX:XX:XX:XX:XX:XX";
@@ -281,16 +313,12 @@ export default function EditUserModal({
     };
 
     const formatMacAddress = (value: string) => {
-        // Remove all non-alphanumeric characters
         const cleaned = value.replace(/[^0-9A-Fa-f]/g, '');
-        // Limit to 12 characters (6 pairs)
         const limited = cleaned.slice(0, 12);
-        // Add colons every 2 characters
         const formatted = limited.match(/.{1,2}/g)?.join(':') || '';
         return formatted.toUpperCase();
     };
 
-    // API check functions
     const checkEmailExists = async (email: string) => {
         if (!email) return;
         setIsCheckingEmail(true);
@@ -345,158 +373,28 @@ export default function EditUserModal({
         }
     };
 
-    // Load base user into form (do not touch device rows here)
-    useEffect(() => {
-        if (!isOpen) return;
-        // Initialize from user only if editForm is empty to avoid overwriting fetched data
-        setEditForm((prev) => {
-            const isEmpty = !prev || Object.keys(prev).length === 0;
-            return isEmpty ? { ...user } : prev;
-        });
-
-        setEmailError("");
-        setPhoneError("");
-        setMacError("");
-    }, [isOpen, user?.id]);
-
-    // Update remaining limit calculation
-    useEffect(() => {
-        const limit = Number(editForm.device_limit) || 0;
-        setRemainingLimit(limit - selectedDeviceTypes.length);
-    }, [editForm.device_limit, selectedDeviceTypes.length]);
-
-    // Fetch lists - Fix device types fetching
-    useEffect(() => {
-        const run = async () => {
-            try {
-                const [groupsRes, dirRes, empRes, devRes] = await Promise.all([
-                    axios.get(`${route}/groups`, { headers: { Authorization: `Bearer ${token}` } }),
-                    axios.get(`${route}/directorate`, { headers: { Authorization: `Bearer ${token}` } }),
-                    axios.get(`${route}/employment-type`, { headers: { Authorization: `Bearer ${token}` } }),
-                    axios.get(`${route}/device-types`, { headers: { Authorization: `Bearer ${token}` } }),
-                ]);
-
-                const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
-                const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
-                const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
-
-                // Fix: Device types are returned directly as array
-                const devs: Option[] = (devRes.data as any[]).map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
-
-                setAllGroupsList(groups);
-                setAllDirectoratesList(dirs);
-                setAllEmploymentList(emps);
-                setAllDeviceList(devs);
-            } catch (err) {
-                console.error("Error fetching dropdown data:", err);
-            }
-        };
-        run();
-    }, [token]);
-
-    // After device types load, map existing names to IDs automatically
-    useEffect(() => {
-        if (allDeviceList.length === 0) return;
-        // This useEffect is no longer needed as device types are managed directly
-    }, [allDeviceList]);
-
-    // When a group is selected, apply it to all device rows for easier saving
-    useEffect(() => {
-        if (!selectedGroup?.id) return;
-        // This useEffect is no longer needed as device types are managed directly
-    }, [selectedGroup?.id, selectedGroup?.name]);
-
-    // Preselects (use IDs when present; fallback to names)
-    useEffect(() => {
-        if (user && allDirectoratesList.length > 0) {
-            const byName = allDirectoratesList.find((d) => String(d.name).toLowerCase() === String(user.directorate).toLowerCase());
-            setSelectedDirectorate(byName ?? null);
-        }
-    }, [user, allDirectoratesList]);
-
-    useEffect(() => {
-        if (user && allGroupsList.length > 0) {
-            const byName = allGroupsList.find((g) => String(g.name).toLowerCase() === String(user.groups).toLowerCase());
-            setSelectedGroup(byName ?? null);
-        }
-    }, [user, allGroupsList]);
-
-    useEffect(() => {
-        if (user && allEmploymentList.length > 0) {
-            const byId = allEmploymentList.find((e) => Number(e.id) === Number((user as any).employee_type_id));
-            const byName = allEmploymentList.find((e) => e.name.toLowerCase() === String(user.employment_type || user.employee_type).toLowerCase());
-            setSelectedEmployment(byId ?? byName ?? null);
-        }
-    }, [user, allEmploymentList]);
-
-    useEffect(() => {
-        if (user && deputyMinistryOptions.length > 0) {
-            const byName = deputyMinistryOptions.find((d) => String(d.name).toLowerCase() === String(user.deputy).toLowerCase());
-            setSelectedDeputy(byName ?? null);
-        }
-    }, [user, deputyMinistryOptions]);
-
-    // Simple device type management functions
-    const addDeviceType = (deviceTypeId: number) => {
-        if (remainingLimit <= 0) return;
-        setSelectedDeviceTypes(prev => [...prev, deviceTypeId]);
-        setDeviceMacs(prev => ({ ...prev, [deviceTypeId]: "" })); // Add empty MAC field
-    };
-
-    const removeDeviceType = (deviceTypeId: number) => {
-        setSelectedDeviceTypes(prev => prev.filter(id => id !== deviceTypeId));
-        setDeviceMacs(prev => {
-            const updated = { ...prev };
-            delete updated[deviceTypeId];
-            return updated;
-        });
-    };
-
-    const getDeviceIcon = (deviceTypeName: string) => {
-        switch (deviceTypeName.toLowerCase()) {
-            case 'mobile':
-            case 'smartphone':
-                return <Smartphone className="w-4 h-4" />;
-            case 'computer':
-            case 'laptop':
-            case 'desktop':
-                return <Laptop className="w-4 h-4" />;
-            case 'tablet':
-                return <Tablet className="w-4 h-4" />;
-            case 'all in one':
-                return <Monitor className="w-4 h-4" />;
-            default:
-                return <Laptop className="w-4 h-4" />;
-        }
-    };
-
     const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
 
-        // Handle MAC address formatting
         if (name === 'mac_address') {
             const formatted = formatMacAddress(value);
-            setEditForm((prev) => ({ ...prev, [name]: formatted }));
+            setSelectedDevices(prev => prev.map(r => r.rowId === name ? { ...r, mac_address: formatted } : r));
 
-            // Clear previous error and validate
             setMacError("");
             const macValidation = validateMacAddress(formatted);
             if (macValidation) {
                 setMacError(macValidation);
-            } else if (formatted.length >= 8) { // Start checking when we have at least 4 characters (XX:XX)
-                // Clear existing timeout
+            } else if (formatted.length >= 8) {
                 if (macTimeout) {
                     clearTimeout(macTimeout);
                     setMacTimeout(null);
                 }
-                // Set new timeout for API call
                 const timeout = setTimeout(() => checkMacExists(formatted), 500);
                 setMacTimeout(timeout);
             }
             return;
         }
 
-        // Handle phone formatting
         if (name === 'phone') {
             let formatted = value;
             if (!value.startsWith('+93') && value.length > 0) {
@@ -504,47 +402,39 @@ export default function EditUserModal({
             }
             setEditForm((prev) => ({ ...prev, [name]: formatted }));
 
-            // Clear previous error and validate
             setPhoneError("");
             const phoneValidation = validatePhone(formatted);
             if (phoneValidation) {
                 setPhoneError(phoneValidation);
-            } else if (formatted.length >= 6) { // Start checking when we have +93 plus at least 3 digits
-                // Clear existing timeout
+            } else if (formatted.length >= 6) {
                 if (phoneTimeout) {
                     clearTimeout(phoneTimeout);
                     setPhoneTimeout(null);
                 }
-                // Set new timeout for API call
                 const timeout = setTimeout(() => checkPhoneExists(formatted), 500);
                 setPhoneTimeout(timeout);
             }
             return;
         }
 
-        // Handle email validation
         if (name === 'email') {
             setEditForm((prev) => ({ ...prev, [name]: value }));
 
-            // Clear previous error and validate
             setEmailError("");
             const emailValidation = validateEmail(value);
             if (emailValidation) {
                 setEmailError(emailValidation);
-            } else if (value.includes('@') && value.length >= 5) { // Start checking when we have @ and reasonable length
-                // Clear existing timeout
+            } else if (value.includes('@') && value.length >= 5) {
                 if (emailTimeout) {
                     clearTimeout(emailTimeout);
                     setEmailTimeout(null);
                 }
-                // Set new timeout for API call
                 const timeout = setTimeout(() => checkEmailExists(value), 500);
                 setEmailTimeout(timeout);
             }
             return;
         }
 
-        // Handle other fields normally
         setEditForm((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -575,7 +465,7 @@ export default function EditUserModal({
         Boolean(selectedGroup?.id) &&
         Boolean(selectedEmployment?.id) &&
         (editForm.device_limit === 0 || Boolean(editForm.device_limit)) &&
-        selectedDeviceTypes.length > 0 && // Check if device types are selected
+        selectedDevices.length > 0 &&
         !emailError &&
         !phoneError &&
         !macError &&
@@ -586,12 +476,11 @@ export default function EditUserModal({
     const handleSave = async () => {
         if (!user) return;
 
-        // Build device_macs only for currently selected device types and normalize format
-        const sanitizedDeviceMacs: Record<number, string> = {};
-        selectedDeviceTypes.forEach((id) => {
-            const raw = deviceMacs[id] || "";
-            sanitizedDeviceMacs[id] = formatMacAddress(raw).toUpperCase();
-        });
+        const devices = selectedDevices.map(row => ({
+            device_type_id: row.device_type_id,
+            mac_address: formatMacAddress(row.mac_address).toUpperCase(),
+        }));
+        const device_type_ids = selectedDevices.map(row => row.device_type_id);
 
         const payload: any = {
             ...editForm,
@@ -599,13 +488,11 @@ export default function EditUserModal({
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
             deputy: selectedDeputy?.name,
-            device_type_ids: selectedDeviceTypes,
-            device_macs: sanitizedDeviceMacs,
-            // Remove legacy single mac field to avoid backend confusion
+            device_type_ids,
+            devices,
         };
 
-        // TEMP: debug payload to verify distinct MACs per deviceTypeId
-        console.log('Update payload', { device_type_ids: payload.device_type_ids, device_macs: payload.device_macs });
+        console.log('Update payload', { device_type_ids, devices });
 
         try {
             await axios.put(`${route}/internet/${user.id}`, payload, { headers: { Authorization: `Bearer ${token}` } });
@@ -613,17 +500,16 @@ export default function EditUserModal({
             onClose();
         } catch (err) {
             console.error("Update failed:", err);
-            // Make sure SweetAlert2 (Swal) is loaded
             const Toast = Swal.mixin({
                 toast: true,
-                position: "bottom-end",          // bottom-right
-                showConfirmButton: false,        // no OK button
-                timer: 2000,                     // auto close (ms)
+                position: "bottom-end",
+                showConfirmButton: false,
+                timer: 2000,
                 timerProgressBar: true,
-                showCloseButton: true,           // small "x" to dismiss
-                iconColor: "#22c55e",            // Tailwind green-500
-                background: "#0f172a",           // slate-900
-                color: "#e2e8f0",                // slate-300
+                showCloseButton: true,
+                iconColor: "#22c55e",
+                background: "#0f172a",
+                color: "#e2e8f0",
                 customClass: {
                     popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
                     title: "text-sm font-medium tracking-wide",
@@ -639,7 +525,6 @@ export default function EditUserModal({
                 title: "Failed to update user. Please check required fields and try again!",
                 icon: "error",
             });
-
         }
     };
 
@@ -661,6 +546,33 @@ export default function EditUserModal({
     }, [emailTimeout, phoneTimeout, macTimeout]);
 
     if (!isOpen) return null;
+
+    const genRowId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const addDeviceType = (deviceTypeId: number) => {
+        if (remainingLimit <= 0) return;
+        setSelectedDevices(prev => ([...prev, { rowId: genRowId(), device_type_id: deviceTypeId, mac_address: "" }]));
+    };
+    const removeDeviceRow = (rowId: string) => {
+        setSelectedDevices(prev => prev.filter(row => row.rowId !== rowId));
+    };
+
+    const getDeviceIcon = (deviceTypeName: string) => {
+        switch (deviceTypeName.toLowerCase()) {
+            case 'mobile':
+            case 'smartphone':
+                return <Smartphone className="w-4 h-4" />;
+            case 'computer':
+            case 'laptop':
+            case 'desktop':
+                return <Laptop className="w-4 h-4" />;
+            case 'tablet':
+                return <Tablet className="w-4 h-4" />;
+            case 'all in one':
+                return <Monitor className="w-4 h-4" />;
+            default:
+                return <Laptop className="w-4 h-4" />;
+        }
+    };
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center 
@@ -857,13 +769,13 @@ export default function EditUserModal({
                                             </h3>
                                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                                 {allDeviceList.map((deviceType) => {
-                                                    const isSelected = selectedDeviceTypes.includes(deviceType.id);
-                                                    const canSelect = remainingLimit > 0; //fardin 2050: allow adding even if already selected
+                                                    const isSelected = selectedDevices.some(row => row.device_type_id === deviceType.id);
+                                                    const canSelect = remainingLimit > 0;
 
                                                     return (
                                                         <button
                                                             key={deviceType.id}
-                                                            onClick={() => addDeviceType(deviceType.id)} //fardin 2050: always add a new row
+                                                            onClick={() => addDeviceType(deviceType.id)}
                                                             disabled={!canSelect}
                                                             className={`p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
                                                                 ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 shadow-md transform scale-105'
@@ -885,19 +797,19 @@ export default function EditUserModal({
                                         </div>
 
                                         {/* Selected Devices Summary */}
-                                        {selectedDeviceTypes.length > 0 && (
+                                        {selectedDevices.length > 0 && (
                                             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6">
                                                 <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
                                                     <Check className="w-5 h-5 text-blue-600" />
                                                     Selected Device Types
                                                 </h3>
                                                 <div className="space-y-3">
-                                                    {selectedDeviceTypes.map((deviceTypeId) => {
-                                                        const deviceType = allDeviceList.find(dt => dt.id === deviceTypeId);
+                                                    {selectedDevices.map((row) => {
+                                                        const deviceType = allDeviceList.find(dt => dt.id === row.device_type_id);
                                                         if (!deviceType) return null;
 
                                                         return (
-                                                            <div key={deviceTypeId} className="flex items-center justify-between bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
+                                                            <div key={row.rowId} className="flex items-center justify-between bg-white rounded-xl p-4 border border-blue-100 shadow-sm">
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="p-2 bg-blue-100 rounded-lg">
                                                                         {getDeviceIcon(deviceType.name)}
@@ -908,19 +820,19 @@ export default function EditUserModal({
                                                                 <div className="mt-4">
                                                                     <InputWithIcon
                                                                         label="MAC Address"
-                                                                        name={`mac_address_${deviceTypeId}`}
-                                                                        value={deviceMacs[deviceTypeId] || ""}
+                                                                        name={`mac_address_${row.rowId}`}
+                                                                        value={row.mac_address || ""}
                                                                         placeholder="XX:XX:XX:XX:XX:XX"
                                                                         icon={<HardDrive className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                                         onChange={e => {
                                                                             const formatted = formatMacAddress(e.target.value);
-                                                                            setDeviceMacs(prev => ({ ...prev, [deviceTypeId]: formatted }));
+                                                                            setSelectedDevices(prev => prev.map(r => r.rowId === row.rowId ? { ...r, mac_address: formatted } : r));
                                                                         }}
                                                                     />
                                                                 </div>
 
                                                                 <button
-                                                                    onClick={() => removeDeviceType(deviceTypeId)}
+                                                                    onClick={() => removeDeviceRow(row.rowId)}
                                                                     className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
                                                                 >
                                                                     <X className="w-4 h-4" />
@@ -933,7 +845,7 @@ export default function EditUserModal({
                                                 <div className="mt-6 pt-4 border-t border-blue-200">
                                                     <div className="grid grid-cols-2 gap-4">
                                                         <div className="text-center p-3 bg-white rounded-xl border border-blue-100">
-                                                            <div className="text-2xl font-bold text-blue-600">{selectedDeviceTypes.length}</div>
+                                                            <div className="text-2xl font-bold text-blue-600">{selectedDevices.length}</div>
                                                             <div className="text-sm text-blue-700">Total Selected</div>
                                                         </div>
                                                         <div className="text-center p-3 bg-white rounded-xl border border-blue-100">

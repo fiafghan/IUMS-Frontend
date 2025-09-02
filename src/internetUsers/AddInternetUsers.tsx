@@ -214,17 +214,19 @@ export default function InternetUserAddForm(): JSX.Element {
 
     setLoading(true);
 
-    // Build device_macs map keyed by device_type_id
-    const device_macs = form.selectedDevices.reduce<Record<string, string | null>>((acc, d) => {
-      const raw = (d as any).macAddress || "";
-      const cleaned = (raw || "")
+    // Build per-device entries so multiple devices of the same type keep their own MAC
+    const devices = form.selectedDevices.map((d) => {
+      const cleaned = (d.macAddress || "")
         .toString()
         .toUpperCase()
         .replace(/[^0-9A-F]/g, "")
         .match(/.{1,2}/g)?.join(":") || "";
-      acc[String(d.deviceTypeId)] = cleaned.length ? cleaned : null;
-      return acc;
-    }, {});
+      return {
+        device_type_id: d.deviceTypeId,
+        mac_address: cleaned || "",
+      };
+    });
+    const device_type_ids = form.selectedDevices.map((d) => d.deviceTypeId);
 
     const payload = {
       username: form.username.trim(),
@@ -238,8 +240,8 @@ export default function InternetUserAddForm(): JSX.Element {
       group_id: form.group_id,
       name: form.name.trim(),
       lastname: form.last_name.trim(),
-      device_type_ids: form.selectedDevices.map((d) => d.deviceTypeId),
-      device_macs,
+      device_type_ids,
+      devices,
     } as const;
 
     try {
