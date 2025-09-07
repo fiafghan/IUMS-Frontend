@@ -34,7 +34,11 @@ export default function InternetUsersList(): JSX.Element {
     const token = currentUser?.token;
     const isViewer = currentUser?.user.role === "viewer";
 
-    const headers = ["Name", "LastName", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"];
+    const headers = useMemo(() => (
+        isViewer
+            ? ["Name", "LastName", "Username", "Directorate", "Position", "Group Type", "Status"]
+            : ["Name", "LastName", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"]
+    ), [isViewer]);
 
 
     // Fetch users
@@ -297,4 +301,3 @@ export default function InternetUsersList(): JSX.Element {
         </div>
     );
 }
-
