@@ -18,6 +18,11 @@ export default function Dashboard(): JSX.Element {
 
   const navigate = useNavigate();
 
+  const userInfo = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+  const currentRole: string | undefined = userInfo?.user?.role;
+  const adminRole = currentRole === "Admin";
+  const userRole = currentRole === "User";
+
   useEffect(() => {
     async function fetchUsers() {
       setLoading(true);
@@ -295,6 +300,7 @@ export default function Dashboard(): JSX.Element {
             >
               <h3 className="text-md font-semibold text-slate-900 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {(adminRole || userRole) && (
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-blue-100 hover:to-blue-200 rounded-xl border border-blue-200 transition-all duration-200 group">
                   <div className="p-2  bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
                     <User className="w-3 h-3 text-blue-300" />
@@ -304,6 +310,7 @@ export default function Dashboard(): JSX.Element {
                     <div className="text-sm text-blue-600">Create new internet user account</div>
                   </div>
                 </button>
+                )}
 
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-green-100 hover:to-green-200 rounded-xl border border-green-200 transition-all duration-200 group">
                   <div className="p-2 bg-gradient-to-r from-slate-800 to-slate-500 rounded-lg group-hover:scale-110 transition-transform duration-200">
@@ -314,7 +321,7 @@ export default function Dashboard(): JSX.Element {
                     <div className="text-sm text-green-600">Browse complete user list</div>
                   </div>
                 </button>
-
+                {(adminRole || userRole) ? (
                 <button className="flex items-center gap-3 p-4 bg-slate-100 hover:from-purple-100
                  hover:to-purple-200 rounded-xl border border-purple-200 transition-all duration-200 
                   group" onClick={() => navigate("/reports")}>
@@ -327,6 +334,7 @@ export default function Dashboard(): JSX.Element {
                     <div className="text-sm text-purple-600">Generate detailed analytics</div>
                   </div>
                 </button>
+                ) : ""}
               </div>
             </motion.div>
           </>

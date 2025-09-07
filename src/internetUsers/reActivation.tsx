@@ -18,6 +18,7 @@ export default function ReactivateUserForm() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [reason, setReason] = useState("");
   const [noResults, setNoResults] = useState(false);
+  const currentUserName: string | undefined = JSON.parse(localStorage.getItem("loggedInUser") || "{}")?.user?.name;
 
   useEffect(() => {
     if (selectedUser) return;
@@ -106,6 +107,7 @@ export default function ReactivateUserForm() {
 
       Toast.fire({
         title: "The Internet User Was Successfully Activated!",
+        text: `Activated by ${currentUserName || "Unknown User"}`,
         icon: "success"
       });
 

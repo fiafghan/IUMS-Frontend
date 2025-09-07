@@ -10,9 +10,10 @@ interface Reactivation {
   username: string;
   reason: string;
   created_at: string;
+  activated_by?: string;
 }
 
-const headers = ["Username", "Reason", "Activation Date", "Actions"];
+const headers = ["Username", "Reason", "Activated By", "Activation Date", "Actions"];
 
 export default function AllReactivations(): JSX.Element {
   const [reactivations, setReactivations] = useState<Reactivation[]>([]);
@@ -39,7 +40,8 @@ export default function AllReactivations(): JSX.Element {
           id: r.id,
           username: r.username,
           reason: r.reason,
-          created_at: r.created_at
+          created_at: r.created_at,
+          activated_by: (r as any).activated_by || (r as any).activatedBy || (r as any).activated_user || (r as any).user_name || (r as any).user?.name || (r as any).activated_user_name || ""
         })));
 
       } catch (err) {
@@ -225,6 +227,16 @@ export default function AllReactivations(): JSX.Element {
                           </p>
                         </div>
                       )}
+                    </td>
+
+                    {/* Activated By */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-900">
+                          {reactivation.activated_by || "Unknown User"}
+                        </span>
+                      </div>
                     </td>
 
                     {/* Activation Date */}
