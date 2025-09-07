@@ -222,6 +222,7 @@ export default function AddViolationForm() {
                                             onChange={handleUserChange}
                                             value={selectedUserOption}
                                             placeholder="Search users..."
+                                            components={{ DropdownIndicator: null, IndicatorSeparator: null }}
                                             isClearable
                                             className="react-select-container"
                                             classNamePrefix="react-select"
