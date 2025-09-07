@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import Select from "react-select";
+import AsyncSelect from "react-select/async";
 import { route } from "../config";
 import GradientSidebar from "../components/Sidebar";
 import Swal from "sweetalert2";
@@ -25,25 +25,13 @@ export default function AddViolationForm() {
     });
 
     const [violationTypes, setViolationTypes] = useState<ViolationType[]>([]);
-    const [usersOptions, setUsersOptions] = useState<{ value: string; label: string }[]>([]);
+    const [selectedUserOption, setSelectedUserOption] = useState<{ value: string; label: string } | null>(null);
+    const searchTimerRef = useRef<number | null>(null);
 
     const [message, setMessage] = useState("");
 
     useEffect(() => {
         const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        axios.get(`${route}/internet`,{headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }})
-            .then(res => {
-                console.log("Internet users response:", res.data);
-                const options = (res.data || []).map((user: InternetUser) => ({
-                    value: String(user.id),
-                    label: user.username,
-                }));
-                setUsersOptions(options);
-            })
-            .catch(() => setUsersOptions([]));
 
         axios.get(`${route}/violation`,{headers: {
           Authorization: `Bearer ${token}`,
@@ -53,12 +41,41 @@ export default function AddViolationForm() {
             .catch(() => setViolationTypes([]));
     }, []);
 
-    // وقتی کاربر در select انتخاب شد
     const handleUserChange = (selectedOption: { value: string; label: string } | null) => {
+        setSelectedUserOption(selectedOption);
         setForm(prev => ({
             ...prev,
             internet_user_id: selectedOption ? selectedOption.value : "",
         }));
+    };
+
+    // Async loader with debounce; queries backend and limits results to reduce payload/render cost
+    const loadUserOptions = (inputValue: string, callback: (options: { value: string; label: string }[]) => void) => {
+        // Require minimal input to avoid loading everything
+        if (!inputValue || inputValue.trim().length < 2) {
+            callback([]);
+            return;
+        }
+        // Debounce network calls
+        if (searchTimerRef.current) window.clearTimeout(searchTimerRef.current);
+        searchTimerRef.current = window.setTimeout(async () => {
+            try {
+                const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+                // NOTE: Ideally the backend supports server-side search like /internet?query=
+                // If not, we fetch once and client-filter, but still cap results for performance
+                const res = await axios.get<InternetUser[]>(`${route}/internet`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const norm = inputValue.toLowerCase();
+                const options = (res.data || [])
+                    .filter(u => u.username?.toLowerCase().includes(norm))
+                    .slice(0, 20) // cap results for performance
+                    .map(u => ({ value: String(u.id), label: u.username }));
+                callback(options);
+            } catch (e) {
+                callback([]);
+            }
+        }, 300);
     };
 
     const handleViolationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -198,11 +215,13 @@ export default function AddViolationForm() {
                                         Select Internet User
                                     </label>
                                     <div className="relative">
-                                        <Select
-                                            options={usersOptions}
+                                        <AsyncSelect
+                                            cacheOptions
+                                            defaultOptions={false}
+                                            loadOptions={loadUserOptions}
                                             onChange={handleUserChange}
-                                            value={usersOptions.find(opt => opt.value === form.internet_user_id) || null}
-                                            placeholder="Search and select user..."
+                                            value={selectedUserOption}
+                                            placeholder="Search users..."
                                             isClearable
                                             className="react-select-container"
                                             classNamePrefix="react-select"
