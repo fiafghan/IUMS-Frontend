@@ -151,6 +151,7 @@ export default function AddViolationForm() {
                
                 setMessage("Violation created successfully!");
                 setForm({ internet_user_id: "", violation_type_id: "", comment: "" });
+                setSelectedUserOption(null);
             } else {
                 setMessage("Failed to create violation.");
             }
