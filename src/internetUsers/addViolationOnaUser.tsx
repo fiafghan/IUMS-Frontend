@@ -12,10 +12,6 @@ interface ViolationType {
     name: string;
 }
 
-interface InternetUser {
-    id: number;
-    username: string;
-}
 
 export default function AddViolationForm() {
     const [form, setForm] = useState({
@@ -61,16 +57,29 @@ export default function AddViolationForm() {
         searchTimerRef.current = window.setTimeout(async () => {
             try {
                 const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-                // NOTE: Ideally the backend supports server-side search like /internet?query=
-                // If not, we fetch once and client-filter, but still cap results for performance
-                const res = await axios.get<InternetUser[]>(`${route}/internet`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                // Call backend with query so server filters and we don't fetch all users
+                const res = await axios.get(`${route}/getSpecifiedUserForViolation`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: { search: inputValue }
                 });
+
+                // Support multiple possible response shapes
+                const raw = Array.isArray(res.data)
+                    ? res.data
+                    : Array.isArray(res.data?.data)
+                        ? res.data.data
+                        : Array.isArray(res.data?.user_violations)
+                            ? res.data.user_violations
+                            : [];
+
+                // Fallback client-side filter in case backend ignores the search param
                 const norm = inputValue.toLowerCase();
-                const options = (res.data || [])
-                    .filter(u => u.username?.toLowerCase().includes(norm))
+                const filtered = raw.filter((u: any) => String(u.username || "").toLowerCase().includes(norm));
+
+                const options = filtered
                     .slice(0, 20) // cap results for performance
-                    .map(u => ({ value: String(u.id), label: u.username }));
+                    .map((u: any) => ({ value: String(u.id), label: String(u.username) }));
+
                 callback(options);
             } catch (e) {
                 callback([]);
