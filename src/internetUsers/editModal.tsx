@@ -297,7 +297,7 @@ export default function EditUserModal({
     };
 
     const validatePhone = (phone: string) => {
-        const phoneRegex = /^\+93[0-9]{8}$/;
+        const phoneRegex = /^\+937[0-9]{8}$/;
         if (!phone) return "";
         if (!phone.startsWith('+93')) return "Phone must start with +93";
         if (!phoneRegex.test(phone)) return "Phone must be in format: +937xxxxxxxx";
@@ -396,10 +396,25 @@ export default function EditUserModal({
         }
 
         if (name === 'phone') {
-            let formatted = value;
-            if (!value.startsWith('+93') && value.length > 0) {
-                formatted = '+93' + value.replace(/^\+93/, '');
+            // Keep only digits from the input to derive formatting
+            const digitsOnly = value.replace(/\D/g, '');
+
+            // If user cleared the field, keep it empty (prevents re-adding +93 on backspace)
+            if (digitsOnly.length === 0) {
+                setEditForm((prev) => ({ ...prev, [name]: '' }));
+                setPhoneError('');
+                return;
             }
+
+            // Drop leading country code if user typed it; we'll add +93 ourselves
+            const withoutCode = digitsOnly.startsWith('93') ? digitsOnly.slice(2) : digitsOnly;
+
+            // Always enforce starting with 7, then allow up to 8 more digits
+            // Remove a leading 7 if present to build the tail cleanly
+            const tail = withoutCode.replace(/^7/, '');
+            const limitedTail = tail.slice(0, 8);
+            const formatted = '+937' + limitedTail;
+
             setEditForm((prev) => ({ ...prev, [name]: formatted }));
 
             setPhoneError("");
