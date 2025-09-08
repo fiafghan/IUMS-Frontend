@@ -47,8 +47,9 @@ export default function InternetUsersList(): JSX.Element {
             setLoading(true);
             setError(null);
             try {
-                const res = await axios.get<InternetUser[]>(`${route}/internet`, { headers: { Authorization: `Bearer ${token}` } });
-                setUsers(res.data);
+                const res = await axios.get(`${route}/internet`, { headers: { Authorization: `Bearer ${token}` } });
+                const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : []);
+                setUsers(list as InternetUser[]);
             } catch {
                 setError("Failed to fetch users.");
             } finally {
@@ -81,11 +82,10 @@ export default function InternetUsersList(): JSX.Element {
     // Save updated user from Modal
     const handleUserSave = async () => {
         try {
-            // Refetch the users data to get the latest information
-            const res = await axios.get<InternetUser[]>(`${route}/internet`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setUsers(res.data);
+            // Refetch users and unwrap paginated response shape
+            const res = await axios.get(`${route}/internet`, { headers: { Authorization: `Bearer ${token}` } });
+            const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : []);
+            setUsers(list as InternetUser[]);
         } catch (err) {
             console.error("Failed to refresh user data after update:", err);
         }
