@@ -1,4 +1,3 @@
-
 import type { JSX } from "react";
 import type { FormState } from "../../types/types";
 import { Briefcase, User, Building2, Building } from "lucide-react";
@@ -57,11 +56,10 @@ export function Step2({
 
 
   return (
-    <div className="grid grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       <InputField
         label="Position"
-        icon={<Briefcase className="w-5 h-5  text-white bg-slate-600
-          scale-150 rounded-sm p-1 mr-2" />}
+        icon={<Briefcase className="w-4 h-4" />}
         name="position"
         type="text"
         placeholder="Position"
@@ -71,8 +69,7 @@ export function Step2({
 
       <SelectField
         label="Employment Type"
-        icon={<User className="w-5 h-5  text-white bg-slate-600
-          scale-150 rounded-sm p-1 mr-2" />}
+        icon={<User className="w-4 h-4" />}
         name="employment_type"
         value={form.employment_type}
         onChange={onChange}
@@ -80,8 +77,7 @@ export function Step2({
 
       <SelectField
         label="Directorate"
-        icon={<Building2 className="w-5 h-5  text-white bg-slate-600
-          scale-150 rounded-sm p-1 mr-2" />}
+        icon={<Building2 className="w-4 h-4" />}
         name="directorate"
         value={form.directorate}
         onChange={handleDirectorateChange}
@@ -97,8 +93,7 @@ export function Step2({
 
       <InputField
         label="Deputy Ministry"
-        icon={<Building className="w-5 h-5  text-white bg-slate-600
-          scale-150 rounded-sm p-1 mr-2" />}
+        icon={<Building className="w-4 h-4" />}
         name="deputyMinistry"
         value={deputyMinistryValue}
         type="text"

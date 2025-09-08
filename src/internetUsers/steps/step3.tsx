@@ -178,7 +178,7 @@ export function Step3({ form, onChange }: {
   return (
     <div className="space-y-6">
       {/* Device Limit and Summary */}
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <InputField
           label="Device Limit"
           icon={<Hash className="w-5 h-5 text-white 
@@ -190,7 +190,7 @@ export function Step3({ form, onChange }: {
           onChange={onChange}
         />
 
-        <div className="flex items-center justify-center bg-gray-50 rounded-lg p-4">
+        <div className="flex items-center justify-center bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
           <div className="text-center">
             <div className="text-2xl font-bold text-slate-600">{remainingLimit}</div>
             <div className="text-sm text-blue-500">Devices Remaining</div>
@@ -203,8 +203,8 @@ export function Step3({ form, onChange }: {
         <button
           onClick={addDevice}
           disabled={remainingLimit <= 0}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium ${remainingLimit > 0
-            ? 'bg-slate-600 hover:bg-slate-500'
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-white font-medium shadow-sm transition-colors ${remainingLimit > 0
+            ? 'bg-slate-700 hover:bg-slate-600'
             : 'bg-gray-400 cursor-not-allowed'
             }`}
         >
@@ -214,13 +214,13 @@ export function Step3({ form, onChange }: {
       </div>
       {/* Group Type (only once for all devices) */}
       <div>
-        <label className="block text-lg font-medium text-gray-700 mb-1 ">
+        <label className="block text-sm font-semibold text-slate-700 mb-2 ">
           Group Type
         </label>
         <select
           value={selectedGroup || ""}
           onChange={(e) => setSelectedGroup(Number(e.target.value))}
-          className="block w-1/2 border rounded-sm p-2 border-gray-200 shadow-sm bg-gray-100"
+          className="block w-full md:w-1/2 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm focus:ring-2 focus:ring-slate-500/30 focus:border-slate-300"
         >
           <option value="">Select Group</option>
           {groups.map((group) => (
@@ -234,12 +234,12 @@ export function Step3({ form, onChange }: {
       {/* Selected Devices */}
       <div className="space-y-4">
         {selectedDevices.map((device, index) => (
-          <div key={device.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <div key={device.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-medium text-gray-900">Device {index + 1}</h3>
               <button
                 onClick={() => removeDevice(device.id)}
-                className="text-red-600 hover:text-red-800"
+                className="text-red-600 hover:text-red-700"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -248,7 +248,7 @@ export function Step3({ form, onChange }: {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Device Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Device Type
                 </label>
                 <div className="relative">
@@ -258,7 +258,7 @@ export function Step3({ form, onChange }: {
                   <select
                     value={device.deviceTypeId || ""}
                     onChange={(e) => updateDevice(device.id, 'deviceTypeId', Number(e.target.value))}
-                    className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+                    className="block w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500/30 focus:border-slate-300"
                   >
                     <option value="">Select Device Type</option>
                     {deviceTypes.map((type) => (
@@ -272,11 +272,11 @@ export function Step3({ form, onChange }: {
 
               {/* MAC Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   MAC Address
                 </label>
                 <div className="relative">
-                  <Cpu className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Cpu className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     value={device.macAddress}
@@ -296,7 +296,7 @@ export function Step3({ form, onChange }: {
                       checkMacAddress(mac, device.id);
                     }}
                     placeholder="00:00:00:00:00:00"
-                    className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+                    className="block w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500/30 focus:border-slate-300"
                   />
                 </div>
                 {/* fardin: inline error per device (duplicate + exists) */}
@@ -311,7 +311,7 @@ export function Step3({ form, onChange }: {
 
       {/* Summary */}
       {selectedDevices.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
           <h3 className="font-medium text-blue-900 mb-2">Device Summary</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             {deviceTypes.map(type => {

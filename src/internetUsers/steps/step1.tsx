@@ -141,12 +141,12 @@ export function Step1({
   }, [form.email]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6">
-      <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 max-w-5xl mx-auto">
+      <h2 className="text-3xl font-extrabold mb-6 tracking-tight text-slate-900">
         User Information
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {/* Name */}
         <div className="flex flex-col">
           <InputField
@@ -191,7 +191,7 @@ export function Step1({
             onChange={onChange}
           />
           {usernameError && (
-            <p className="text-red-600 text-sm mt-1">{usernameError}</p>
+            <p className="text-red-600 text-xs mt-2">{usernameError}</p>
           )}
         </div>
 
@@ -208,7 +208,9 @@ export function Step1({
             value={form.email}
             onChange={onChange}
           />
-          {emailError && <p className="text-red-600 text-sm mt-1">{emailError}</p>}
+          {emailError && (
+            <p className="text-red-600 text-xs mt-2">{emailError}</p>
+          )}
         </div>
 
         {/* Phone */}
@@ -225,7 +227,7 @@ export function Step1({
             onChange={onChange}
           />
           {phoneError && (
-            <p className="text-red-600 text-sm mt-1">{phoneError}</p>
+            <p className="text-red-600 text-xs mt-2">{phoneError}</p>
           )}
         </div>
       </div>
