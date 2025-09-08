@@ -12,7 +12,6 @@ import { Users, AlertCircle } from "lucide-react";
 
 type Option = { id: number; name: string };
 
-
 export default function InternetUsersList(): JSX.Element {
     const [users, setUsers] = useState<InternetUser[]>([]);
     const [loading, setLoading] = useState(false);
@@ -29,6 +28,8 @@ export default function InternetUsersList(): JSX.Element {
     const [groupOptions, setGroupOptions] = useState<Option[]>([]);
     const [selectedGroup, setSelectedGroup] = useState("");
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     const token = currentUser?.token;
@@ -40,16 +41,19 @@ export default function InternetUsersList(): JSX.Element {
             : ["Name", "LastName", "Username", "Directorate", "Position", "Group Type", "Status", "Actions"]
     ), [isViewer]);
 
-
     // Fetch users
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);
             setError(null);
             try {
-                const res = await axios.get(`${route}/internet`, { headers: { Authorization: `Bearer ${token}` } });
+                const res = await axios.get(`${route}/internet?page=${currentPage}`, { headers: { Authorization: `Bearer ${token}` } });
                 const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : []);
                 setUsers(list as InternetUser[]);
+                const lastPage = (res.data && typeof res.data === 'object') ? (res.data.last_page ?? res.data?.meta?.last_page) : undefined;
+                if (lastPage) {
+                    setTotalPages(Number(lastPage) || 1);
+                }
             } catch {
                 setError("Failed to fetch users.");
             } finally {
@@ -57,7 +61,7 @@ export default function InternetUsersList(): JSX.Element {
             }
         };
         fetchUsers();
-    }, [token]);
+    }, [token, currentPage]);
 
     // Fetch directorates and groups
     useEffect(() => {
@@ -82,10 +86,13 @@ export default function InternetUsersList(): JSX.Element {
     // Save updated user from Modal
     const handleUserSave = async () => {
         try {
-            // Refetch users and unwrap paginated response shape
-            const res = await axios.get(`${route}/internet`, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await axios.get(`${route}/internet?page=${currentPage}`, { headers: { Authorization: `Bearer ${token}` } });
             const list = Array.isArray(res.data) ? res.data : (Array.isArray(res.data?.data) ? res.data.data : []);
             setUsers(list as InternetUser[]);
+            const lastPage = (res.data && typeof res.data === 'object') ? (res.data.last_page ?? res.data?.meta?.last_page) : undefined;
+            if (lastPage) {
+                setTotalPages(Number(lastPage) || 1);
+            }
         } catch (err) {
             console.error("Failed to refresh user data after update:", err);
         }
@@ -117,10 +124,7 @@ export default function InternetUsersList(): JSX.Element {
         });
     }, [users, selectedDirectorate, selectedGroup, selectedStatus, searchTerm]);
 
-    const usersPerPage = 10;
-    const [currentPage, setCurrentPage] = useState(1);
-    const visibleUsers = filteredUsers.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage);
-    const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+    const visibleUsers = filteredUsers;
 
     return (
         <div className="min-h-screen flex bg-white">
