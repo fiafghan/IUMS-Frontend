@@ -29,10 +29,13 @@ export default function Dashboard(): JSX.Element {
       setError(null);
       try {
         const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        const res = await axios.get<InternetUser[]>(`${route}/internet`, {
+        const res = await axios.get(`${route}/internet`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUsers(res.data);
+        const list = Array.isArray(res.data)
+          ? res.data
+          : (Array.isArray(res.data?.data) ? res.data.data : []);
+        setUsers(list as InternetUser[]);
       } catch (e) {
         setError("Failed to fetch users. Please try again later.");
         console.error(e);
