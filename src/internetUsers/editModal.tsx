@@ -519,6 +519,31 @@ export default function EditUserModal({
 
         try {
             await axios.put(`${route}/internet/${user.id}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                showCloseButton: true,
+                iconColor: "#22c55e",
+                background: "#0f172a",
+                color: "#e2e8f0",
+                customClass: {
+                    popup: "rounded-2xl shadow-2xl ring-1 ring-white/10",
+                    title: "text-sm font-medium tracking-wide",
+                    timerProgressBar: "bg-white/40",
+                },
+                didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+            });
+
+            Toast.fire({
+                title: "User updated successfully!",
+                icon: "success",
+            });
             onSave({ ...payload, id: user.id });
             onClose();
         } catch (err) {
