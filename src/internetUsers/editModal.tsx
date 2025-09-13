@@ -189,7 +189,13 @@ export default function EditUserModal({
                     email: u.email ?? prev.email,
                     phone: u.phone ?? prev.phone,
                     position: u.position ?? prev.position,
-                    status: u.status ?? prev.status,
+                    // Normalize status into the constrained union type expected by InternetUser
+                    status: (() => {
+                      const raw = (u.status ?? user?.status ?? prev.status) as any;
+                      if (raw === 'active' || raw === 1 || raw === '1') return 1 as 1;
+                      if (raw === 'deactive' || raw === 0 || raw === '0') return 0 as 0;
+                      return undefined;
+                    })(),
                     device_limit: u.device_limit ?? prev.device_limit,
                     employment_type: u.employment_type ?? prev.employment_type,
                     device_type_id: Array.isArray(u.device_type_id) ? u.device_type_id : prev.device_type_id ?? [],
@@ -499,6 +505,8 @@ export default function EditUserModal({
 
         const payload: any = {
             ...editForm,
+            status: Number((editForm as any).status ?? user?.status ?? 0),
+            device_limit: Number((editForm as any).device_limit ?? 0),
             directorate_id: selectedDirectorate?.id,
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
