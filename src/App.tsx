@@ -64,7 +64,7 @@ function PublicNavbar() {
         <div className="flex items-center gap-3">
           <img src="/moph.png" alt="MoPH" className="w-10 h-10 object-contain" />
           <span className="ml-2 text-sm font-semibold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-            Internet User Management System (IUMS-MOPH)
+            IUMS-MOPH
           </span>
         </div>
         <nav className="flex items-center gap-2 relative">
@@ -198,7 +198,7 @@ function HomeLanding() {
             <div className="text-xs text-slate-500"> 2025 Ministry of Public Health. All rights reserved.</div>
             <div className="flex items-center gap-3 text-xs text-slate-500">
               <span>Developed By</span>
-              <span className="font-medium text-slate-700">IT Directorate Software Development Team</span>
+              <span className="font-medium text-slate-700">MOPH Software Development Team</span>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ function AboutPage() {
             <div className="text-xs text-slate-500"> 2025 Ministry of Public Health. All rights reserved.</div>
             <div className="flex items-center gap-3 text-xs text-slate-500">
               <span>Developed By</span>
-              <span className="font-medium text-slate-700">IT Directorate Software Development Team</span>
+              <span className="font-medium text-slate-700">MOPH Software Development Team</span>
             </div>
           </div>
         </div>
@@ -357,7 +357,7 @@ function ContactPage() {
             <div className="text-xs text-slate-500"> 2025 Ministry of Public Health. All rights reserved.</div>
             <div className="flex items-center gap-3 text-xs text-slate-500">
               <span>Developed By</span>
-              <span className="font-medium text-slate-700">IT Directorate Software Development Team</span>
+              <span className="font-medium text-slate-700">MOPH Software Development Team</span>
             </div>
           </div>
         </div>
