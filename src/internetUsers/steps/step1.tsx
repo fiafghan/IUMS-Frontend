@@ -16,6 +16,35 @@ export function Step1({
   const [emailError, setEmailError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
+  // Sanitize inputs: email should only contain ASCII (English) characters and must include '@'
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "email") {
+      // Remove any non-ASCII characters
+      const asciiOnly = value.replace(/[^\x00-\x7F]/g, "");
+      // Optionally trim spaces
+      const sanitized = asciiOnly.replace(/\s+/g, "");
+
+      // Inline validation messages
+      if (sanitized !== value) {
+        setEmailError("Email must contain only English (ASCII) characters.");
+      } else if (sanitized && !sanitized.includes("@")) {
+        setEmailError("Email must contain @ symbol.");
+      } else if (
+        emailError === "Email must contain only English (ASCII) characters." ||
+        emailError === "Email must contain @ symbol."
+      ) {
+        // Clear only our inline messages; server messages remain managed by checkEmail
+        setEmailError(null);
+      }
+
+      onChange({ ...e, target: { ...e.target, name, value: sanitized } });
+      return;
+    }
+
+    onChange(e);
+  };
+
   const checkPhone = (phoneToCheck: string) => {
     if (!phoneToCheck) {
       setPhoneError(null);
@@ -69,6 +98,15 @@ export function Step1({
   const checkEmail = (emailToCheck: string) => {
     if (!emailToCheck) {
       setEmailError(null);
+      return;
+    }
+    // Basic client-side guards before hitting the API
+    if (!/^[\x00-\x7F]+$/.test(emailToCheck)) {
+      setEmailError("Email must contain only English (ASCII) characters.");
+      return;
+    }
+    if (!emailToCheck.includes("@")) {
+      setEmailError("Email must contain @ symbol.");
       return;
     }
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
@@ -206,7 +244,7 @@ export function Step1({
             type="email"
             placeholder="you@example.com"
             value={form.email}
-            onChange={onChange}
+            onChange={handleInputChange}
           />
           {emailError && (
             <p className="text-red-600 text-xs mt-2">{emailError}</p>
