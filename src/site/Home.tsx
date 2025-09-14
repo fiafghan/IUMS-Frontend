@@ -52,18 +52,6 @@ export default function Home() {
           <h3 className="text-slate-900 font-semibold mb-2">Devices & Resource Control</h3>
           <p className="text-slate-600 text-sm">Register devices, track MACs, and allocate resources to maintain compliance and uptime.</p>
         </div>
-        <div className="md:col-span-3 mt-4 flex items-center justify-between bg-white border border-slate-200 rounded-2xl p-6">
-          <div className="flex items-center gap-4">
-            <img src="/moph.png" alt="MoPH" className="w-10 h-10 object-contain" />
-            <div>
-              <div className="text-slate-900 font-semibold">Ministry of Public Health</div>
-              <div className="text-slate-600 text-sm">Islamic Emirate of Afghanistan</div>
-            </div>
-          </div>
-          <Link to="/login" className="px-5 py-3 rounded-xl text-blue-300 text-sm font-medium inline-flex items-center gap-2 bg-gradient-to-r from-slate-800 to-slate-600 hover:to-slate-400">
-            <LogIn className="w-4 h-4" /> Go to Login
-          </Link>
-        </div>
       </main>
       <PublicFooter />
     </div>
