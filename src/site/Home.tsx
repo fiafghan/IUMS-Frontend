@@ -1,5 +1,4 @@
-import { Shield, Info, Phone, Wifi, Globe, Server, LogIn } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Shield, Info, Phone, Wifi, Globe, Server } from "lucide-react";
 import SiteNavbar from "./SiteNavbar";
 import SiteHero from "./SiteHero";
 import PublicFooter from "./SiteFooter";
