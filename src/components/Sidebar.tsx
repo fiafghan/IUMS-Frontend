@@ -113,7 +113,7 @@ export default function GradientSidebar(): JSX.Element {
           onClick={() => navigate("/")}
           className="group flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-cyan-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
         >
-          <div className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+          <div className="p-1.5 bg-gradient-to-br from-slate-500 to-slate-800 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
             <HomeIcon className="w-3.5 h-3.5 text-white" />
           </div>
           <span className="font-medium text-sm">Home</span>
