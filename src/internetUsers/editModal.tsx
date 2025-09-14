@@ -138,8 +138,7 @@ export default function EditUserModal({
     user,
     isOpen,
     onClose,
-    onSave,
-    deputyMinistryOptions,
+    onSave
 }: Props) {
     const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}")?.token;
 
