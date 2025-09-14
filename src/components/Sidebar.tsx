@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Settings, AlertOctagon, Users, LogOut, ChevronDown, Shield,
   ClipboardList,
-  LayoutDashboard
+  LayoutDashboard,
+  Home as HomeIcon,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, type JSX } from "react";
@@ -105,11 +106,24 @@ export default function GradientSidebar(): JSX.Element {
 
       {/* Navigation - Compact */}
       <nav className="flex flex-col flex-1 px-3 py-3 space-y-1">
-        {/* Dashboard */}
+        {/* Website Home */}
         <motion.button
           whileHover={{ scale: 1.02, x: 4 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => navigate("/")}
+          className="group flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-cyan-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
+        >
+          <div className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+            <HomeIcon className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="font-medium text-sm">Home</span>
+        </motion.button>
+
+        {/* Dashboard */}
+        <motion.button
+          whileHover={{ scale: 1.02, x: 4 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => navigate("/dashboard")}
           className="group flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-cyan-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
         >
           <div className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
