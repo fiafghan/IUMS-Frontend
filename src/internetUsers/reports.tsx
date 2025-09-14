@@ -44,7 +44,7 @@ export default function Reports() {
             const usernames: string[] = [];
             while (true) {
                 const res = await axios.get(`${route}/internet?page=${page}`, { headers });
-                // Support both raw array and Laravel paginator shapes
+                // Support both raw array and Laravel paginator shapess
                 const payload = Array.isArray(res.data)
                     ? res.data
                     : (Array.isArray(res.data?.data) ? res.data.data : []);
