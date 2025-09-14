@@ -163,10 +163,9 @@ function HomeLanding() {
           <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl w-fit mb-4">
             <Server className="w-5 h-5 text-blue-300" />
           </div>
-          <h3 className="text-slate-900 font-semibold mb-2">Device & Resource Control</h3>
+          <h3 className="text-slate-900 font-semibold mb-2">Devices & Resource Control</h3>
           <p className="text-slate-600 text-sm">Register devices, track MACs, and allocate resources to maintain compliance and uptime.</p>
         </div>
-      
       </main>
     </div>
   );
