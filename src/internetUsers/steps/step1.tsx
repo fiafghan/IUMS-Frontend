@@ -177,6 +177,31 @@ export function Step1({
     };
   }, []);
 
+  // Email input should accept English characters only and must contain '@'
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value || "";
+    // Allow only ASCII letters, digits, and typical email symbols
+    const filtered = raw.replace(/[^A-Za-z0-9@._+\-]/g, "");
+
+    // Forward the sanitized value to parent onChange
+    const sanitizedEvent = {
+      ...e,
+      target: {
+        ...e.target,
+        name: "email",
+        value: filtered,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(sanitizedEvent);
+
+    // Simple inline rule: must contain '@'
+    if (filtered && !filtered.includes("@")) {
+      setEmailError("Email must contain @ symbol");
+    } else {
+      setEmailError(null);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 max-w-5xl mx-auto">
       <h2 className="text-3xl font-extrabold mb-6 tracking-tight text-slate-900">
@@ -243,7 +268,7 @@ export function Step1({
             type="email"
             placeholder="you@example.com"
             value={form.email}
-            onChange={onChange}
+            onChange={handleEmailChange}
           />
           {emailError && (
             <p className="text-red-600 text-xs mt-2">{emailError}</p>
