@@ -62,7 +62,6 @@ function PublicNavbar() {
     <header className="w-full bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/emirate.png" alt="Emirate" className="w-8 h-8 object-contain" />
           <img src="/moph.png" alt="MoPH" className="w-8 h-8 object-contain" />
           <span className="ml-2 text-sm font-semibold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
             Internet User Management System
@@ -146,19 +145,6 @@ function HomeLanding() {
           <h3 className="text-slate-900 font-semibold mb-2">Streamlined Support</h3>
           <p className="text-slate-600 text-sm">Contact the IT Directorate for assistance with accounts, devices, or network access.</p>
         </div>
-        <div className="md:col-span-3 mt-4 flex items-center justify-between bg-white border border-slate-200 rounded-2xl p-6">
-          <div className="flex items-center gap-4">
-            <img src="/emirate.png" alt="Emirate" className="w-10 h-10 object-contain" />
-            <img src="/moph.png" alt="MoPH" className="w-10 h-10 object-contain" />
-            <div>
-              <div className="text-slate-900 font-semibold">Ministry of Public Health</div>
-              <div className="text-slate-600 text-sm">Islamic Emirate of Afghanistan</div>
-            </div>
-          </div>
-          <Link to="/login" className="px-5 py-3 rounded-xl text-blue-300 text-sm font-medium inline-flex items-center gap-2 bg-gradient-to-r from-slate-800 to-slate-600 hover:to-slate-400">
-            <LogIn className="w-4 h-4" /> Go to Login
-          </Link>
-        </div>
       </main>
     </div>
   );
@@ -214,16 +200,6 @@ function ContactPage() {
               </div>
               <div className="mt-2 text-slate-600 text-sm">Office Hours: Sun–Thu, 8:00–16:00</div>
             </div>
-            <div className="flex items-center justify-center gap-6">
-              <img src="/emirate.png" alt="Emirate" className="w-20 h-20 object-contain" />
-              <img src="/moph.png" alt="MoPH" className="w-20 h-20 object-contain" />
-            </div>
-          </div>
-          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-slate-800 to-slate-600 text-blue-300 text-sm flex items-center justify-between">
-            <span>Need to manage users or devices?</span>
-            <Link to="/login" className="px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 inline-flex items-center gap-2">
-              <LogIn className="w-4 h-4" /> Login
-            </Link>
           </div>
         </div>
       </main>
