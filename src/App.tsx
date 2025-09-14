@@ -198,7 +198,7 @@ function ContactPage() {
               <div className="flex items-center gap-3 text-slate-700 text-sm">
                 <Phone className="w-4 h-4 text-blue-600" /> +93 7xxxxxxxx
               </div>
-              <div className="mt-2 text-slate-600 text-sm">Office Hours: Sun–Thu, 8:00–16:00</div>
+              <div className="mt-2 text-slate-600 text-sm">Office Hours: Sat–Thu, 8:00–16:00</div>
             </div>
           </div>
         </div>
