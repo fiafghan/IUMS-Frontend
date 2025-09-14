@@ -597,6 +597,7 @@ export default function EditUserModal({
             const resp: any = (err as any)?.response;
             const errs = resp?.data?.errors || {};
             // Map backend errors to our inline states if present
+            const msgList = Object.entries(errs).flatMap(([, v]) => (Array.isArray(v) ? v : [String(v)])).slice(0, 4);
             if (errs.username && Array.isArray(errs.username) && errs.username.length) {
                 setUsernameError(String(errs.username[0]));
             }
@@ -627,7 +628,6 @@ export default function EditUserModal({
                 },
             });
 
-            const msgList = Object.entries(errs).flatMap(([k, v]) => (Array.isArray(v) ? v : [String(v)])).slice(0, 4);
             Toast.fire({
                 title: msgList.length ? msgList.join("\n") : "Failed to update user. Please check required fields and try again!",
                 icon: "error",
