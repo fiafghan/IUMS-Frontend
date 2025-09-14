@@ -18,7 +18,7 @@ import ReactivateUserForm from "./internetUsers/reActivation"
 import Dashboard from "./internetUsers/dashboard"
 import AllReactivations from "./internetUsers/AllReactivations"
 import Reports from "./internetUsers/reports"
-import { Shield, Info, Phone, LogIn, Home as HomeIcon, User as UserIcon, LayoutDashboard, LogOut, ChevronDown } from "lucide-react"
+import { Shield, Info, Phone, LogIn, Home as HomeIcon, User as UserIcon, LayoutDashboard, LogOut, ChevronDown, Wifi, Globe, Server } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -145,6 +145,28 @@ function HomeLanding() {
           <h3 className="text-slate-900 font-semibold mb-2">Streamlined Support</h3>
           <p className="text-slate-600 text-sm">Contact the IT Directorate for assistance with accounts, devices, or network access.</p>
         </div>
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl w-fit mb-4">
+            <Wifi className="w-5 h-5 text-blue-300" />
+          </div>
+          <h3 className="text-slate-900 font-semibold mb-2">Network Connectivity</h3>
+          <p className="text-slate-600 text-sm">Managed Wi‑Fi access and bandwidth policies ensure stable connectivity for staff and services.</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl w-fit mb-4">
+            <Globe className="w-5 h-5 text-blue-300" />
+          </div>
+          <h3 className="text-slate-900 font-semibold mb-2">Secure Internet Access</h3>
+          <p className="text-slate-600 text-sm">Policy-driven internet access with monitoring to protect critical systems and information.</p>
+        </div>
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl w-fit mb-4">
+            <Server className="w-5 h-5 text-blue-300" />
+          </div>
+          <h3 className="text-slate-900 font-semibold mb-2">Device & Resource Control</h3>
+          <p className="text-slate-600 text-sm">Register devices, track MACs, and allocate resources to maintain compliance and uptime.</p>
+        </div>
+      
       </main>
     </div>
   );
