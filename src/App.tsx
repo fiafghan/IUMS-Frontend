@@ -62,9 +62,9 @@ function PublicNavbar() {
     <header className="w-full bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/moph.png" alt="MoPH" className="w-8 h-8 object-contain" />
+          <img src="/moph.png" alt="MoPH" className="w-10 h-10 object-contain" />
           <span className="ml-2 text-sm font-semibold bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
-            Internet User Management System
+            Internet User Management System (IUMS-MOPH)
           </span>
         </div>
         <nav className="flex items-center gap-2 relative">
