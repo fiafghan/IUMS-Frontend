@@ -9,6 +9,7 @@ import {
 import type { InternetUser } from "../types/types";
 import { route } from "../config";
 import Swal from "sweetalert2";
+import { mapsid } from "../enums/deputy_enum";
 
 type Option = { id: number; name: string };
 
@@ -30,6 +31,7 @@ function InputWithIcon({
     onChange,
     error,
     isLoading,
+    disabled,
 }: {
     label: string;
     name: string;
@@ -40,6 +42,7 @@ function InputWithIcon({
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     error?: string;
     isLoading?: boolean;
+    disabled?: boolean;
 }) {
     return (
         <div className="w-full">
@@ -54,8 +57,9 @@ function InputWithIcon({
                     value={value as any}
                     onChange={onChange}
                     placeholder={placeholder}
+                    disabled={disabled}
                     className={`w-full pl-10 pr-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-blue-300 ${error ? 'border-red-500' : 'border-gray-300'
-                        }`}
+                        } ${disabled ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
                 />
                 {isLoading && (
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -134,20 +138,23 @@ export default function EditUserModal({
     user,
     isOpen,
     onClose,
-    onSave,
-    deputyMinistryOptions,
+    onSave
 }: Props) {
     const token = JSON.parse(localStorage.getItem("loggedInUser") || "{}")?.token;
 
     const [editForm, setEditForm] = useState<Partial<InternetUser>>({});
     const [allGroupsList, setAllGroupsList] = useState<Option[]>([]);
     const [allDirectoratesList, setAllDirectoratesList] = useState<Option[]>([]);
+    const [directorateOptionsFull, setDirectorateOptionsFull] = useState<any[]>([]);
     const [allEmploymentList, setAllEmploymentList] = useState<Option[]>([]);
     const [allDeviceList, setAllDeviceList] = useState<Option[]>([]);
     const [selectedDirectorate, setSelectedDirectorate] = useState<Option | null>(null);
     const [selectedGroup, setSelectedGroup] = useState<Option | null>(null);
     const [selectedEmployment, setSelectedEmployment] = useState<Option | null>(null);
-    const [selectedDeputy, setSelectedDeputy] = useState<Option | null>(null);
+    const [deputyMinistryId, setDeputyMinistryId] = useState<number | null>(null);
+    const deputyMinistryName = useMemo(() => {
+        return deputyMinistryId ? (mapsid[Number(deputyMinistryId)] ?? "") : "";
+    }, [deputyMinistryId]);
 
     const [selectedDevices, setSelectedDevices] = useState<Array<{ rowId: string; device_type_id: number; mac_address: string }>>([]);
     const [remainingLimit, setRemainingLimit] = useState(Number(user?.device_limit) || 0);
@@ -155,7 +162,6 @@ export default function EditUserModal({
     const [qDirectorate, setQDirectorate] = useState("");
     const [qGroup, setQGroup] = useState("");
     const [qEmployment, setQEmployment] = useState("");
-    const [qDeputy, setQDeputy] = useState("");
 
     const [emailError, setEmailError] = useState("");
     const [phoneError, setPhoneError] = useState("");
@@ -238,6 +244,11 @@ export default function EditUserModal({
                 if (allDirectoratesList.length) {
                     const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
                     setSelectedDirectorate(d);
+                    if (d && directorateOptionsFull.length) {
+                        const full = directorateOptionsFull.find((fd: any) => Number(fd.id) === Number(d.id));
+                        const depId = full?.directorate_id;
+                        setDeputyMinistryId(depId != null ? Number(depId) : null);
+                    }
                 }
                 if (allGroupsList.length) {
                     const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
@@ -247,9 +258,9 @@ export default function EditUserModal({
                     const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
                     setSelectedEmployment(eByName);
                 }
-                if (deputyMinistryOptions.length) {
-                    const dep = deputyMinistryOptions.find(x => x.name?.toLowerCase() === String(u.deputy ?? "").toLowerCase()) || null;
-                    setSelectedDeputy(dep);
+                if (u.deputy && !deputyMinistryId) {
+                    const entry = Object.entries(mapsid).find(([, v]) => String(v).toLowerCase() === String(u.deputy).toLowerCase());
+                    setDeputyMinistryId(entry ? Number(entry[0]) : null);
                 }
 
             } catch (e) {
@@ -278,13 +289,15 @@ export default function EditUserModal({
                 ]);
 
                 const groups: Option[] = (groupsRes.data as any[]).map((g) => ({ id: Number(g.id), name: String(g.name) }));
-                const dirs: Option[] = (dirRes.data as any[]).map((d) => ({ id: Number(d.id), name: String(d.name) }));
+                const rawDirs: any[] = dirRes.data as any[];
+                const dirs: Option[] = rawDirs.map((d) => ({ id: Number(d.id), name: String(d.name) }));
                 const emps: Option[] = (empRes.data as any[]).map((e) => ({ id: Number(e.id), name: String(e.name) }));
 
                 const devs: Option[] = (devRes.data as any[]).map((d: any) => ({ id: Number(d.id), name: String(d.name) }));
 
                 setAllGroupsList(groups);
                 setAllDirectoratesList(dirs);
+                setDirectorateOptionsFull(rawDirs);
                 setAllEmploymentList(emps);
                 setAllDeviceList(devs);
             } catch (err) {
@@ -471,10 +484,6 @@ export default function EditUserModal({
         () => allEmploymentList.filter((o) => o.name.toLowerCase().includes(qEmployment.toLowerCase())),
         [qEmployment, allEmploymentList]
     );
-    const filteredDeputies = useMemo(
-        () => deputyMinistryOptions.filter((o) => o.name.toLowerCase().includes(qDeputy.toLowerCase())),
-        [qDeputy, deputyMinistryOptions]
-    );
 
     const canSave =
         Boolean(editForm.name) &&
@@ -510,7 +519,7 @@ export default function EditUserModal({
             directorate_id: selectedDirectorate?.id,
             group_id: selectedGroup?.id,
             employee_type_id: selectedEmployment?.id,
-            deputy: selectedDeputy?.name,
+            deputy: deputyMinistryName,
             device_type_ids,
             devices,
         };
@@ -619,6 +628,17 @@ export default function EditUserModal({
                 return <Monitor className="w-4 h-4" />;
             default:
                 return <Laptop className="w-4 h-4" />;
+        }
+    };
+
+    const handleSelectDirectorate = (opt: Option | null) => {
+        setSelectedDirectorate(opt);
+        if (opt) {
+            const full = directorateOptionsFull.find((fd: any) => Number(fd.id) === Number(opt.id));
+            const depId = full?.directorate_id;
+            setDeputyMinistryId(depId != null ? Number(depId) : null);
+        } else {
+            setDeputyMinistryId(null);
         }
     };
 
@@ -742,7 +762,7 @@ export default function EditUserModal({
                                             <ComboBoxField
                                                 label="Directorate"
                                                 selected={selectedDirectorate}
-                                                setSelected={setSelectedDirectorate}
+                                                setSelected={handleSelectDirectorate}
                                                 filtered={filteredDirectorates}
                                                 query={qDirectorate}
                                                 setQuery={setQDirectorate}
@@ -766,14 +786,14 @@ export default function EditUserModal({
                                                 setQuery={setQEmployment}
                                                 icon={<BriefcaseBusiness className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                             />
-                                            <ComboBoxField
+                                            <InputWithIcon
                                                 label="Deputy Ministry"
-                                                selected={selectedDeputy}
-                                                setSelected={setSelectedDeputy}
-                                                filtered={filteredDeputies}
-                                                query={qDeputy}
-                                                setQuery={setQDeputy}
+                                                name="deputyMinistry"
+                                                value={deputyMinistryName}
+                                                placeholder="Deputy Ministry"
                                                 icon={<Landmark className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
+                                                onChange={() => { /* non-editable */ }}
+                                                disabled={true}
                                             />
                                         </div>
                                     </div>
