@@ -295,6 +295,7 @@ export default function InternetUsersList(): JSX.Element {
 
             {isModalOpen && selectedUser && (
                 <EditUserModal
+                    key={selectedUser.id}
                     user={selectedUser}
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}

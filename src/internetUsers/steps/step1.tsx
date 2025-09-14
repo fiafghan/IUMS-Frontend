@@ -1,7 +1,7 @@
 import { IdCard, Mail, Phone, User } from "lucide-react";
 import type { FormState } from "../../types/types";
 import { InputField } from "./InputField";
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import axios from "axios";
 import { route } from "../../config";
 
@@ -16,16 +16,21 @@ export function Step1({
   const [emailError, setEmailError] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
 
-  const checkPhone = (phoneToCheck: string) => {
-    if (!phoneToCheck) {
+  const usernameAbortRef = useRef<AbortController | null>(null);
+  const emailAbortRef = useRef<AbortController | null>(null);
+  const phoneAbortRef = useRef<AbortController | null>(null);
+
+  const checkPhone = (rawPhone: string) => {
+    if (!rawPhone) {
       setPhoneError(null);
       return;
     }
 
+    // Normalize to +937xxxxxxxx format
+    let phoneToCheck = rawPhone;
     if (!phoneToCheck.startsWith("+93")) {
       phoneToCheck = "+93" + phoneToCheck.replace(/^(\+93)?/, "");
     }
-
     if (phoneToCheck.length !== 12) {
       setPhoneError("Phone number must be 10 characters!");
     }
@@ -35,6 +40,11 @@ export function Step1({
       return;
     }
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    // Abort previous request if any
+    if (phoneAbortRef.current) phoneAbortRef.current.abort();
+    const controller = new AbortController();
+    phoneAbortRef.current = controller;
+    const requested = phoneToCheck; // snapshot for stale guard
     axios
       .post(
         `${route}/check-phone-of-internet-user`,
@@ -44,16 +54,20 @@ export function Step1({
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          signal: controller.signal as any,
         }
       )
       .then((res) => {
+        // Ignore stale responses
+        if (requested !== phoneToCheck) return;
         if (res.data.exists) {
           setPhoneError(res.data.message);
         } else {
           setPhoneError(null);
         }
       })
-      .catch(() => {
+      .catch((e) => {
+        if ((axios as any).isCancel?.(e) || e?.code === 'ERR_CANCELED' || e?.name === 'CanceledError') return;
         setPhoneError(null);
       });
   };
@@ -72,6 +86,10 @@ export function Step1({
       return;
     }
     const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    if (emailAbortRef.current) emailAbortRef.current.abort();
+    const controller = new AbortController();
+    emailAbortRef.current = controller;
+    const requested = emailToCheck;
     axios
       .post(
         `${route}/check-email-of-internet-users`,
@@ -81,9 +99,11 @@ export function Step1({
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          signal: controller.signal as any,
         }
       )
       .then((res) => {
+        if (requested !== emailToCheck) return;
         if (res.data.exists) {
           setEmailError(
             res.data.message ||
@@ -93,10 +113,19 @@ export function Step1({
           setEmailError(null);
         }
       })
-      .catch(() => {
+      .catch((e) => {
+        if ((axios as any).isCancel?.(e) || e?.code === 'ERR_CANCELED' || e?.name === 'CanceledError') return;
         setEmailError(null);
       });
   };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      checkEmail(form.email);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [form.email]);
 
   useEffect(() => {
     if (!form.username) {
@@ -106,6 +135,10 @@ export function Step1({
 
     const delayDebounceFn = setTimeout(() => {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+      if (usernameAbortRef.current) usernameAbortRef.current.abort();
+      const controller = new AbortController();
+      usernameAbortRef.current = controller;
+      const requested = form.username;
       axios
         .post(
           `${route}/check-username`,
@@ -115,16 +148,19 @@ export function Step1({
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
+            signal: controller.signal as any,
           }
         )
         .then((res) => {
+          if (requested !== form.username) return;
           if (res.data.exists) {
             setUsernameError("This User name is already taken try another one!");
           } else {
             setUsernameError(null);
           }
         })
-        .catch(() => {
+        .catch((e) => {
+          if ((axios as any).isCancel?.(e) || e?.code === 'ERR_CANCELED' || e?.name === 'CanceledError') return;
           setUsernameError(null);
         });
     }, 500);
@@ -132,13 +168,14 @@ export function Step1({
     return () => clearTimeout(delayDebounceFn);
   }, [form.username]);
 
+  // Cleanup any inflight checks on unmount
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      checkEmail(form.email);
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [form.email]);
+    return () => {
+      usernameAbortRef.current?.abort();
+      emailAbortRef.current?.abort();
+      phoneAbortRef.current?.abort();
+    };
+  }, []);
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 md:p-8 max-w-5xl mx-auto">

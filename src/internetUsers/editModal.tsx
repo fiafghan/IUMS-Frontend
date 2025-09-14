@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import type { JSX } from "react";
 import axios from "axios";
 import { Combobox, Tab } from "@headlessui/react";
@@ -174,102 +174,169 @@ export default function EditUserModal({
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
 
+    // Track the currently active user ID to ignore stale responses
+    const currentUserIdRef = useRef<string | number | null>(null);
+
+    // Store fetched user payload separate from UI state to avoid refetch races
+    const [fetchedUser, setFetchedUser] = useState<any | null>(null);
+
+    // Reset state when opening modal for a different user to avoid showing stale data
     useEffect(() => {
         if (!isOpen || !user?.id) return;
+        // Seed with minimal known props immediately (better UX) before API returns
+        setEditForm({
+            id: user.id,
+            name: user.name,
+            lastname: user.lastname,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            position: user.position,
+            status: user.status as any,
+            device_limit: user.device_limit as any,
+            employment_type: user.employment_type,
+        });
+        setSelectedDevices([]);
+        setSelectedDirectorate(null);
+        setSelectedGroup(null);
+        setSelectedEmployment(null);
+        setDeputyMinistryId(null);
+        setEmailError("");
+        setPhoneError("");
+        setMacError("");
+        currentUserIdRef.current = user.id;
+        setFetchedUser(null);
+    }, [isOpen, user?.id]);
+
+    useEffect(() => {
+        if (!isOpen || !user?.id) return;
+
+        const abortController = new AbortController();
+        const reqUserId = user.id; // snapshot the user id for this request
 
         const fetchUser = async () => {
             try {
                 const res = await axios.get(`${route}/internet-user-edit/${user.id}`, {
                     headers: { Authorization: `Bearer ${token}` },
+                    signal: abortController.signal as any,
                 });
 
                 console.log('API user edit response:', res.data);
                 const u = res.data?.data ?? res.data;
 
-                setEditForm(prev => ({
-                    ...prev,
-                    id: u.id,
-                    name: u.name ?? prev.name,
-                    lastname: u.lastname ?? prev.lastname,
-                    username: u.username ?? prev.username,
-                    email: u.email ?? prev.email,
-                    phone: u.phone ?? prev.phone,
-                    position: u.position ?? prev.position,
-                    // Normalize status into the constrained union type expected by InternetUser
-                    status: (() => {
-                      const raw = (u.status ?? user?.status ?? prev.status) as any;
-                      if (raw === 'active' || raw === 1 || raw === '1') return 1 as 1;
-                      if (raw === 'deactive' || raw === 0 || raw === '0') return 0 as 0;
-                      return undefined;
-                    })(),
-                    device_limit: u.device_limit ?? prev.device_limit,
-                    employment_type: u.employment_type ?? prev.employment_type,
-                    device_type_id: Array.isArray(u.device_type_id) ? u.device_type_id : prev.device_type_id ?? [],
-                    device_type: Array.isArray(u.device_type) ? u.device_type : prev.device_type ?? [],
-                    device_macs: (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : prev.device_macs ?? {},
-                }));
-
-                if (Array.isArray(u.devices)) {
-                    const typeCounts: Record<number, number> = {};
-                    setSelectedDevices(u.devices.map((d: any) => {
-                        const tId = Number(d.device_type_id);
-                        const count = (typeCounts[tId] = (typeCounts[tId] || 0) + 1);
-                        return {
-                            rowId: `${u.id || 'u'}-${tId}-${count}`,
-                            device_type_id: tId,
-                            mac_address: String(d.mac_address || ''),
-                        };
-                    }));
-                } else {
-                    const ids: number[] = Array.isArray(u.device_type_id) ? u.device_type_id.map((x: any) => Number(x)) : [];
-                    const macs = (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : {};
-                    const rows: Array<{ rowId: string; device_type_id: number; mac_address: string }> = [];
-                    const typeCounts: Record<number, number> = {};
-                    ids.forEach((id: number) => {
-                        const count = (typeCounts[id] = (typeCounts[id] || 0) + 1);
-                        const entry = (macs as any)[id];
-                        let mac = '';
-                        if (Array.isArray(entry)) {
-                            mac = String(entry[count - 1] || '');
-                        } else if (count === 1) {
-                            mac = String(entry || '');
-                        } else {
-                            mac = '';
-                        }
-                        rows.push({ rowId: `${u.id || 'u'}-${id}-${count}`, device_type_id: id, mac_address: mac });
-                    });
-                    setSelectedDevices(rows);
+                // Ignore if this response is stale (user changed while request was in-flight)
+                if (!isOpen || currentUserIdRef.current !== reqUserId) {
+                    return;
                 }
 
-                if (allDirectoratesList.length) {
-                    const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
-                    setSelectedDirectorate(d);
-                    if (d && directorateOptionsFull.length) {
-                        const full = directorateOptionsFull.find((fd: any) => Number(fd.id) === Number(d.id));
-                        const depId = full?.directorate_id;
-                        setDeputyMinistryId(depId != null ? Number(depId) : null);
-                    }
-                }
-                if (allGroupsList.length) {
-                    const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
-                    setSelectedGroup(g);
-                }
-                if (allEmploymentList.length) {
-                    const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
-                    setSelectedEmployment(eByName);
-                }
-                if (u.deputy && !deputyMinistryId) {
-                    const entry = Object.entries(mapsid).find(([, v]) => String(v).toLowerCase() === String(u.deputy).toLowerCase());
-                    setDeputyMinistryId(entry ? Number(entry[0]) : null);
-                }
+                // Store raw payload for mapping once lists are ready
+                setFetchedUser(u);
 
-            } catch (e) {
+            } catch (e: any) {
+                // Ignore expected cancellations when switching users or unmounting
+                if ((axios as any).isCancel?.(e) || e?.code === 'ERR_CANCELED' || e?.name === 'CanceledError') {
+                    return;
+                }
                 console.error("Failed to load user for edit:", e);
             }
         };
         fetchUser();
+        return () => {
+            abortController.abort();
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen, user?.id, token, allDeviceList]);
+    }, [isOpen, user?.id, token]);
+
+    // Map fetched user payload into UI state once lists are available
+    useEffect(() => {
+        if (!isOpen || !fetchedUser) return;
+
+        const u = fetchedUser;
+
+        // Only update fields that may not be present in the seed or need normalization
+        setEditForm(prev => ({
+            ...prev,
+            id: u.id ?? prev.id,
+            name: u.name ?? prev.name,
+            lastname: u.lastname ?? prev.lastname,
+            username: u.username ?? prev.username,
+            email: u.email ?? prev.email,
+            phone: u.phone ?? prev.phone,
+            position: u.position ?? prev.position,
+            status: (() => {
+                const raw = (u.status ?? prev.status) as any;
+                if (raw === 'active' || raw === 1 || raw === '1') return 1 as 1;
+                if (raw === 'deactive' || raw === 0 || raw === '0') return 0 as 0;
+                return prev.status as any;
+            })(),
+            device_limit: u.device_limit ?? prev.device_limit,
+            employment_type: u.employment_type ?? prev.employment_type,
+        }));
+
+        // Devices mapping
+        if (Array.isArray(u.devices)) {
+            const typeCounts: Record<number, number> = {};
+            setSelectedDevices(u.devices.map((d: any) => {
+                const tId = Number(d.device_type_id);
+                const count = (typeCounts[tId] = (typeCounts[tId] || 0) + 1);
+                return {
+                    rowId: `${u.id || 'u'}-${tId}-${count}`,
+                    device_type_id: tId,
+                    mac_address: String(d.mac_address || ''),
+                };
+            }));
+        } else {
+            const ids: number[] = Array.isArray(u.device_type_id) ? u.device_type_id.map((x: any) => Number(x)) : [];
+            const macs = (u.device_macs && typeof u.device_macs === 'object') ? u.device_macs : {};
+            const rows: Array<{ rowId: string; device_type_id: number; mac_address: string }> = [];
+            const typeCounts: Record<number, number> = {};
+            ids.forEach((id: number) => {
+                const count = (typeCounts[id] = (typeCounts[id] || 0) + 1);
+                const entry = (macs as any)[id];
+                let mac = '';
+                if (Array.isArray(entry)) {
+                    mac = String(entry[count - 1] || '');
+                } else if (count === 1) {
+                    mac = String(entry || '');
+                } else {
+                    mac = '';
+                }
+                rows.push({ rowId: `${u.id || 'u'}-${id}-${count}`, device_type_id: id, mac_address: mac });
+            });
+            setSelectedDevices(rows);
+        }
+
+        // Map directorate/group/employment once lists are ready
+        if (allDirectoratesList.length) {
+            const d = allDirectoratesList.find(x => x.name?.toLowerCase() === String(u.directorate ?? "").toLowerCase()) || null;
+            setSelectedDirectorate(d);
+            if (d && directorateOptionsFull.length) {
+                const full = directorateOptionsFull.find((fd: any) => Number(fd.id) === Number(d.id));
+                const depId = full?.directorate_id;
+                setDeputyMinistryId(depId != null ? Number(depId) : null);
+            }
+        }
+        if (allGroupsList.length) {
+            const g = allGroupsList.find(x => x.name?.toLowerCase() === String(u.groups ?? "").toLowerCase()) || null;
+            setSelectedGroup(g);
+        }
+        if (allEmploymentList.length) {
+            const eByName = allEmploymentList.find(x => x.name?.toLowerCase() === String(u.employment_type ?? "").toLowerCase()) || null;
+            setSelectedEmployment(eByName);
+        }
+        if (u.deputy && !deputyMinistryId) {
+            const entry = Object.entries(mapsid).find(([, v]) => String(v).toLowerCase() === String(u.deputy).toLowerCase());
+            setDeputyMinistryId(entry ? Number(entry[0]) : null);
+        }
+
+    }, [
+        isOpen,
+        fetchedUser,
+        allDirectoratesList.length,
+        allGroupsList.length,
+        allEmploymentList.length,
+        directorateOptionsFull.length,
+    ]);
 
     useEffect(() => {
         if (!isOpen || !editForm || allDeviceList.length === 0) return;
@@ -395,9 +462,11 @@ export default function EditUserModal({
     const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
 
-        if (name === 'mac_address') {
+        if (name === 'mac_address' || name.startsWith('mac_address_')) {
             const formatted = formatMacAddress(value);
-            setSelectedDevices(prev => prev.map(r => r.rowId === name ? { ...r, mac_address: formatted } : r));
+            // Support row-specific mac inputs named as mac_address_${rowId}
+            const rowId = name.startsWith('mac_address_') ? name.replace('mac_address_', '') : name;
+            setSelectedDevices(prev => prev.map(r => r.rowId === rowId ? { ...r, mac_address: formatted } : r));
 
             setMacError("");
             const macValidation = validateMacAddress(formatted);
