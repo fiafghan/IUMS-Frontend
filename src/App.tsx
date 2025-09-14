@@ -234,6 +234,34 @@ function AboutPage() {
                 <div className="text-slate-600 text-sm">Dashboards and reports for operational transparency.</div>
               </div>
             </div>
+            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200">
+              <Wifi className="w-5 h-5 text-blue-600" />
+              <div>
+                <div className="text-slate-900 font-medium">Reliable Connectivity</div>
+                <div className="text-slate-600 text-sm">Policy-driven Wi‑Fi and bandwidth management to keep teams online.</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200">
+              <Globe className="w-5 h-5 text-blue-600" />
+              <div>
+                <div className="text-slate-900 font-medium">Secure Internet Access</div>
+                <div className="text-slate-600 text-sm">Controlled outbound access and monitoring to protect public health systems.</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200">
+              <Server className="w-5 h-5 text-blue-600" />
+              <div>
+                <div className="text-slate-900 font-medium">Device Governance</div>
+                <div className="text-slate-600 text-sm">Register devices, track MACs, and ensure compliance with standards.</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200">
+              <LayoutDashboard className="w-5 h-5 text-blue-600" />
+              <div>
+                <div className="text-slate-900 font-medium">Operational Excellence</div>
+                <div className="text-slate-600 text-sm">Streamlined workflows for user lifecycle, re-activations, and reporting.</div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
