@@ -38,15 +38,30 @@ export default function Reports() {
     const fetchUsernames = async () => {
         try {
             const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-            const res = await axios.get(`${route}/internet`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const headers = { Authorization: `Bearer ${token}` } as const;
 
-            const options = res.data.map((user: any) => ({
-                value: user.username,
-                label: user.username
-            }));
+            let page = 1;
+            const usernames: string[] = [];
+            while (true) {
+                const res = await axios.get(`${route}/internet?page=${page}`, { headers });
+                // Support both raw array and Laravel paginator shapes
+                const payload = Array.isArray(res.data)
+                    ? res.data
+                    : (Array.isArray(res.data?.data) ? res.data.data : []);
 
+                for (const user of payload) {
+                    const u = String(user?.username || '').trim();
+                    if (u && !usernames.includes(u)) usernames.push(u);
+                }
+
+                const lastPage = (res.data && typeof res.data === 'object')
+                    ? (res.data.last_page ?? res.data?.meta?.last_page)
+                    : undefined;
+                if (!lastPage || page >= Number(lastPage)) break;
+                page += 1;
+            }
+
+            const options = usernames.sort((a, b) => a.localeCompare(b)).map(u => ({ value: u, label: u }));
             setUserOptions(options);
         } catch (err) {
             console.error("Error fetching usernames:", err);
