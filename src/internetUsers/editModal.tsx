@@ -166,13 +166,16 @@ export default function EditUserModal({
     const [emailError, setEmailError] = useState("");
     const [phoneError, setPhoneError] = useState("");
     const [macError, setMacError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const [isCheckingEmail, setIsCheckingEmail] = useState(false);
     const [isCheckingPhone, setIsCheckingPhone] = useState(false);
     const [isCheckingMac, setIsCheckingMac] = useState(false);
+    const [isCheckingUsername, setIsCheckingUsername] = useState(false);
 
     const [emailTimeout, setEmailTimeout] = useState<number | null>(null);
     const [phoneTimeout, setPhoneTimeout] = useState<number | null>(null);
     const [macTimeout, setMacTimeout] = useState<number | null>(null);
+    const [usernameTimeout, setUsernameTimeout] = useState<number | null>(null);
 
     useEffect(() => {
         if (!isOpen || !user?.id) return;
@@ -392,6 +395,24 @@ export default function EditUserModal({
         }
     };
 
+    const checkUsernameExists = async (username: string) => {
+        if (!username) return;
+        setIsCheckingUsername(true);
+        try {
+            const response = await axios.post(`${route}/check-username`,
+                { username },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.data.exists) {
+                setUsernameError("This username is already taken");
+            }
+        } catch (err) {
+            console.error("Error checking username:", err);
+        } finally {
+            setIsCheckingUsername(false);
+        }
+    };
+
     const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
 
@@ -469,6 +490,20 @@ export default function EditUserModal({
             return;
         }
 
+        if (name === 'username') {
+            setEditForm((prev) => ({ ...prev, [name]: value }));
+            setUsernameError("");
+            if (value && value.length >= 3) {
+                if (usernameTimeout) {
+                    clearTimeout(usernameTimeout);
+                    setUsernameTimeout(null);
+                }
+                const timeout = setTimeout(() => checkUsernameExists(value), 500);
+                setUsernameTimeout(timeout);
+            }
+            return;
+        }
+
         setEditForm((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -499,9 +534,11 @@ export default function EditUserModal({
         !emailError &&
         !phoneError &&
         !macError &&
+        !usernameError &&
         !isCheckingEmail &&
         !isCheckingPhone &&
-        !isCheckingMac;
+        !isCheckingMac &&
+        !isCheckingUsername;
 
     const handleSave = async () => {
         if (!user) return;
@@ -557,6 +594,18 @@ export default function EditUserModal({
             onClose();
         } catch (err) {
             console.error("Update failed:", err);
+            const resp: any = (err as any)?.response;
+            const errs = resp?.data?.errors || {};
+            // Map backend errors to our inline states if present
+            if (errs.username && Array.isArray(errs.username) && errs.username.length) {
+                setUsernameError(String(errs.username[0]));
+            }
+            if (errs.email && Array.isArray(errs.email) && errs.email.length) {
+                setEmailError(String(errs.email[0]));
+            }
+            if (errs.phone && Array.isArray(errs.phone) && errs.phone.length) {
+                setPhoneError(String(errs.phone[0]));
+            }
             const Toast = Swal.mixin({
                 toast: true,
                 position: "bottom-end",
@@ -578,8 +627,9 @@ export default function EditUserModal({
                 },
             });
 
+            const msgList = Object.entries(errs).flatMap(([k, v]) => (Array.isArray(v) ? v : [String(v)])).slice(0, 4);
             Toast.fire({
-                title: "Failed to update user. Please check required fields and try again!",
+                title: msgList.length ? msgList.join("\n") : "Failed to update user. Please check required fields and try again!",
                 icon: "error",
             });
         }
@@ -599,8 +649,12 @@ export default function EditUserModal({
                 clearTimeout(macTimeout);
                 setMacTimeout(null);
             }
+            if (usernameTimeout) {
+                clearTimeout(usernameTimeout);
+                setUsernameTimeout(null);
+            }
         };
-    }, [emailTimeout, phoneTimeout, macTimeout]);
+    }, [emailTimeout, phoneTimeout, macTimeout, usernameTimeout]);
 
     if (!isOpen) return null;
 
@@ -721,6 +775,7 @@ export default function EditUserModal({
                                                 placeholder="Enter username"
                                                 icon={<BadgeCheck className="w-5 h-5 text-blue-300 bg-slate-800 p-1 rounded-full" />}
                                                 onChange={handleEditChange}
+                                                error={usernameError}
                                             />
                                             <InputWithIcon
                                                 label="Email"
