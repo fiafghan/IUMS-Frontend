@@ -23,11 +23,19 @@ import About from "./site/About"
 import Contact from "./site/Contact"
 
 function App() {
-
   return (
     <>
       <Routes>
-        <Route path="/register" element={<PrivateRoute><RoleChecker allowedRoles={['Admin']}><RegisterForm /></RoleChecker></PrivateRoute>} />
+        <Route
+          path="/register"
+          element={
+            <PrivateRoute>
+              <RoleChecker allowedRoles={["Admin"]}>
+                <RegisterForm />
+              </RoleChecker>
+            </PrivateRoute>
+          }
+        />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/adduser" element={<PrivateRoute><RoleChecker allowedRoles={['Admin', 'User']}><InternetUserAddForm /></RoleChecker></PrivateRoute>} />
         <Route path="/all-system-users" element={<RoleChecker allowedRoles={['Admin']}><SystemUsersPage /></RoleChecker>} />
@@ -59,7 +67,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
