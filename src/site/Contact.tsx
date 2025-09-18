@@ -36,12 +36,26 @@ export default function Contact() {
               <h4 className="text-slate-900 font-semibold mb-2">Address</h4>
               <p className="text-slate-600 text-sm">Wazir Akbar Khan, Kabul, Afghanistan.</p>
             </div>
+
             <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
               <div className="p-3 bg-gradient-to-r from-slate-800 to-slate-500 rounded-xl w-fit mb-4">
                 <Clock className="w-5 h-5 text-blue-300" />
               </div>
               <h4 className="text-slate-900 font-semibold mb-2">Working Hours</h4>
               <p className="text-slate-600 text-sm">Sun–Thu 8:00–16:00</p>
+            </div>
+            <div style={{ width: "910px", height: "400px" }}>
+              <iframe
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                style={{ border: 0 }}
+                src="https://www.google.com/maps?q=Ministry%20of%20Public%20Health,%20Wazir%20Akbar%20Khan,%20Kabul&output=embed"
+                allowFullScreen
+                aria-hidden="false"
+                tabIndex={0}
+                title="Ministry of Public Health, Kabul"
+              />
             </div>
           </div>
         </div>
