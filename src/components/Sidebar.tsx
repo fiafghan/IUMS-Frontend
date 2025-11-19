@@ -306,46 +306,46 @@ export default function GradientSidebar(): JSX.Element {
           </AnimatePresence>
         </div>
 
-        <div className="space-y-0.5">
-          <motion.button
-            whileHover={{ scale: 1.02, x: 4 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleDropdownToggle('moph')}
-            className="group w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-indigo-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
-          >
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
-                <Mail className="w-3.5 h-3.5 text-white" />
-              </div>
-              <span className="font-medium text-sm">MOPH Emails</span>
-            </div>
-            <motion.div
-              animate={{ rotate: mophOpen ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
+        {!isViewer && (
+          <div className="space-y-0.5">
+            <motion.button
+              whileHover={{ scale: 1.02, x: 4 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleDropdownToggle('moph')}
+              className="group w-full flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-indigo-500/20 hover:border-blue-500/30 border border-transparent transition-all duration-300 text-slate-300 hover:text-white"
             >
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-colors duration-300" />
-            </motion.div>
-          </motion.button>
-
-          <AnimatePresence>
-            {mophOpen && (
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-md group-hover:shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300">
+                  <Mail className="w-3.5 h-3.5 text-white" />
+                </div>
+                <span className="font-medium text-sm">MOPH Emails</span>
+              </div>
               <motion.div
-                variants={menuVariants}
-                initial="closed"
-                animate="open"
-                exit="closed"
-                className="ml-6 space-y-0.5 overflow-hidden"
+                animate={{ rotate: mophOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <motion.button
-                  variants={itemVariants}
-                  whileHover="hover"
-                  onClick={() => navigate("/all-moph-emails")}
-                  className="flex items-center gap-2 py-1 px-3 text-xs text-slate-400 hover:text-blue-400 transition-colors duration-200 rounded-md hover:bg-blue-500/10"
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-colors duration-300" />
+              </motion.div>
+            </motion.button>
+
+            <AnimatePresence>
+              {mophOpen && (
+                <motion.div
+                  variants={menuVariants}
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                  className="ml-6 space-y-0.5 overflow-hidden"
                 >
-                  <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
-                  All MOPH Emails
-                </motion.button>
-                {!isViewer && (
+                  <motion.button
+                    variants={itemVariants}
+                    whileHover="hover"
+                    onClick={() => navigate("/all-moph-emails")}
+                    className="flex items-center gap-2 py-1 px-3 text-xs text-slate-400 hover:text-blue-400 transition-colors duration-200 rounded-md hover:bg-blue-500/10"
+                  >
+                    <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
+                    All MOPH Emails
+                  </motion.button>
                   <motion.button
                     variants={itemVariants}
                     whileHover="hover"
@@ -355,11 +355,11 @@ export default function GradientSidebar(): JSX.Element {
                     <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
                     Add MOPH Email
                   </motion.button>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
         {/* System Users Section (Admin Only) */}
         {isAdmin && (

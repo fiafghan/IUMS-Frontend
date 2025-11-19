@@ -46,7 +46,7 @@ function App() {
         <Route path="/all-re-activations" element={<RoleChecker allowedRoles={['Admin', 'User']}><AllReactivations/></RoleChecker>} />
         <Route path="/reports" element={<RoleChecker allowedRoles={['Admin', 'User']}><Reports/></RoleChecker>} />
         <Route path="/add-moph-email" element={<PrivateRoute><RoleChecker allowedRoles={['Admin', 'User']}><AddMophEmailAddress /></RoleChecker></PrivateRoute>} />
-        <Route path="/all-moph-emails" element={<PrivateRoute><AllMophEmails /></PrivateRoute>} />
+        <Route path="/all-moph-emails" element={<PrivateRoute><RoleChecker allowedRoles={['Admin', 'User']}><AllMophEmails /></RoleChecker></PrivateRoute>} />
         <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />
         <Route path="/all-violations-from-users" element={<PrivateRoute><AllViolationsFromUsers /></PrivateRoute>} />
         <Route path="/access-denied" element={<PrivateRoute><AccessDenied /></PrivateRoute>} />
