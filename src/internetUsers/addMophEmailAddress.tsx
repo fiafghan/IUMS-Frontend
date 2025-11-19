@@ -9,9 +9,38 @@ export default function AddMophEmailAddress(): JSX.Element {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailMsg, setEmailMsg] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const t = setTimeout(async () => {
+      const val = email.trim();
+      // basic email format check to avoid unnecessary API calls
+      const isEmailLike = /.+@.+\..+/.test(val);
+      if (!val || !isEmailLike) {
+        setEmailExists(false);
+        setEmailMsg("");
+        return;
+      }
+      try {
+        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+        const res = await axios.get(`${route}/checkEmailAddress`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { email: val }
+        });
+        const exists = !!res.data?.exists;
+        setEmailExists(exists);
+        setEmailMsg(exists ? (res.data?.message || "This email already exists.") : "");
+      } catch (e) {
+        // do not block the user if the check fails; just allow submission validation to handle
+        console.error('Email check failed', e);
+        setEmailExists(false);
+        setEmailMsg("");
+      }
+    }, 200);
+    return () => clearTimeout(t);
+  }, [email]);
 
   const validate = () => {
     const e: { [k: string]: string } = {};
@@ -59,10 +88,11 @@ export default function AddMophEmailAddress(): JSX.Element {
               <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-slate-300 rounded-md px-3 py-2" />
               {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
+              {emailExists && <p className="text-sm text-red-600 mt-1">{emailMsg || "This email already exists."}</p>}
             </div>
             <div className="flex gap-2 justify-end pt-2">
               <button type="button" onClick={() => navigate(-1)} className="px-4 py-2 rounded-md border border-slate-300 text-slate-700">Cancel</button>
-              <button disabled={loading} type="submit" className="px-4 py-2 rounded-md bg-slate-800 text-white disabled:opacity-50">{loading ? "Saving..." : "Save"}</button>
+              <button disabled={loading || emailExists} type="submit" className="px-4 py-2 rounded-md bg-slate-800 text-white disabled:opacity-50">{loading ? "Saving..." : "Save"}</button>
             </div>
           </form>
         </div>
