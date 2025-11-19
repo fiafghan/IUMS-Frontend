@@ -9,6 +9,7 @@ import UserFiltersPanel from "../components/UserFilters";
 import EditUserModal from "./editModal";
 import { motion } from "framer-motion";
 import { Users, AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type Option = { id: number; name: string };
 
@@ -34,6 +35,7 @@ export default function InternetUsersList(): JSX.Element {
     const currentUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
     const token = currentUser?.token;
     const isViewer = currentUser?.user.role === "viewer";
+    const navigate = useNavigate();
 
     const headers = useMemo(() => (
         isViewer
@@ -153,6 +155,19 @@ export default function InternetUsersList(): JSX.Element {
                             </p>
                         </div>
                     </div>
+
+                    {!isViewer && (
+                        <div className="flex justify-end mb-4">
+                            <motion.button
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={() => navigate("/adduser")}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-slate-800 to-slate-600 text-white shadow hover:from-slate-700 hover:to-slate-500"
+                            >
+                                Add User
+                            </motion.button>
+                        </div>
+                    )}
 
                     {/* Filters Section */}
                     <motion.div
