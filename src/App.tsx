@@ -21,6 +21,8 @@ import Reports from "./internetUsers/reports"
 import Home from "./site/Home"
 import About from "./site/About"
 import Contact from "./site/Contact"
+import AddMophEmailAddress from "./internetUsers/addMophEmailAddress"
+import AllMophEmails from "./internetUsers/AllMophEmails"
 
 function App() {
 
@@ -43,6 +45,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/all-re-activations" element={<RoleChecker allowedRoles={['Admin', 'User']}><AllReactivations/></RoleChecker>} />
         <Route path="/reports" element={<RoleChecker allowedRoles={['Admin', 'User']}><Reports/></RoleChecker>} />
+        <Route path="/add-moph-email" element={<PrivateRoute><RoleChecker allowedRoles={['Admin', 'User']}><AddMophEmailAddress /></RoleChecker></PrivateRoute>} />
+        <Route path="/all-moph-emails" element={<PrivateRoute><AllMophEmails /></PrivateRoute>} />
         <Route path="/all-violation-types" element={<PrivateRoute><AllViolationTypes /></PrivateRoute>} />
         <Route path="/all-violations-from-users" element={<PrivateRoute><AllViolationsFromUsers /></PrivateRoute>} />
         <Route path="/access-denied" element={<PrivateRoute><AccessDenied /></PrivateRoute>} />
