@@ -5,28 +5,17 @@ import GradientSidebar from "../components/Sidebar";
 import { route } from "../config";
 
 export default function AddMophEmailAddress(): JSX.Element {
-  const [directorateId, setDirectorateId] = useState<number | "">("");
+  const [directorate, setDirectorate] = useState("");
   const [email, setEmail] = useState("");
-  const [dirs, setDirs] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [k: string]: string }>({});
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const run = async () => {
-      try {
-        const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
-        const res = await axios.get(`${route}/directorate`, { headers: { Authorization: `Bearer ${token}` } });
-        const list = Array.isArray(res.data) ? res.data : [];
-        setDirs(list.map((d: any) => ({ id: d.id, name: d.name })));
-      } catch {}
-    };
-    run();
-  }, []);
+  useEffect(() => {}, []);
 
   const validate = () => {
     const e: { [k: string]: string } = {};
-    if (!directorateId) e.directorate_id = "Directorate is required";
+    if (!directorate.trim()) e.directorate = "Directorate is required";
     if (!email.trim()) e.email = "Email is required";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -40,7 +29,7 @@ export default function AddMophEmailAddress(): JSX.Element {
       const { token } = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       await axios.post(
         `${route}/moph-emails`,
-        { directorate_id: Number(directorateId), email: email.trim() },
+        { directorate: directorate.trim(), email: email.trim() },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       navigate("/all-moph-emails");
@@ -63,13 +52,8 @@ export default function AddMophEmailAddress(): JSX.Element {
           <form onSubmit={submit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Directorate</label>
-              <select value={directorateId as any} onChange={(e) => setDirectorateId(e.target.value ? Number(e.target.value) : "")} className="w-full border border-slate-300 rounded-md px-3 py-2">
-                <option value="">Select directorate</option>
-                {dirs.map(d => (
-                  <option key={d.id} value={d.id}>{d.name}</option>
-                ))}
-              </select>
-              {errors.directorate_id && <p className="text-sm text-red-600 mt-1">{errors.directorate_id}</p>}
+              <input value={directorate} onChange={(e) => setDirectorate(e.target.value)} placeholder="Enter directorate" className="w-full border border-slate-300 rounded-md px-3 py-2" />
+              {errors.directorate && <p className="text-sm text-red-600 mt-1">{errors.directorate}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>

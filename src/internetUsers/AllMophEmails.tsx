@@ -7,18 +7,16 @@ import { useNavigate } from "react-router-dom";
 type Row = {
   id: number;
   moph_id: string;
-  directorate_id: number;
-  directorate_name: string;
+  directorate: string;
   email: string;
 };
 
 export default function AllMophEmails(): JSX.Element {
   const [rows, setRows] = useState<Row[]>([]);
-  const [dirs, setDirs] = useState<{ id: number; name: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
-  const [edit, setEdit] = useState<{ moph_id: string; directorate_id: number | ""; email: string }>({ moph_id: "", directorate_id: "", email: "" });
+  const [edit, setEdit] = useState<{ moph_id: string; directorate: string; email: string }>({ moph_id: "", directorate: "", email: "" });
 
   const navigate = useNavigate();
 
@@ -34,13 +32,8 @@ export default function AllMophEmails(): JSX.Element {
     setLoading(true);
     setError(null);
     try {
-      const [listRes, dirRes] = await Promise.all([
-        axios.get(`${route}/moph-emails`, { headers }),
-        axios.get(`${route}/directorate`, { headers })
-      ]);
+      const listRes = await axios.get(`${route}/moph-emails`, { headers });
       setRows(listRes.data || []);
-      const dirList = Array.isArray(dirRes.data) ? dirRes.data : [];
-      setDirs(dirList.map((d: any) => ({ id: d.id, name: d.name })));
     } catch (e) {
       setError("Failed to load data");
     } finally {
@@ -55,19 +48,19 @@ export default function AllMophEmails(): JSX.Element {
 
   const startEdit = (row: Row) => {
     setEditId(row.id);
-    setEdit({ moph_id: row.moph_id, directorate_id: row.directorate_id, email: row.email });
+    setEdit({ moph_id: row.moph_id, directorate: row.directorate, email: row.email });
   };
 
   const cancelEdit = () => {
     setEditId(null);
-    setEdit({ moph_id: "", directorate_id: "", email: "" });
+    setEdit({ moph_id: "", directorate: "", email: "" });
   };
 
   const saveEdit = async () => {
     if (!editId) return;
     try {
       await axios.put(`${route}/moph-emails/${editId}`, {
-        directorate_id: Number(edit.directorate_id),
+        directorate: edit.directorate,
         email: edit.email,
       }, { headers });
       await fetchAll();
@@ -126,14 +119,9 @@ export default function AllMophEmails(): JSX.Element {
                     </td>
                     <td className="px-4 py-2 align-top">
                       {editId === r.id ? (
-                        <select value={edit.directorate_id as any} onChange={(e) => setEdit(s => ({ ...s, directorate_id: e.target.value ? Number(e.target.value) : "" }))} className="border border-slate-300 rounded-md px-2 py-1">
-                          <option value="">Select directorate</option>
-                          {dirs.map(d => (
-                            <option key={d.id} value={d.id}>{d.name}</option>
-                          ))}
-                        </select>
+                        <input value={edit.directorate} onChange={(e) => setEdit(s => ({ ...s, directorate: e.target.value }))} className="border border-slate-300 rounded-md px-2 py-1" />
                       ) : (
-                        r.directorate_name
+                        r.directorate
                       )}
                     </td>
                     <td className="px-4 py-2 align-top">
